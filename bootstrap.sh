@@ -27,15 +27,7 @@ PATH+=:/snap/bin && export PATH
 gsutil cp gs://jlucktay-factorio-asia/server-settings.json /opt/factorio/config/
 chown --recursive 845:845 /opt/factorio
 
-
-
-### TODO
-### set up docker to restart the container (command below) at system start
-### do a reboot
-
-
-
-# Run the server
+# Run up the server, and set 'restart=always' to have it come back up after a reboot
 docker run \
     --detach \
     --name factorio \
@@ -44,3 +36,9 @@ docker run \
     --restart=always \
     --volume /opt/factorio:/factorio \
     factoriotools/factorio
+
+# Give the server a minute to warm up
+sleep 60s
+
+# Let the upgrades from Apt kick in properly
+reboot
