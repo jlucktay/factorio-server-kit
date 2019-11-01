@@ -23,7 +23,7 @@ RCON is still running, but nobody can to connect to it.
 
 ### Bootstrap/user data
 
-- set up Fuse to mount GCS bucket
+- ~~set up Fuse to mount GCS bucket~~
 - get Factorio config/server settings from bucket
 - start up Docker container
 
