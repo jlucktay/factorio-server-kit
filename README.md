@@ -7,7 +7,14 @@ Running our own Factorio server.
 ### Create VM
 
 - create instance (see latest template) with 'factorio' and 'ssh' network tags
-- use bootstrap script (gs/jlucktay-factorio-asia/factorio.sh)
+
+``` shell
+gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
+    --source-instance-template=factorio-container-5 \
+    --tags=factorio,ssh
+```
+
+- use [bootstrap script](bootstrap.sh)
 
 ``` text
 To "disable" RCON don't expose port 27015, i.e. start the server without -p 27015:27015/tcp.
