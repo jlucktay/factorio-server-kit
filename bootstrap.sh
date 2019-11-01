@@ -27,6 +27,14 @@ PATH+=:/snap/bin && export PATH
 gsutil cp gs://jlucktay-factorio-asia/server-settings.json /opt/factorio/config/
 chown --recursive 845:845 /opt/factorio
 
+
+
+### TODO
+### set up docker to restart the container (command below) at system start
+### do a reboot
+
+
+
 # Run the server
 docker run \
     --detach \
