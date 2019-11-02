@@ -6,15 +6,14 @@ Running our own Factorio server.
 
 ### Create VM
 
-- create instance (see latest template) with 'factorio' and 'ssh' network tags
+- create instance (see [latest template])
+  - [bootstrap script](bootstrap.sh) is set as custom metadata
+  - `factorio` and `ssh` network tags are part of the template
 
 ``` shell
 gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
-    --source-instance-template=factorio-container-5 \
-    --tags=factorio,ssh
+    --source-instance-template=factorio-container-6
 ```
-
-- use [bootstrap script](bootstrap.sh)
 
 ``` text
 To "disable" RCON don't expose port 27015, i.e. start the server without -p 27015:27015/tcp.
@@ -70,3 +69,5 @@ systemctl status --full factorio >> /root/startup-script.log
 ``` shell
 reboot
 ```
+
+[latest template]: https://console.cloud.google.com/compute/instanceTemplates/details/factorio-container-6?project=jlucktay-factorio

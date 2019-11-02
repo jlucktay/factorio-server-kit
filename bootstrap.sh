@@ -22,9 +22,9 @@ useradd --gid 845 --uid 845 factorio
 mkdir --parents /opt/factorio/config
 chown --recursive 845:845 /opt/factorio
 
-# Get the server config from Storage
+# Get the server and map configs from Storage
 PATH+=:/snap/bin && export PATH
-gsutil cp gs://jlucktay-factorio-asia/server-settings.json /opt/factorio/config/
+gsutil cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
 chown --recursive 845:845 /opt/factorio
 
 # Run up the server, and set 'restart=always' to have it come back up after a reboot
