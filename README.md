@@ -34,27 +34,6 @@ game as outlined
 
 ### Removed from scripts to save for later
 
-#### Pull scripts from GitHub
-
-``` shell
-git clone https://github.com/Bisa/factorio-init.git /opt/factorio-init
-git clone https://github.com/narc0tiq/factorio-updater.git /opt/factorio-updater
-```
-
-#### Configure 'factorio-init' and install Factorio
-
-``` shell
-cp /opt/factorio-init/config.example /opt/factorio-init/config
-sed --expression "s/UPDATE_SCRIPT=\/path\/to\/update_factorio.py/UPDATE_SCRIPT=\/opt\/factorio-updater\/update_factorio.py/g" --in-place /opt/factorio-init/config
-/opt/factorio-init/factorio install
-```
-
-#### Get the server config from Storage
-
-``` shell
-gsutil cp gs://jlucktay-factorio-asia/server-settings.json /opt/factorio/data
-```
-
 #### Configure Factorio service in systemd
 
 ``` shell
