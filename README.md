@@ -27,6 +27,12 @@ RCON is still running, but nobody can to connect to it.
 - get Factorio config/server settings from bucket
 - start up Docker container
 
+### Map (generation) settings
+
+The two settings files `map-settings.json` and `map-gen-settings.json` can be created from a map exchange string in the
+game as outlined
+[here](https://wiki.factorio.com/Command_line_parameters#Creating_the_JSON_files_from_a_map_exchange_string).
+
 ### Removed from scripts to save for later
 
 #### Pull scripts from GitHub
