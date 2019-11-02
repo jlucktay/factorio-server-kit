@@ -12,7 +12,7 @@ Running our own Factorio server.
 
 ``` shell
 gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
-    --source-instance-template=factorio-container-8
+    --source-instance-template=factorio-container-10
 ```
 
 ``` text
@@ -49,4 +49,4 @@ systemctl status --full factorio >> /root/startup-script.log
 reboot
 ```
 
-[latest template]: https://console.cloud.google.com/compute/instanceTemplates/details/factorio-container-8?project=jlucktay-factorio
+[latest template]: https://console.cloud.google.com/compute/instanceTemplates/details/factorio-container-10?project=jlucktay-factorio
