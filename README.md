@@ -9,9 +9,29 @@ Running our own Factorio server.
 - create instance (see [latest template])
   - [startup script](startup.sh) is set as custom metadata
   - `factorio` and `ssh` network tags are part of the template
+- OPTIONAL
+  - set `--preemptible` flag
+    - also need to set appropriate maintenance policy
+      - `--maintenance-policy=TERMINATE`
+    - with preemptible, set a shutdown script from file
+      - `--metadata-from-file shutdown-script=shutdown.sh`
+      - specifying a shutdown script in this way also necessitates (re)specifying the startup script as well
+        - `--metadata-from-file startup-script=startup.sh`
+  - set VM size with `--machine-type=<NAME>`
+    - look up available sizes with `gcloud compute machine-types list --zones=us-west2-b --sort-by=CPUS`
+    - e.g. `--machine-type=n1-standard-2`
 
 ``` shell
 gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
+    --source-instance-template=factorio-container-10
+```
+
+``` shell
+gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
+    --maintenance-policy=TERMINATE \
+    --metadata-from-file shutdown-script=shutdown.sh \
+    --metadata-from-file startup-script=startup.sh \
+    --preemptible \
     --source-instance-template=factorio-container-10
 ```
 
