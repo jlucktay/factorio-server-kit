@@ -7,7 +7,7 @@ Running our own Factorio server.
 ### Create VM
 
 - create instance (see [latest template])
-  - [bootstrap script](bootstrap.sh) is set as custom metadata
+  - [startup script](startup.sh) is set as custom metadata
   - `factorio` and `ssh` network tags are part of the template
 
 ``` shell
@@ -20,7 +20,7 @@ To "disable" RCON don't expose port 27015, i.e. start the server without -p 2701
 RCON is still running, but nobody can to connect to it.
 ```
 
-### Bootstrap/user data
+### Startup script
 
 - ~~set up Fuse to mount GCS bucket~~
 - get Factorio config/server settings from bucket
