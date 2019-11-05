@@ -11,7 +11,7 @@ fi
 
 # Functions
 function logsetup {
-    exec > >(tee -a "$log_file")
+    exec > >(tee --append "$log_file")
     exec 2>&1
 }
 
@@ -37,16 +37,16 @@ log "Set up 'factorio' user and group"
 groupadd --gid 845 factorio
 useradd --gid 845 --uid 845 factorio
 
-log "Create the necessary folder structure"
-mkdir --parents /opt/factorio/config
-mkdir --parents /opt/factorio/saves
+log "=== Create the necessary folder structure"
+mkdir --parents --verbose /opt/factorio/config
+mkdir --parents --verbose /opt/factorio/saves
 
-log "Get the configs and saves from Storage"
-gsutil cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
-gsutil cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
+log "=== Get the configs and saves from Storage"
+gsutil -m cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
+gsutil -m cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
 
-log "Fix up permissions"
-chown --recursive factorio:factorio /opt/factorio
+log "=== Fix up permissions"
+chown --changes --recursive factorio:factorio /opt/factorio
 
 log "Run up the server and set 'restart=always' to have it come back up after a reboot"
 docker run \
@@ -61,8 +61,8 @@ docker run \
 log "Give the server some time to warm up"
 sleep 30s
 
-log "Schedule a cron job to push the saves back to Storage"
-echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves >> /opt/factorio/cron.log 2>&1" >> /etc/crontab
+log "=== Schedule a cron job to push the saves back to Storage"
+echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves >> /opt/factorio/cron.log 2>&1" | tee --append /etc/crontab
 
 log "Let the upgrades from Apt kick in properly"
 reboot
