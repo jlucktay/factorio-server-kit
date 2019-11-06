@@ -10,7 +10,8 @@ Running our own Factorio server.
   - [startup](startup.sh) and [shutdown](shutdown.sh) scripts should be set(/overriden from template) as custom
   metadata
     - `--metadata-from-file startup-script=startup.sh,shutdown-script=shutdown.sh`
-  - `factorio` and `ssh` network tags are part of the template, for firewall rules
+  - `factorio` and `ssh` network tags are part of the template, for firewall rules, and `grafana` also needs to be
+    added to the template
 - OPTIONAL
   - set `--preemptible` flag
     - also need to set appropriate maintenance policy
@@ -30,7 +31,8 @@ gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
     --maintenance-policy=TERMINATE \
     --metadata-from-file startup-script=startup.sh,shutdown-script=shutdown.sh \
     --preemptible \
-    --source-instance-template=factorio-container-10
+    --source-instance-template=factorio-container-10 \
+    --tags=factorio,grafana,ssh
 ```
 
 ``` text
