@@ -16,7 +16,7 @@ new_instance=$( gcloud compute instances create "factorio-$( gdate '+%Y%m%d-%H%M
     --source-instance-template=factorio-container-10 \
     --tags=factorio,grafana,ssh )
 
-new_instance_name=$( echo "$new_instance" | jq --raw-output'.[].name' )
+new_instance_name=$( echo "$new_instance" | jq --raw-output '.[].name' )
 
 echo "new instance name: '$new_instance_name'"
 
