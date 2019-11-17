@@ -2,24 +2,20 @@
 set -euxo pipefail
 IFS=$'\n\t'
 
+# Log setup and function
 log_file=/root/startup.log
-
-if test -f "$log_file" ; then
-    log "=== '$log_file' already exists, exiting." >> "$log_file"
-    exit 0
-fi
-
-# Functions
-function logsetup {
-    exec > >(tee --append "$log_file")
-    exec 2>&1
-}
+exec > >(tee --append "$log_file")
+exec 2>&1
 
 function log {
     echo "[$(date --rfc-3339=seconds)]: $*"
 }
 
-logsetup
+# Test for reruns
+if test -f "$log_file" ; then
+    log "=== '$log_file' already exists, exiting." >> "$log_file"
+    exit 0
+fi
 
 # Drop a note when this script is done (note: 'done' might include exiting prematurely due to an error!)
 trap 'log DONE' INT TERM EXIT
