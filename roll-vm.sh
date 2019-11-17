@@ -13,11 +13,7 @@ factorio::vm::delete_all
 new_instance=$( gcloud compute instances create "factorio-$( gdate '+%Y%m%d-%H%M%S' )" \
     --configuration=factorio \
     --format=json \
-    --maintenance-policy=TERMINATE \
-    --metadata-from-file startup-script=startup.sh,shutdown-script=shutdown.sh \
-    --preemptible \
-    --source-instance-template=factorio-container-10 \
-    --tags=factorio,grafana,ssh )
+    --source-instance-template=factorio-container-11 )
 
 new_instance_name=$( echo "$new_instance" | jq --raw-output '.[].name' )
 

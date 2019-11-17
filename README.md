@@ -6,34 +6,13 @@ Running our own Factorio server.
 
 ### Create VM
 
-- create instance (see [latest template])
-  - [startup](startup.sh) and [shutdown](shutdown.sh) scripts should be set(/overriden from template) as custom
-  metadata
-    - `--metadata-from-file startup-script=startup.sh,shutdown-script=shutdown.sh`
-  - `factorio` and `ssh` network tags are part of the template, for firewall rules, and `grafana` also needs to be
-    added to the template
-- OPTIONAL
-  - set `--preemptible` flag
-    - also need to set appropriate maintenance policy
-      - `--maintenance-policy=TERMINATE`
-  - set VM size with `--machine-type=<NAME>`
-    - look up available sizes with `gcloud compute machine-types list --zones=us-west2-b --sort-by=CPUS`
-    - e.g. `--machine-type=n1-standard-2`
+See the [new VM script](roll-vm.sh) and related [library](lib/) functions.
 
-``` shell
-gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
-    --metadata-from-file startup-script=startup.sh,shutdown-script=shutdown.sh \
-    --source-instance-template=factorio-container-10
-```
+#### Optional
 
-``` shell
-gcloud compute instances create factorio-$(gdate '+%Y%m%d-%H%M%S') \
-    --maintenance-policy=TERMINATE \
-    --metadata-from-file startup-script=startup.sh,shutdown-script=shutdown.sh \
-    --preemptible \
-    --source-instance-template=factorio-container-10 \
-    --tags=factorio,grafana,ssh
-```
+- set VM size with `--machine-type=<NAME>`
+  - look up available sizes with `gcloud compute machine-types list --zones=us-west2-b --sort-by=CPUS`
+  - e.g. `--machine-type=n1-standard-2`
 
 ``` text
 To "disable" RCON don't expose port 27015, i.e. start the server without -p 27015:27015/tcp.
@@ -68,5 +47,3 @@ systemctl status --full factorio >> /root/startup-script.log
 ``` shell
 reboot
 ```
-
-[latest template]: https://console.cloud.google.com/compute/instanceTemplates/details/factorio-container-10?project=jlucktay-factorio
