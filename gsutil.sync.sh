@@ -9,9 +9,7 @@ fi
 shopt -s nullglob globstar
 
 mkdir -pv gs/jlucktay-factorio-asia/
-mkdir -pv gs/jlucktay-factorio-eur4/ # blueprint backups
 mkdir -pv gs/jlucktay-factorio-us-west2/
 
 gsutil -m rsync -r -u gs://jlucktay-factorio-asia/ ./gs/jlucktay-factorio-asia/
-gsutil -m rsync -r -u gs://jlucktay-factorio-eur4/ ./gs/jlucktay-factorio-eur4/
 gsutil -m rsync -r -u gs://jlucktay-factorio-us-west2/ ./gs/jlucktay-factorio-us-west2/
