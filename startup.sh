@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -euxo pipefail
 IFS=$'\n\t'
 
 log_file=/root/startup.log
