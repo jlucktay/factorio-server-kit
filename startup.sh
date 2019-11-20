@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 # Drop a note when this script is done (note: 'done' might include exiting prematurely due to an error!)
 done_file=/root/startup-script.done
-trap 'touch $done_file && logger "DONE"' INT TERM EXIT
+trap 'touch $done_file; logger "DONE"' INT TERM EXIT
 
 # Test for reruns
 if test -f "$done_file" ; then
@@ -14,24 +14,20 @@ fi
 # Log setup and function
 cd /tmp
 curl --remote-name --show-error --silent https://dl.google.com/cloudagents/install-logging-agent.sh
-./install-logging-agent.sh
+bash install-logging-agent.sh
 
 logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
 
 logger "=== Patch up the system and install Docker, GCP SDK, JQ, etc etc"
-logger "--- apt update"
 apt update
-logger "--- apt install --assume-yes --no-install-recommends ..."
 apt install --assume-yes --no-install-recommends \
     docker-compose \
     docker.io \
     google-cloud-sdk \
     jq \
     libarchive-tools
-logger "--- apt upgrade --assume-yes --no-install-recommends"
 apt upgrade --assume-yes --no-install-recommends
-logger "--- apt autoremove --assume-yes"
 apt autoremove --assume-yes
 
 logger "=== Set up 'factorio' user and group"
@@ -49,37 +45,30 @@ gsutil -m cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
 logger "=== Fix up Factorio permissions"
 chown --changes --recursive factorio:factorio /opt/factorio
 
-logger "=== Get latest Graftorio release and extract"
-logger "--- add Graftorio mod to Factorio server"
+logger "=== Get latest Graftorio release and extract to set up local database against"
 mkdir --parents --verbose /opt/factorio/mods
 curl --silent https://api.github.com/repos/afex/graftorio/releases/latest \
     | jq --raw-output ".assets[].browser_download_url" \
     | wget --input-file=- --output-document=/opt/factorio/mods/graftorio_0.0.7.zip
-logger "--- extract Graftorio release to set up local database against"
 mkdir --parents --verbose /opt/graftorio/data/grafana
 mkdir --parents --verbose /opt/graftorio/data/prometheus
 bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio_0.0.7.zip --directory /opt/graftorio
 
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 cd /opt/graftorio
-logger "--- snap install yq"
 snap install yq
-logger "--- set volume for exporter"
 /snap/bin/yq write - services.exporter.volumes[0] "/opt/factorio/script-output/graftorio:/textfiles" \
     < docker-compose.yml \
     > docker-compose.1.yml
-logger "--- set restart=always for all 3x services"
 /snap/bin/yq write - services.*.restart always \
     < docker-compose.1.yml \
     > docker-compose.2.yml
-logger "--- set user=nobody for all prometheus and grafana services"
 /snap/bin/yq write - services.prometheus.user nobody \
     < docker-compose.2.yml \
     > docker-compose.3.yml
 /snap/bin/yq write - services.grafana.user nobody \
     < docker-compose.3.yml \
     > docker-compose.4.yml
-logger "--- set absolute paths for all volumes"
 /snap/bin/yq write - services.prometheus.volumes[0] "/opt/graftorio/data/prometheus:/prometheus" \
     < docker-compose.4.yml \
     > docker-compose.5.yml
@@ -96,10 +85,8 @@ mv -fv docker-compose.7.yml docker-compose.yml
 logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
 
-logger "=== Run up Docker, Docker Compose, and the Factorio server"
-logger "--- enable the Docker service so that it starts whenever the system (re)boots"
+logger "=== Enable Docker auto-restart, and run everything up with Docker Compose"
 systemctl enable docker
-logger "--- set 'restart=always' to have the container itself also come back up after a reboot"
 docker run \
     --detach \
     --name factorio \
