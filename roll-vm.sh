@@ -13,11 +13,10 @@ factorio::vm::delete_all
 new_instance=$( gcloud compute instances create "factorio-$( gdate '+%Y%m%d-%H%M%S' )" \
     --configuration=factorio \
     --format=json \
-    --source-instance-template=factorio-container-11 )
+    --source-instance-template=factorio-container-12 )
 
-new_instance_name=$( echo "$new_instance" | jq --raw-output '.[].name' )
+new_instance_id=$( echo "$new_instance" | jq --raw-output '.[].id' )
 
-echo "new instance name: '$new_instance_name'"
+echo "new instance ID: '$new_instance_id'"
 
-gcloud --configuration=factorio compute instances tail-serial-port-output "$new_instance_name" \
-| grep startup-script
+open "https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio&resource=gce_instance/instance_id/$new_instance_id"
