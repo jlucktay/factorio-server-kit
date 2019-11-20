@@ -12,6 +12,7 @@ if test -f "$done_file" ; then
 fi
 
 # Log setup and function
+cd /tmp
 curl --remote-name --show-error --silent https://dl.google.com/cloudagents/install-logging-agent.sh
 ./install-logging-agent.sh
 
