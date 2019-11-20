@@ -19,4 +19,4 @@ new_instance_id=$( echo "$new_instance" | jq --raw-output '.[].id' )
 
 echo "new instance ID: '$new_instance_id'"
 
-open "https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio&resource=gce_instance/instance_id/$new_instance_id"
+open "https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio&resource=gce_instance/instance_id/${new_instance_id}&interval=NO_LIMIT"
