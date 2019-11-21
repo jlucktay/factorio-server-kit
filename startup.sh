@@ -4,7 +4,7 @@ IFS=$'\n\t'
 
 # Create a touch file when this script is done (note: 'done' might include exiting prematurely due to an error!)
 done_file="/root/startup-script.done"
-trap 'touch $done_file; logger "DONE"' INT TERM EXIT
+trap 'touch $done_file; logger "TRAP"' INT TERM EXIT
 
 # Test for reruns
 if test -f "$done_file" ; then
@@ -102,6 +102,9 @@ sleep 30s
 
 logger "=== Schedule a cron job to push the saves back to Storage"
 echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves >> /opt/factorio/cron.log 2>&1" | tee --append /etc/crontab
+
+logger "=== startup-script done"
+touch "$done_file"
 
 logger "=== Let the upgrades from Apt kick in properly"
 reboot
