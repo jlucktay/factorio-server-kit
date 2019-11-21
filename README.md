@@ -31,19 +31,6 @@ The two settings files `map-settings.json` and `map-gen-settings.json` can be cr
 game as outlined
 [here](https://wiki.factorio.com/Command_line_parameters#Creating_the_JSON_files_from_a_map_exchange_string).
 
-### Removed from scripts to save for later
+## Other improvements
 
-#### Configure Factorio service in systemd
-
-``` shell
-cp /opt/factorio-init/factorio.service.example /etc/systemd/system/factorio.service
-systemctl daemon-reload
-systemctl enable factorio
-systemctl status --full factorio >> /root/startup-script.log
-```
-
-#### [cloud-init](https://cloudinit.readthedocs.io/en/latest/topics/examples.html#reboot-poweroff-when-finished)
-
-``` shell
-reboot
-```
+- Bake a [proper image](https://cloud.google.com/compute/docs/images) for the server, rather than bootstrap everything every time

@@ -2,8 +2,8 @@
 set -euxo pipefail
 IFS=$'\n\t'
 
-# Drop a note when this script is done (note: 'done' might include exiting prematurely due to an error!)
-done_file=/root/startup-script.done
+# Create a touch file when this script is done (note: 'done' might include exiting prematurely due to an error!)
+done_file="/root/startup-script.done"
 trap 'touch $done_file; logger "DONE"' INT TERM EXIT
 
 # Test for reruns
