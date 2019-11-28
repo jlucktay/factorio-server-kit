@@ -16,6 +16,10 @@ cd /tmp
 curl --remote-name --show-error --silent https://dl.google.com/cloudagents/install-logging-agent.sh
 bash install-logging-agent.sh
 
+logger "=== Set Docker's log driver to google-fluentd (gcplogs)"
+mkdir --parents --verbose /etc/docker
+echo '{"log-driver":"gcplogs"}' | tee /etc/docker/daemon.json
+
 logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
 
@@ -38,7 +42,8 @@ logger "=== Create the necessary folder structure"
 mkdir --parents --verbose /opt/factorio/config
 mkdir --parents --verbose /opt/factorio/saves
 
-logger "=== Get the configs and saves from Storage"
+logger "=== Get configs and game saves from Storage"
+gsutil -m cp gs://jlucktay-factorio-asia/fluentd/* /etc/google-fluentd/config.d/
 gsutil -m cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
 gsutil -m cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
 
@@ -89,6 +94,7 @@ logger "=== Enable Docker auto-restart, and run everything up with Docker Compos
 systemctl enable docker
 docker run \
     --detach \
+    --log-opt tag="docker.{.ID}}" \
     --name factorio \
     --publish 27015:27015/tcp \
     --publish 34197:34197/udp \
@@ -101,7 +107,7 @@ logger "=== Give the containers/servers some time to warm up"
 sleep 30s
 
 logger "=== Schedule a cron job to push the saves back to Storage"
-echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves >> /opt/factorio/cron.log 2>&1" | tee --append /etc/crontab
+echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves &> /opt/factorio/cron.log" | tee --append /etc/crontab
 
 logger "=== startup-script done"
 touch "$done_file"
