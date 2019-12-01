@@ -18,7 +18,7 @@ bash install-logging-agent.sh
 
 logger "=== Set Docker's log driver to google-fluentd (gcplogs)"
 mkdir --parents --verbose /etc/docker
-echo '{"log-driver":"gcplogs"}' | tee /etc/docker/daemon.json
+echo '{"log-driver":"gcplogs","log-opts":{"gcp-log-cmd": "true"}}' | tee /etc/docker/daemon.json
 
 logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
@@ -94,14 +94,13 @@ logger "=== Enable Docker auto-restart, and run everything up with Docker Compos
 systemctl enable docker
 docker run \
     --detach \
-    --log-opt tag="docker.{.ID}}" \
     --name factorio \
     --publish 27015:27015/tcp \
     --publish 34197:34197/udp \
     --restart=always \
     --volume /opt/factorio:/factorio \
     factoriotools/factorio
-docker-compose --file=/opt/graftorio/docker-compose.yml up -d
+docker-compose --file=/opt/graftorio/docker-compose.yml up --detach
 
 logger "=== Give the containers/servers some time to warm up"
 sleep 30s
