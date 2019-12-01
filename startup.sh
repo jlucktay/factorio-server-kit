@@ -84,8 +84,8 @@ snap install yq
 /snap/bin/yq write - services.grafana.volumes[0] "/opt/graftorio/data/grafana:/var/lib/grafana" \
     < docker-compose.6.yml \
     > docker-compose.7.yml
-rm -fv docker-compose.{1..6}.yml
-mv -fv docker-compose.7.yml docker-compose.yml
+rm --force --verbose docker-compose.{1..6}.yml
+mv --force --verbose docker-compose.7.yml docker-compose.yml
 
 logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
