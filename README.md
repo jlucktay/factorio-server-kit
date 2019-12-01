@@ -6,7 +6,7 @@ Running our own Factorio server.
 
 ### Create VM
 
-See the [new VM script](roll-vm.sh) and related [library](lib/) functions.
+See the [(re)roll VM script](roll-vm.sh) and related [library](lib/) functions.
 
 #### Optional
 
@@ -22,8 +22,8 @@ RCON is still running, but nobody can to connect to it.
 ### Startup script
 
 - ~~set up Fuse to mount GCS bucket~~
-- get Factorio config/server settings from bucket
-- start up Docker container
+- ~~get Factorio config/server settings from bucket~~
+- ~~start up Docker container~~
 
 ### Map (generation) settings
 
