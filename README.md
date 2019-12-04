@@ -38,5 +38,9 @@ game as outlined
 - Add more signals to `trap` call in `startup.sh`?
   - `$ bat /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/signal.h`
 - Wire all of the logs up to Stackdriver [including Docker][1]
+  - Further reading:
+    - [Google Cloud Logging driver](https://docs.docker.com/config/containers/logging/gcplogs/)
+    - [Docker Logging](https://www.fluentd.org/guides/recipes/docker-logging)
+    - [About the Logging agent](https://cloud.google.com/logging/docs/agent/)
 
 [1]: https://cloud.google.com/community/tutorials/docker-gcplogs-driver
