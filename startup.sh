@@ -106,7 +106,7 @@ logger "=== Give the containers/servers some time to warm up"
 sleep 30s
 
 logger "=== Schedule a cron job to push the saves back to Storage"
-echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves &> /opt/factorio/cron.log" | tee --append /etc/crontab
+echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves &>> /opt/factorio/cron.log" | tee --append /etc/crontab
 
 logger "=== startup-script done"
 touch "$done_file"
