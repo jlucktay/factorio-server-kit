@@ -1,21 +1,21 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FACTORIO_ROOT=$( cd "$( dirname "${BASH_SOURCE[0]}" )" &>/dev/null && pwd )
+FACTORIO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
-    # shellcheck disable=SC1090
-    source "$lib"
+  # shellcheck disable=SC1090
+  source "$lib"
 done
 
 factorio::vm::delete_all
 
-new_instance=$( gcloud compute instances create "factorio-$( gdate '+%Y%m%d-%H%M%S' )" \
-    --configuration=factorio \
-    --format=json \
-    --source-instance-template=factorio-container-20 )
+new_instance=$(gcloud compute instances create "factorio-$(gdate '+%Y%m%d-%H%M%S')" \
+  --configuration=factorio \
+  --format=json \
+  --source-instance-template=factorio-container-21)
 
-new_instance_id=$( echo "$new_instance" | jq --raw-output '.[].id' )
+new_instance_id=$(echo "$new_instance" | jq --raw-output '.[].id')
 
 echo "${script_name:-}: new instance ID: '$new_instance_id'"
 

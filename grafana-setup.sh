@@ -1,23 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FACTORIO_ROOT=$( cd "$( dirname "${BASH_SOURCE[0]}" )" &>/dev/null && pwd )
+FACTORIO_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
-    # shellcheck disable=SC1090
-    source "$lib"
+  # shellcheck disable=SC1090
+  source "$lib"
 done
 
 factorio::password
 
-factorio_instance=$( gcloud compute instances list \
-    --configuration=factorio \
-    --format=json )
+factorio_instance=$(gcloud compute instances list \
+  --configuration=factorio \
+  --format=json)
 
-factorio_instance_name=$( echo "$factorio_instance" | jq --raw-output '.[].name' )
+factorio_instance_name=$(echo "$factorio_instance" | jq --raw-output '.[].name')
 # echo "factorio_instance_name: '$factorio_instance_name'"
 
-factorio_instance_ip=$( echo "$factorio_instance" | jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP' )
+factorio_instance_ip=$(echo "$factorio_instance" | jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP')
 # echo "factorio_instance_ip: '$factorio_instance_ip'"
 
 # curl \
@@ -70,8 +70,8 @@ factorio_instance_ip=$( echo "$factorio_instance" | jq --raw-output '.[].network
 #     | jq
 
 curl \
-    --header "Accept: application/json" \
-    --request GET \
-    --silent \
-    "http://admin:${password}@${factorio_instance_ip}:3000/api/dashboards/uid/Yv5ie31Wk" \
-    | jq
+  --header "Accept: application/json" \
+  --request GET \
+  --silent \
+  "http://admin:${password}@${factorio_instance_ip}:3000/api/dashboards/uid/Yv5ie31Wk" \
+  | jq

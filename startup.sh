@@ -7,8 +7,8 @@ done_file="/root/startup-script.done"
 trap 'touch $done_file; logger "TRAP"' INT TERM EXIT
 
 # Test for reruns
-if test -f "$done_file" ; then
-    exit 0
+if test -f "$done_file"; then
+  exit 0
 fi
 
 # Log setup and function
@@ -26,11 +26,11 @@ sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place
 logger "=== Patch up the system and install Docker, GCP SDK, JQ, etc etc"
 apt update
 apt install --assume-yes --no-install-recommends \
-    docker-compose \
-    docker.io \
-    google-cloud-sdk \
-    jq \
-    libarchive-tools
+  docker-compose \
+  docker.io \
+  google-cloud-sdk \
+  jq \
+  libarchive-tools
 apt upgrade --assume-yes --no-install-recommends
 apt autoremove --assume-yes
 
@@ -53,8 +53,8 @@ chown --changes --recursive factorio:factorio /opt/factorio
 logger "=== Get latest Graftorio release and extract to set up local database against"
 mkdir --parents --verbose /opt/factorio/mods
 curl --silent https://api.github.com/repos/afex/graftorio/releases/latest \
-    | jq --raw-output ".assets[].browser_download_url" \
-    | wget --input-file=- --output-document=/opt/factorio/mods/graftorio_0.0.7.zip
+  | jq --raw-output ".assets[].browser_download_url" \
+  | wget --input-file=- --output-document=/opt/factorio/mods/graftorio_0.0.7.zip
 mkdir --parents --verbose /opt/graftorio/data/grafana
 mkdir --parents --verbose /opt/graftorio/data/prometheus
 bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio_0.0.7.zip --directory /opt/graftorio
@@ -63,27 +63,27 @@ logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 cd /opt/graftorio
 snap install yq
 /snap/bin/yq write - services.exporter.volumes[0] "/opt/factorio/script-output/graftorio:/textfiles" \
-    < docker-compose.yml \
-    > docker-compose.1.yml
+  < docker-compose.yml \
+  > docker-compose.1.yml
 /snap/bin/yq write - services.*.restart always \
-    < docker-compose.1.yml \
-    > docker-compose.2.yml
+  < docker-compose.1.yml \
+  > docker-compose.2.yml
 /snap/bin/yq write - services.prometheus.user nobody \
-    < docker-compose.2.yml \
-    > docker-compose.3.yml
+  < docker-compose.2.yml \
+  > docker-compose.3.yml
 /snap/bin/yq write - services.grafana.user nobody \
-    < docker-compose.3.yml \
-    > docker-compose.4.yml
+  < docker-compose.3.yml \
+  > docker-compose.4.yml
 /snap/bin/yq write - services.prometheus.volumes[0] "/opt/graftorio/data/prometheus:/prometheus" \
-    < docker-compose.4.yml \
-    > docker-compose.5.yml
+  < docker-compose.4.yml \
+  > docker-compose.5.yml
 /snap/bin/yq write - services.prometheus.volumes[1] \
-    "/opt/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml" \
-    < docker-compose.5.yml \
-    > docker-compose.6.yml
+  "/opt/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml" \
+  < docker-compose.5.yml \
+  > docker-compose.6.yml
 /snap/bin/yq write - services.grafana.volumes[0] "/opt/graftorio/data/grafana:/var/lib/grafana" \
-    < docker-compose.6.yml \
-    > docker-compose.7.yml
+  < docker-compose.6.yml \
+  > docker-compose.7.yml
 rm --force --verbose docker-compose.{1..6}.yml
 mv --force --verbose docker-compose.7.yml docker-compose.yml
 
@@ -93,13 +93,13 @@ chown --changes --recursive nobody /opt/graftorio
 logger "=== Enable Docker auto-restart, and run everything up with Docker Compose"
 systemctl enable docker
 docker run \
-    --detach \
-    --name factorio \
-    --publish 27015:27015/tcp \
-    --publish 34197:34197/udp \
-    --restart=always \
-    --volume /opt/factorio:/factorio \
-    factoriotools/factorio
+  --detach \
+  --name factorio \
+  --publish 27015:27015/tcp \
+  --publish 34197:34197/udp \
+  --restart=always \
+  --volume /opt/factorio:/factorio \
+  factoriotools/factorio
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d
 
 logger "=== Give the containers/servers some time to warm up"
