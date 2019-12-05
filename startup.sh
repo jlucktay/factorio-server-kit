@@ -20,6 +20,9 @@ logger "=== Set Docker's log driver to google-fluentd (gcplogs)"
 mkdir --parents --verbose /etc/docker
 echo '{"log-driver":"gcplogs","log-opts":{"env":"VERSION","gcp-log-cmd":"true","labels":"maintainer"}}' | tee /etc/docker/daemon.json
 
+logger "=== Set Bash as shell in crontab"
+sed --expression "s,^SHELL=/bin/sh$,SHELL=/bin/bash,g" --in-place /etc/crontab
+
 logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
 
@@ -43,7 +46,7 @@ mkdir --parents --verbose /opt/factorio/config
 mkdir --parents --verbose /opt/factorio/saves
 
 logger "=== Get configs and game saves from Storage"
-gsutil -m cp gs://jlucktay-factorio-asia/fluentd/* /etc/google-fluentd/config.d/
+# gsutil -m cp gs://jlucktay-factorio-asia/fluentd/* /etc/google-fluentd/config.d/ # currently empty
 gsutil -m cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
 gsutil -m cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
 
@@ -106,9 +109,9 @@ logger "=== Give the containers/servers some time to warm up"
 sleep 30s
 
 logger "=== Schedule a cron job to push the saves back to Storage"
-echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves &>> /opt/factorio/cron.log" | tee --append /etc/crontab
+echo "*/5 * * * * root gsutil -m -q rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves |& logger" >> /etc/crontab
 
-logger "=== startup-script done"
+logger "=== 'startup-script' done"
 touch "$done_file"
 
 logger "=== Let the upgrades from Apt kick in properly"
