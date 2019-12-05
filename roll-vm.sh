@@ -17,6 +17,8 @@ new_instance=$(gcloud compute instances create "factorio-$(gdate '+%Y%m%d-%H%M%S
 
 new_instance_id=$(echo "$new_instance" | jq --raw-output '.[].id')
 
-echo "${script_name:-}: new instance ID: '$new_instance_id'"
+logs_link="https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio&resource=gce_instance/instance_id/${new_instance_id}&interval=NO_LIMIT"
 
-open "https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio&resource=gce_instance/instance_id/${new_instance_id}&interval=NO_LIMIT"
+echo "Opening the log viewer link: '$logs_link'"
+
+open "$logs_link"
