@@ -2,15 +2,20 @@
 set -euo pipefail
 
 function factorio::vm::delete_all() {
-    mapfile -t old_instances < <( gcloud compute instances list \
-        --configuration=factorio \
-        --format=json \
-        | jq --raw-output '.[].name' )
+  old_instances=$(gcloud compute instances list \
+    --configuration=factorio \
+    --format=json)
 
-    for old_instance in "${old_instances[@]}"; do
-        echo "${script_name:-}: old instance: $old_instance"
-        gcloud compute instances delete "$old_instance" \
-            --configuration=factorio \
-            --format=json
-    done
+  for ((i = 0; i < $(echo "$old_instances" | jq length); i += 1)); do
+    name=$(echo "$old_instances" | jq --raw-output ".[$i].name")
+
+    raw_zone=$(echo "$old_instances" | jq --raw-output ".[$i].zone")
+    zone=$(basename "$raw_zone")
+
+    gcloud compute instances delete \
+      --configuration=factorio \
+      --format=json \
+      --zone="$zone" \
+      "$name"
+  done
 }
