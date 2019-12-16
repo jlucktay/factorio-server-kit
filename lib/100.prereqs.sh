@@ -11,7 +11,7 @@ test -n "${FACTORIO_ROOT:-}" || {
 }
 
 # Tool - JQ
-hash jq 2>/dev/null || {
+hash jq 2> /dev/null || {
   echo >&2 "$script_name requires 'jq' but it's not installed: https://github.com/stedolan/jq/wiki/Installation"
   exit 1
 }
