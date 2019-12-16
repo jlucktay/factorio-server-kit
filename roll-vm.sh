@@ -10,7 +10,7 @@ done
 
 factorio::vm::delete_all
 
-new_instance=$(gcloud compute instances create "factorio-$(gdate '+%Y%m%d-%H%M%S')" \
+new_instance=$(gcloud compute instances create "factorio-$(TZ=UTC gdate '+%Y%m%d-%H%M%S')" \
   --configuration=factorio \
   --format=json \
   --source-instance-template=factorio-container-22)
