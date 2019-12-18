@@ -83,6 +83,7 @@ gcloud_args=(
   instances
   create
   "--format=json"
+  "--machine-type=n1-standard-1"
   "--project=jlucktay-factorio"
   "--source-instance-template=factorio-container-23"
   "--subnet=default"
