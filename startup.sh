@@ -106,6 +106,16 @@ docker run \
   factoriotools/factorio
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d
 
+logger "=== Manage Docker as non-root users"
+while IFS= read -r line; do
+  user_id=$(cut --delimiter=":" --fields=3 <<< "$line")
+
+  if ((user_id > 1000)) && ((user_id < 65534)); then
+    user_name=$(cut --delimiter=":" --fields=1 <<< "$line")
+    usermod --append --groups docker "$user_name"
+  fi
+done < /etc/passwd
+
 logger "=== Give the containers/servers some time to warm up"
 sleep 30s
 
