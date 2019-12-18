@@ -65,7 +65,6 @@ for i in "$@"; do
   *)
     location=${1:2}
     if test "${locations[$location]+is_set}"; then
-      zone=${locations[$location]}
       shift
     else
       usage
@@ -87,7 +86,7 @@ gcloud_args=(
   "--project=jlucktay-factorio"
   "--source-instance-template=factorio-container-23"
   "--subnet=default"
-  "--zone=$zone"
+  "--zone=${locations[$location]}"
   "factorio-$location-$(TZ=UTC gdate '+%Y%m%d-%H%M%S')"
 )
 
