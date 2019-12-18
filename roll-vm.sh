@@ -85,7 +85,7 @@ gcloud_args=(
   create
   "--format=json"
   "--project=jlucktay-factorio"
-  "--source-instance-template=factorio-container-22"
+  "--source-instance-template=factorio-container-23"
   "--subnet=default"
   "--zone=$zone"
   "factorio-$location-$(TZ=UTC gdate '+%Y%m%d-%H%M%S')"
