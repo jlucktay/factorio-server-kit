@@ -48,6 +48,7 @@ mkdir --parents --verbose /opt/factorio/saves
 logger "=== Get configs and game saves from Storage"
 # gsutil -m cp gs://jlucktay-factorio-asia/fluentd/* /etc/google-fluentd/config.d/ # currently empty
 gsutil -m cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
+gsutil -m cp gs://jlucktay-factorio-asia/server-adminlist.json /opt/factorio/config/
 gsutil -m cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
 
 logger "=== Fix up Factorio permissions"
