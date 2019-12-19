@@ -11,10 +11,8 @@ function factorio::vm::delete_all() {
 
   for ((i = 0; i < $(echo "$old_instances" | jq length); i += 1)); do
     local name, raw_zone, zone
-    name=$(echo "$old_instances" | jq --raw-output ".[$i].name")
-
-    raw_zone=$(echo "$old_instances" | jq --raw-output ".[$i].zone")
-    zone=$(basename "$raw_zone")
+    name=$(jq --raw-output ".[$i].name" <<< "$old_instances")
+    zone=$(basename "$(jq --raw-output ".[$i].zone" <<< "$old_instances")")
 
     gcloud compute instances delete \
       --format=json \
