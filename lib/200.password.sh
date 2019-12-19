@@ -7,6 +7,7 @@ function factorio::password() {
     exit 1
   }
 
+  local password
   password=$(jq --raw-output '.password' "$FACTORIO_ROOT/lib/password.json")
 
   test "$password" != "null" || {
