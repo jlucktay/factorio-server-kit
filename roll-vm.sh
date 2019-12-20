@@ -92,12 +92,12 @@ gcloud_args=(
 )
 
 ### Show arguments and execute with them
-echo "Running gcloud with following arguments:"
+echo "Running 'gcloud' with following arguments:"
 echo "${gcloud_args[@]}"
 
 new_instance=$(gcloud "${gcloud_args[@]}")
-new_instance_id=$(echo "$new_instance" | jq --raw-output '.[].id')
-new_instance_ip=$(echo "$new_instance" | jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP')
+new_instance_id=$(jq --raw-output '.[].id' <<< "$new_instance")
+new_instance_ip=$(jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP' <<< "$new_instance")
 
 echo "Server IP: $new_instance_ip"
 

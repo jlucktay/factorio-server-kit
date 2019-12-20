@@ -9,7 +9,7 @@ function factorio::vm::delete_all() {
       --project=jlucktay-factorio
   )
 
-  for ((i = 0; i < $(echo "$old_instances" | jq length); i += 1)); do
+  for ((i = 0; i < $(jq length <<< "$old_instances"); i += 1)); do
     local name zone
     name=$(jq --raw-output ".[$i].name" <<< "$old_instances")
     zone=$(basename "$(jq --raw-output ".[$i].zone" <<< "$old_instances")")

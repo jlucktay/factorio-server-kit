@@ -14,10 +14,10 @@ factorio_instance=$(gcloud compute instances list \
   --configuration=factorio \
   --format=json)
 
-factorio_instance_name=$(echo "$factorio_instance" | jq --raw-output '.[].name')
+factorio_instance_name=$(jq --raw-output '.[].name' <<< "$factorio_instance")
 # echo "factorio_instance_name: '$factorio_instance_name'"
 
-factorio_instance_ip=$(echo "$factorio_instance" | jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP')
+factorio_instance_ip=$(jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP' <<< "$factorio_instance")
 # echo "factorio_instance_ip: '$factorio_instance_ip'"
 
 # curl \
