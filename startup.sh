@@ -120,7 +120,12 @@ logger "=== Give the containers/servers some time to warm up"
 sleep 30s
 
 logger "=== Schedule a cron job to push the saves back to Storage"
-echo "*/5 * * * * root gsutil -m rsync -P /opt/factorio/saves gs://jlucktay-factorio-asia/saves |& logger" >> /etc/crontab
+cron_job="*/5 * * * * root"                       # Schedule, and user to run as
+cron_job+=' gsutil -m rsync -P -x ".*\.tmp\.zip"' # -m parallel, -P preserve timestamps, -x exclude pattern
+cron_job+=' /opt/factorio/saves'                  # Source path
+cron_job+=' gs://jlucktay-factorio-asia/saves'    # Destination path
+cron_job+=' |& logger'                            # Send everything to Stackdriver
+echo "$cron_job" >> /etc/crontab
 
 logger "=== 'startup-script' done"
 touch "$done_file"
