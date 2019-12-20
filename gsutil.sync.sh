@@ -9,10 +9,8 @@ fi
 shopt -s nullglob globstar
 
 mkdir -pv gs/jlucktay-factorio-asia/
-mkdir -pv gs/jlucktay-factorio-us-west2/
 
 gsutil -m rsync -r -u \
   -x "saves/_autosave.\.zip$|saves/_autosave.\.tmp\.zip$" \
   gs://jlucktay-factorio-asia/ \
   ./gs/jlucktay-factorio-asia/
-gsutil -m rsync -r -u gs://jlucktay-factorio-us-west2/ ./gs/jlucktay-factorio-us-west2/
