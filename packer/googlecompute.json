@@ -27,5 +27,14 @@
       "script": "{{ template_dir }}/provisioner.sh",
       "type": "shell"
     }
+  ],
+  "post-processors": [
+    {
+      "environment_vars": [
+        "IMAGE_NAME={{ user `image_name` }}"
+      ],
+      "script": "{{ template_dir }}/create-instance-template.sh",
+      "type": "shell-local"
+    }
   ]
 }
