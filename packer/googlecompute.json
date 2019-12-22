@@ -8,18 +8,12 @@
       "image_family": "packtorio",
       "image_name": "{{ user `image_name` }}",
       "machine_type": "n2-standard-2",
-      "metadata_files": {
-        "shutdown-script": "{{ template_dir }}/shutdown.sh",
-        "startup-script": "{{ template_dir }}/startup.sh"
-      },
       "preemptible": true,
       "project_id": "jlucktay-factorio",
       "service_account_email": "factorio-server@jlucktay-factorio.iam.gserviceaccount.com",
       "source_image": "ubuntu-1804-bionic-v20191113",
       "ssh_username": "packer",
       "tags": [
-        "factorio",
-        "grafana",
         "ssh"
       ],
       "type": "googlecompute",
