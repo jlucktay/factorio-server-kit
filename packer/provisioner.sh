@@ -2,15 +2,6 @@
 set -euxo pipefail
 IFS=$'\n\t'
 
-# Create a touch file when this script is done (note: 'done' might include exiting prematurely due to an error!)
-done_file="/root/startup-script.done"
-trap 'touch $done_file; logger "TRAP"' INT TERM EXIT
-
-# Test for reruns
-if test -f "$done_file"; then
-  exit 0
-fi
-
 # Log setup and function
 cd /tmp
 curl --remote-name --show-error --silent https://dl.google.com/cloudagents/install-logging-agent.sh
@@ -18,7 +9,7 @@ bash install-logging-agent.sh
 
 logger "=== Set Docker's log driver to google-fluentd (gcplogs)"
 mkdir --parents --verbose /etc/docker
-echo '{"log-driver":"gcplogs","log-opts":{"env":"VERSION","gcp-log-cmd":"true","labels":"maintainer"}}' | tee /etc/docker/daemon.json
+# echo '{"log-driver":"gcplogs","log-opts":{"env":"VERSION","gcp-log-cmd":"true","labels":"maintainer"}}' | tee /etc/docker/daemon.json # TODO: fix up permissions error
 
 logger "=== Set Bash as shell in crontab"
 sed --expression "s,^SHELL=/bin/sh$,SHELL=/bin/bash,g" --in-place /etc/crontab
@@ -44,12 +35,6 @@ useradd --gid 845 --uid 845 factorio
 logger "=== Create the necessary folder structure"
 mkdir --parents --verbose /opt/factorio/config
 mkdir --parents --verbose /opt/factorio/saves
-
-logger "=== Get configs and game saves from Storage"
-# gsutil -m cp gs://jlucktay-factorio-asia/fluentd/* /etc/google-fluentd/config.d/ # currently empty
-gsutil -m cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
-gsutil -m cp gs://jlucktay-factorio-asia/server-*list.json /opt/factorio/config/
-gsutil -m cp -P gs://jlucktay-factorio-asia/saves/* /opt/factorio/saves/
 
 logger "=== Fix up Factorio permissions"
 chown --changes --recursive factorio:factorio /opt/factorio
@@ -115,20 +100,3 @@ while IFS= read -r line; do
     usermod --append --groups docker "$user_name"
   fi
 done < /etc/passwd
-
-logger "=== Give the containers/servers some time to warm up"
-sleep 30s
-
-logger "=== Schedule a cron job to push the saves back to Storage"
-cron_job="*/5 * * * * root"                       # Schedule, and user to run as
-cron_job+=' gsutil -m rsync -P -x ".*\.tmp\.zip"' # -m parallel, -P preserve timestamps, -x exclude pattern
-cron_job+=' /opt/factorio/saves'                  # Source path
-cron_job+=' gs://jlucktay-factorio-asia/saves'    # Destination path
-cron_job+=' |& logger'                            # Send everything to Stackdriver
-echo "$cron_job" >> /etc/crontab
-
-logger "=== 'startup-script' done"
-touch "$done_file"
-
-logger "=== Let the upgrades from Apt kick in properly"
-reboot
