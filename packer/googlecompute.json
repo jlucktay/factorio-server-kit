@@ -1,9 +1,12 @@
 {
+  "variables": {
+    "image_name": "packer-{{ isotime \"20060102-150405\" }}"
+  },
   "builders": [
     {
       "image_description": "https://github.com/jlucktay/factorio-workbench - baked with Packer {{ packer_version }}",
       "image_family": "packtorio",
-      "image_name": "packer-{{isotime \"20060102-150405\" | clean_resource_name}}",
+      "image_name": "{{ user `image_name` }}",
       "machine_type": "n2-standard-2",
       "metadata_files": {
         "shutdown-script": "{{ template_dir }}/shutdown.sh",
