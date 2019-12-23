@@ -21,3 +21,6 @@ cron_job+=' |& logger'                            # Send everything to Stackdriv
 if ! grep -F "$cron_job" /etc/crontab &> /dev/null; then
   echo "$cron_job" >> /etc/crontab
 fi
+
+logger "=== Start up the Factorio server"
+docker start factorio

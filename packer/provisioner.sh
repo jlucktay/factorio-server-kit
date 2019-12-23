@@ -86,10 +86,16 @@ docker run \
   --name factorio \
   --publish 27015:27015/tcp \
   --publish 34197:34197/udp \
-  --restart=always \
   --volume /opt/factorio:/factorio \
   factoriotools/factorio
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d
+
+logger "=== Give the containers a moment to warm up"
+sleep 10s
+
+logger "=== Tidy up and get ready to shut down"
+docker stop factorio
+rm --force --verbose /opt/factorio/saves/*.zip
 
 logger "=== Manage Docker as non-root users"
 while IFS= read -r line; do

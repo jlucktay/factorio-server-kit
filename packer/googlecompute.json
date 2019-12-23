@@ -23,7 +23,6 @@
   "provisioners": [
     {
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
-      "pause_after": "30s",
       "script": "{{ template_dir }}/provisioner.sh",
       "type": "shell"
     }
