@@ -82,7 +82,7 @@ gcloud_args=(
   compute
   instance-templates
   list
-  "--filter=name:packtorio-*"
+  "--filter=name:packer-*"
   "--format=value(name)"
   "--limit=1"
   "--project=jlucktay-factorio"
