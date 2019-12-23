@@ -29,7 +29,7 @@ gcloud_args=(
   "--scopes=https://www.googleapis.com/auth/cloud-platform"
   "--service-account=factorio-server@jlucktay-factorio.iam.gserviceaccount.com"
   "--tags=factorio,grafana,ssh"
-  "packtorio-$(TZ=UTC gdate '+%Y%m%d-%H%M%S')"
+  "$IMAGE_NAME"
 )
 
 ### Show arguments and execute with them
