@@ -77,27 +77,47 @@ done
 # Delete any old servers that may already be deployed within the project
 factorio::vm::delete_all
 
-### Build arguments list for gcloud
+# Look up latest instance template
+gcloud_args=(
+  compute
+  instance-templates
+  list
+  "--filter=name:packtorio-*"
+  "--format=value(name)"
+  "--limit=1"
+  "--project=jlucktay-factorio"
+  "--sort-by=~creationTimestamp"
+)
+
+echo "Running 'gcloud' with following arguments:"
+echo "${gcloud_args[@]}"
+
+instance_template=$(gcloud "${gcloud_args[@]}")
+
+if test -z "$instance_template"; then
+  echo "$script_name: no instance templates named 'packtorio-*' were found"
+  exit 1
+fi
+
+# Create instance from template
 gcloud_args=(
   compute
   instances
   create
   "--format=json"
-  "--machine-type=n2-standard-2"
   "--project=jlucktay-factorio"
-  "--source-instance-template=factorio-container-23"
+  "--source-instance-template=$instance_template"
   "--subnet=default"
   "--zone=${locations[$location]}"
   "factorio-$location-$(TZ=UTC gdate '+%Y%m%d-%H%M%S')"
 )
 
-### Show arguments and execute with them
 echo "Running 'gcloud' with following arguments:"
 echo "${gcloud_args[@]}"
 
 new_instance=$(gcloud "${gcloud_args[@]}")
-new_instance_id=$(jq --raw-output '.[].id' <<< "$new_instance")
-new_instance_ip=$(jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP' <<< "$new_instance")
+new_instance_id=$(jq --raw-output '.[0].id' <<< "$new_instance")
+new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].natIP' <<< "$new_instance")
 
 echo "Server IP: $new_instance_ip"
 
