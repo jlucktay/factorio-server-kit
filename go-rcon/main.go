@@ -11,23 +11,23 @@ import (
 func main() {
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
-		log.Fatal(errRF)
+		log.Fatalf("error reading password file: %v", errRF)
 	}
 
 	r, errDial := rcon.Dial("127.0.0.1:27015")
 	if errDial != nil {
-		log.Fatal(errDial)
+		log.Fatalf("error dialing: %v", errDial)
 	}
 	defer r.Close()
 
 	errAuth := r.Authenticate(string(pwBytes))
 	if errAuth != nil {
-		log.Fatal(errAuth)
+		log.Fatalf("error authenticating: %v", errAuth)
 	}
 
 	players, errCP := r.CmdPlayers()
 	if errCP != nil {
-		log.Fatal(errCP)
+		log.Fatalf("error fetching player count: %v", errCP)
 	}
 
 	fmt.Printf("Players: '%+v'\n", players)
