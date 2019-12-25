@@ -75,6 +75,4 @@ func main() {
 
 		time.Sleep(time.Minute * shutdownMinutes)
 	}
-
-	fmt.Printf("Players: '%+v'\n", players)
 }
