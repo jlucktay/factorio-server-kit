@@ -31,6 +31,7 @@ function usage() {
 
   Optional arguments:
     -h, --help            show this help message and exit
+    -l, --logs            open the Stackdriver Logging page after creating the server
 
   Server location:
 HEREDOC
@@ -54,12 +55,19 @@ HEREDOC
 HEREDOC
 }
 
+# Other argument defaults
+open_logs=0
+
 ### Parse given arguments
 for i in "$@"; do
   case $i in
   -h | --help)
     usage
     exit 0
+    ;;
+  -l | --logs)
+    open_logs=1
+    shift
     ;;
   *)
     location=${1:2}
@@ -120,8 +128,10 @@ new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].na
 
 echo "Server IP: $new_instance_ip"
 
-logs_link="https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio"
-logs_link+="&resource=gce_instance/instance_id/${new_instance_id}"
+if ((open_logs == 1)); then
+  logs_link="https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio"
+  logs_link+="&resource=gce_instance/instance_id/${new_instance_id}"
 
-echo "Opening the log viewer link: '$logs_link'"
-open "$logs_link"
+  echo "Opening the log viewer link: '$logs_link'"
+  open "$logs_link"
+fi
