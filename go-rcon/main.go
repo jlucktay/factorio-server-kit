@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/rconpw")
+	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
 		log.Fatal(errRF)
 	}
