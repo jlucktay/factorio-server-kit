@@ -4,7 +4,6 @@ shopt -s nullglob globstar
 IFS=$'\n\t'
 
 FACTORIO_ROOT=$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)/..
-export FACTORIO_ROOT
 
 for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   # shellcheck disable=SC1090
