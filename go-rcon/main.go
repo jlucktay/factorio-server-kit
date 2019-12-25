@@ -5,11 +5,15 @@ import (
 	"io/ioutil"
 	"log"
 	"strings"
+	"time"
 
 	rcon "github.com/gtaylor/factorio-rcon"
 )
 
 func main() {
+	// Number of minutes for the server to be empty before shutting down
+	const shutdownMinutes = 15
+
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
 		log.Fatalf("error reading password file: %v", errRF)
@@ -26,9 +30,34 @@ func main() {
 		log.Fatalf("error authenticating: %v", errAuth)
 	}
 
-	players, errCP := r.CmdPlayers()
-	if errCP != nil {
-		log.Fatalf("error fetching player count: %v", errCP)
+	minutesEmpty := 0
+
+	for {
+		players, errCP := r.CmdPlayers()
+		if errCP != nil {
+			log.Fatalf("error fetching player count: %v", errCP)
+		}
+
+		fmt.Printf("Players: '%+v'\n", players)
+
+		anyOnline := false
+
+		for _, player := range players {
+			if player.Online {
+				anyOnline = true
+				break
+			}
+		}
+
+		if !anyOnline {
+			minutesEmpty++
+		}
+
+		if minutesEmpty >= shutdownMinutes {
+			break
+		}
+
+		time.Sleep(time.Minute * shutdownMinutes)
 	}
 
 	fmt.Printf("Players: '%+v'\n", players)
