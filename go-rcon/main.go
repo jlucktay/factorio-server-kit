@@ -1,44 +1,60 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"io/ioutil"
 	"log"
 	"strings"
 	"time"
 
+	"cloud.google.com/go/logging"
 	rcon "github.com/gtaylor/factorio-rcon"
 )
 
 func main() {
+	// GCP project to send Stackdriver logs to
+	const projectID = "jlucktay-factorio"
+	// Sets the name of the log to write to
+	const logName = "goppuku"
 	// Number of minutes for the server to be empty before shutting down
 	const shutdownMinutes = 15
 
+	// Keep track of how long the server has been empty for
+	minutesEmpty := 0
+
+	// Creates a logger client
+	ctx := context.Background()
+
+	client, err := logging.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("Failed to create client: %v", err)
+	}
+	defer client.Close()
+	logger := client.Logger(logName).StandardLogger(logging.Info)
+
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
-		log.Fatalf("error reading password file: %v", errRF)
+		logger.Fatalf("error reading password file: %v", errRF)
 	}
 
 	r, errDial := rcon.Dial("127.0.0.1:27015")
 	if errDial != nil {
-		log.Fatalf("error dialing: %v", errDial)
+		logger.Fatalf("error dialing: %v", errDial)
 	}
 	defer r.Close()
 
 	errAuth := r.Authenticate(strings.TrimSpace(string(pwBytes)))
 	if errAuth != nil {
-		log.Fatalf("error authenticating: %v", errAuth)
+		logger.Fatalf("error authenticating: %v", errAuth)
 	}
-
-	minutesEmpty := 0
 
 	for {
 		players, errCP := r.CmdPlayers()
 		if errCP != nil {
-			log.Fatalf("error fetching player count: %v", errCP)
+			logger.Fatalf("error fetching player count: %v", errCP)
 		}
 
-		fmt.Printf("Players: '%+v'\n", players)
+		logger.Printf("Players: '%+v'\n", players)
 
 		anyOnline := false
 
