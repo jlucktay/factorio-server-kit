@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"strings"
 
 	rcon "github.com/gtaylor/factorio-rcon"
 )
@@ -20,7 +21,7 @@ func main() {
 	}
 	defer r.Close()
 
-	errAuth := r.Authenticate(string(pwBytes))
+	errAuth := r.Authenticate(strings.TrimSpace(string(pwBytes)))
 	if errAuth != nil {
 		log.Fatalf("error authenticating: %v", errAuth)
 	}
