@@ -54,7 +54,7 @@ func main() {
 			logger.Fatalf("error fetching player count: %v", errCP)
 		}
 
-		logger.Printf("Players: '%+v'\n", players)
+		logger.Printf("Players: '%+v'", players)
 
 		anyOnline := false
 
@@ -73,6 +73,6 @@ func main() {
 			break
 		}
 
-		time.Sleep(time.Minute * shutdownMinutes)
+		time.Sleep(time.Minute * 1)
 	}
 }
