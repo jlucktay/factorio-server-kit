@@ -33,6 +33,7 @@ func main() {
 	defer client.Close()
 	logger := client.Logger(logName).StandardLogger(logging.Info)
 
+	// Creates the RCON client and authenticates with the server
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
 		logger.Fatalf("error reading password file: %v", errRF)
@@ -49,6 +50,7 @@ func main() {
 		logger.Fatalf("error authenticating: %v", errAuth)
 	}
 
+	// Main monitoring loop
 	for {
 		time.Sleep(time.Minute)
 
