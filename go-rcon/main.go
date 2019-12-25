@@ -4,6 +4,7 @@ import (
 	"context"
 	"io/ioutil"
 	"log"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -67,12 +68,19 @@ func main() {
 
 		if !anyOnline {
 			minutesEmpty++
+			logger.Printf("Minutes without any online players: %d", minutesEmpty)
 		}
 
 		if minutesEmpty >= shutdownMinutes {
+			logger.Printf("Threshold reached; %d minutes elapsed without any online players", shutdownMinutes)
 			break
 		}
 
-		time.Sleep(time.Minute * 1)
+		time.Sleep(time.Minute)
 	}
+
+	// Server seppuku
+	cmd := exec.Command("shutdown", "--poweroff", "now")
+	logger.Printf("Calling shutdown command: '%+v'", cmd)
+	_ = cmd.Start()
 }
