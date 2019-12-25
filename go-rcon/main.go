@@ -50,6 +50,8 @@ func main() {
 	}
 
 	for {
+		time.Sleep(time.Minute)
+
 		players, errCP := r.CmdPlayers()
 		if errCP != nil {
 			logger.Fatalf("error fetching player count: %v", errCP)
@@ -62,6 +64,8 @@ func main() {
 		for _, player := range players {
 			if player.Online {
 				anyOnline = true
+				minutesEmpty = 0
+
 				break
 			}
 		}
@@ -75,8 +79,6 @@ func main() {
 			logger.Printf("Threshold reached; %d minutes elapsed without any online players", shutdownMinutes)
 			break
 		}
-
-		time.Sleep(time.Minute)
 	}
 
 	// Server seppuku
