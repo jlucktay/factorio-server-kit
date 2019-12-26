@@ -63,13 +63,11 @@ func main() {
 	// Creates the RCON client and authenticates with the server
 	r, errDial := rcon.Dial(rconAddress)
 	for errDial != nil {
-		d := b.Duration()
-
 		logger.Log(logging.Entry{
 			Payload:  fmt.Sprintf("error dialing: %v", errDial),
 			Severity: logging.Error,
 		})
-		time.Sleep(d)
+		time.Sleep(b.Duration())
 
 		r, errDial = rcon.Dial(rconAddress)
 	}
@@ -83,7 +81,8 @@ func main() {
 			Payload:  fmt.Sprintf("error authenticating: %v", errAuth),
 			Severity: logging.Error,
 		})
-		time.Sleep(d)
+		time.Sleep(b.Duration())
+
 		r.Close()
 
 		r, errDial = rcon.Dial(rconAddress)
@@ -92,6 +91,7 @@ func main() {
 				Payload:  fmt.Sprintf("error redialing: %v", errAuth),
 				Severity: logging.Critical,
 			})
+			time.Sleep(b.Duration())
 
 			continue
 		}
