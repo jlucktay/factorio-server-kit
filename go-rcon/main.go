@@ -32,6 +32,7 @@ func main() {
 	}
 	defer client.Close()
 	logger := client.Logger(logName).StandardLogger(logging.Info)
+	logger.Printf("%s online", logName)
 
 	// Creates the RCON client and authenticates with the server
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
