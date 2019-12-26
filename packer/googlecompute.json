@@ -10,7 +10,7 @@
       "machine_type": "n2-standard-2",
       "preemptible": false,
       "project_id": "jlucktay-factorio",
-      "source_image": "ubuntu-1804-bionic-v20191113",
+      "source_image_family": "ubuntu-1804-lts",
       "ssh_username": "packer",
       "tags": [
         "ssh"
