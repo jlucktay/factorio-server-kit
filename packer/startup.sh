@@ -24,3 +24,6 @@ fi
 
 logger "=== Start up the Factorio server"
 docker start factorio
+
+logger "=== Start up our server seppuku binary"
+/root/go/bin/go-rcon &

@@ -109,3 +109,7 @@ done < /etc/passwd
 
 echo 'EXTRA_GROUPS="docker"' | tee --append /etc/adduser.conf
 echo 'ADD_EXTRA_GROUPS=1' | tee --append /etc/adduser.conf
+
+logger "=== Get Go and install our server seppuku binary"
+snap install go --classic
+/snap/bin/go get -u -v github.com/jlucktay/factorio-workbench/go-rcon
