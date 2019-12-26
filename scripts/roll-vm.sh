@@ -116,7 +116,7 @@ gcloud_args=(
   "--source-instance-template=$instance_template"
   "--subnet=default"
   "--zone=${locations[$location]}"
-  "factorio-$location-$(TZ=UTC gdate '+%Y%m%d-%H%M%S')"
+  "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 
 echo "Running 'gcloud' with following arguments:"
