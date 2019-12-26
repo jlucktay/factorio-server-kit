@@ -8,7 +8,7 @@
       "image_family": "packtorio",
       "image_name": "{{ user `image_name` }}",
       "machine_type": "n2-standard-2",
-      "preemptible": true,
+      "preemptible": false,
       "project_id": "jlucktay-factorio",
       "source_image": "ubuntu-1804-bionic-v20191113",
       "ssh_username": "packer",
