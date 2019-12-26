@@ -25,5 +25,6 @@ fi
 logger "=== Start up the Factorio server"
 docker start factorio
 
-logger "=== Start up our server seppuku binary"
+logger "=== Sleep 5 minutes and start up our server seppuku binary"
+sleep 5m
 /home/packer/go/bin/go-rcon &> /tmp/go-rcon.log &
