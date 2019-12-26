@@ -32,22 +32,26 @@ func main() {
 	}
 	defer client.Close()
 	logger := client.Logger(logName).StandardLogger(logging.Info)
+	log.Printf("%s online", logName)
 	logger.Printf("%s online", logName)
 
 	// Creates the RCON client and authenticates with the server
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
+		log.Printf("error reading password file: %v", errRF)
 		logger.Fatalf("error reading password file: %v", errRF)
 	}
 
 	r, errDial := rcon.Dial("127.0.0.1:27015")
 	if errDial != nil {
+		log.Printf("error dialing: %v", errDial)
 		logger.Fatalf("error dialing: %v", errDial)
 	}
 	defer r.Close()
 
 	errAuth := r.Authenticate(strings.TrimSpace(string(pwBytes)))
 	if errAuth != nil {
+		log.Printf("error authenticating: %v", errAuth)
 		logger.Fatalf("error authenticating: %v", errAuth)
 	}
 
@@ -57,6 +61,7 @@ func main() {
 
 		players, errCP := r.CmdPlayers()
 		if errCP != nil {
+			log.Printf("error fetching player count: %v", errCP)
 			logger.Fatalf("error fetching player count: %v", errCP)
 		}
 
