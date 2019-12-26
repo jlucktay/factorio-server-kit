@@ -106,3 +106,6 @@ while IFS= read -r line; do
     usermod --append --groups docker "$user_name"
   fi
 done < /etc/passwd
+
+echo 'EXTRA_GROUPS="docker"' | tee --append /etc/adduser.conf
+echo 'ADD_EXTRA_GROUPS=1' | tee --append /etc/adduser.conf
