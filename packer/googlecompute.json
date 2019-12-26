@@ -16,7 +16,7 @@
         "ssh"
       ],
       "type": "googlecompute",
-      "zone": "europe-west1-c"
+      "zone": "australia-southeast1-b"
     }
   ],
   "provisioners": [
