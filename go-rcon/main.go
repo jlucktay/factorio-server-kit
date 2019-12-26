@@ -22,6 +22,8 @@ func main() {
 	const logName = "goppuku"
 	// Number of minutes for the server to be empty before shutting down
 	const shutdownMinutes = 15
+	// Address of RCON server
+	const rconAddress = "127.0.0.1:27015"
 
 	// Keep track of how long the server has been empty for
 	minutesEmpty := 0
@@ -60,7 +62,7 @@ func main() {
 	}
 
 	// Creates the RCON client and authenticates with the server
-	r, errDial := rcon.Dial("127.0.0.1:27015")
+	r, errDial := rcon.Dial(rconAddress)
 	for errDial != nil {
 		d := b.Duration()
 
@@ -70,7 +72,7 @@ func main() {
 		})
 		time.Sleep(d)
 
-		r, errDial = rcon.Dial("127.0.0.1:27015")
+		r, errDial = rcon.Dial(rconAddress)
 	}
 	b.Reset()
 
@@ -86,6 +88,8 @@ func main() {
 		})
 		time.Sleep(d)
 
+		r.Close()
+		r, _ = rcon.Dial(rconAddress)
 		errAuth = r.Authenticate(rconPassword)
 	}
 	b.Reset()
