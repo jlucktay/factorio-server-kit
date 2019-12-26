@@ -52,6 +52,7 @@ HEREDOC
   cat << HEREDOC
 
   NOTE: if multiple locations are specified, the last one wins
+
 HEREDOC
 }
 

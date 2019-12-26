@@ -17,6 +17,7 @@ function factorio::vm::delete_all() {
     gcloud compute instances delete \
       --format=json \
       --project=jlucktay-factorio \
+      --quiet \
       --zone="$zone" \
       "$name"
   done
