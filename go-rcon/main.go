@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"strings"
 	"time"
@@ -32,16 +34,23 @@ func main() {
 		log.Fatalf("Failed to create client: %v", err)
 	}
 	defer client.Close()
-	logger := client.Logger(logName).StandardLogger(logging.Info)
-	log.Printf("%s online", logName)
-	logger.Printf("%s online", logName)
+	logger := client.Logger(logName)
+	logger.Log(logging.Entry{
+		Payload:  fmt.Sprintf("%s online", logName),
+		Severity: logging.Notice,
+	})
 
 	// Prepare the RCON password
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
-		log.Printf("error reading password file: %v", errRF)
-		logger.Fatalf("error reading password file: %v", errRF)
+		logger.Log(logging.Entry{
+			Payload:  fmt.Sprintf("error reading password file: %v", errRF),
+			Severity: logging.Critical,
+		})
+		logger.Flush()
+		os.Exit(1)
 	}
+
 	rconPassword := strings.TrimSpace(string(pwBytes))
 
 	// Set up exponential backoff
@@ -53,9 +62,12 @@ func main() {
 	// Creates the RCON client and authenticates with the server
 	r, errDial := rcon.Dial("127.0.0.1:27015")
 	for errDial != nil {
-		log.Printf("error dialing: %v", errDial)
-		logger.Fatalf("error dialing: %v", errDial)
 		d := b.Duration()
+
+		logger.Log(logging.Entry{
+			Payload:  fmt.Sprintf("error dialing: %v", errDial),
+			Severity: logging.Error,
+		})
 		time.Sleep(d)
 
 		r, errDial = rcon.Dial("127.0.0.1:27015")
@@ -66,10 +78,14 @@ func main() {
 
 	errAuth := r.Authenticate(rconPassword)
 	for errAuth != nil {
-		log.Printf("error authenticating: %v", errAuth)
-		logger.Fatalf("error authenticating: %v", errAuth)
 		d := b.Duration()
+
+		logger.Log(logging.Entry{
+			Payload:  fmt.Sprintf("error authenticating: %v", errAuth),
+			Severity: logging.Error,
+		})
 		time.Sleep(d)
+
 		errAuth = r.Authenticate(rconPassword)
 	}
 	b.Reset()
@@ -80,11 +96,18 @@ func main() {
 
 		players, errCP := r.CmdPlayers()
 		if errCP != nil {
-			log.Printf("error fetching player count: %v", errCP)
-			logger.Fatalf("error fetching player count: %v", errCP)
+			logger.Log(logging.Entry{
+				Payload:  fmt.Sprintf("error fetching player count: %v", errCP),
+				Severity: logging.Error,
+			})
+
+			continue
 		}
 
-		logger.Printf("Players: '%+v'", players)
+		logger.Log(logging.Entry{
+			Payload:  fmt.Sprintf("Players: '%+v'", players),
+			Severity: logging.Info,
+		})
 
 		anyOnline := false
 
@@ -99,17 +122,30 @@ func main() {
 
 		if !anyOnline {
 			minutesEmpty++
-			logger.Printf("Minutes without any online players: %d", minutesEmpty)
+			logger.Log(logging.Entry{
+				Payload:  fmt.Sprintf("Minutes without any online players: %d", minutesEmpty),
+				Severity: logging.Info,
+			})
 		}
 
 		if minutesEmpty >= shutdownMinutes {
-			logger.Printf("Threshold reached; %d minutes elapsed without any online players", shutdownMinutes)
+			logger.Log(logging.Entry{
+				Payload:  fmt.Sprintf("Threshold reached; %d minutes elapsed without any online players", shutdownMinutes),
+				Severity: logging.Notice,
+			})
+
 			break
 		}
 	}
 
 	// Server seppuku
 	cmd := exec.Command("shutdown", "--poweroff", "now")
-	logger.Printf("Calling shutdown command: '%+v'", cmd)
+
+	logger.Log(logging.Entry{
+		Payload:  fmt.Sprintf("Calling shutdown command: '%+v'", cmd),
+		Severity: logging.Notice,
+	})
+	logger.Flush()
+
 	_ = cmd.Start()
 }
