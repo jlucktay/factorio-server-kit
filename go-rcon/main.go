@@ -27,8 +27,7 @@ func main() {
 
 	// Keep track of how long the server has been empty for
 	minutesEmpty := 0
-
-	// Creates a logger client
+	// Create a logger client
 	ctx := context.Background()
 
 	client, err := logging.NewClient(ctx, projectID)
@@ -79,17 +78,24 @@ func main() {
 	defer r.Close()
 
 	errAuth := r.Authenticate(rconPassword)
-	for errAuth != nil {
-		d := b.Duration()
-
+	for errAuth != nil && errDial != nil {
 		logger.Log(logging.Entry{
 			Payload:  fmt.Sprintf("error authenticating: %v", errAuth),
 			Severity: logging.Error,
 		})
 		time.Sleep(d)
-
 		r.Close()
-		r, _ = rcon.Dial(rconAddress)
+
+		r, errDial = rcon.Dial(rconAddress)
+		if errDial != nil {
+			logger.Log(logging.Entry{
+				Payload:  fmt.Sprintf("error redialing: %v", errAuth),
+				Severity: logging.Critical,
+			})
+
+			continue
+		}
+
 		errAuth = r.Authenticate(rconPassword)
 	}
 	b.Reset()
