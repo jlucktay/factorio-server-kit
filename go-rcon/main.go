@@ -10,6 +10,7 @@ import (
 
 	"cloud.google.com/go/logging"
 	rcon "github.com/gtaylor/factorio-rcon"
+	"github.com/jpillora/backoff"
 )
 
 func main() {
@@ -35,25 +36,43 @@ func main() {
 	log.Printf("%s online", logName)
 	logger.Printf("%s online", logName)
 
-	// Creates the RCON client and authenticates with the server
+	// Prepare the RCON password
 	pwBytes, errRF := ioutil.ReadFile("/opt/factorio/config/rconpw")
 	if errRF != nil {
 		log.Printf("error reading password file: %v", errRF)
 		logger.Fatalf("error reading password file: %v", errRF)
 	}
+	rconPassword := strings.TrimSpace(string(pwBytes))
 
+	// Set up exponential backoff
+	b := &backoff.Backoff{
+		Max:    10 * time.Minute,
+		Jitter: true,
+	}
+
+	// Creates the RCON client and authenticates with the server
 	r, errDial := rcon.Dial("127.0.0.1:27015")
-	if errDial != nil {
+	for errDial != nil {
 		log.Printf("error dialing: %v", errDial)
 		logger.Fatalf("error dialing: %v", errDial)
+		d := b.Duration()
+		time.Sleep(d)
+
+		r, errDial = rcon.Dial("127.0.0.1:27015")
 	}
+	b.Reset()
+
 	defer r.Close()
 
-	errAuth := r.Authenticate(strings.TrimSpace(string(pwBytes)))
-	if errAuth != nil {
+	errAuth := r.Authenticate(rconPassword)
+	for errAuth != nil {
 		log.Printf("error authenticating: %v", errAuth)
 		logger.Fatalf("error authenticating: %v", errAuth)
+		d := b.Duration()
+		time.Sleep(d)
+		errAuth = r.Authenticate(rconPassword)
 	}
+	b.Reset()
 
 	// Main monitoring loop
 	for {
