@@ -27,7 +27,7 @@ zone=${locations[$location]}
 function usage() {
   cat << HEREDOC
 
-  Usage: $script_name [--help] [--<location>]
+  Usage: $script_name [--help | [--logs] --<location>]
 
   Optional arguments:
     -h, --help            show this help message and exit
