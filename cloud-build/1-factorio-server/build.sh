@@ -28,3 +28,30 @@ gcloud --project=jlucktay-factorio \
   --config="$script_dir/cloudbuild.yaml" \
   --substitutions="$(join_by , "${substitutions[@]}")" \
   "$script_dir"
+
+# Clean up old image(s); all but most recent
+gcloud_args=(
+  "--format=json"
+  "--project=jlucktay-factorio"
+  compute
+  images
+  list
+  "--filter=family:$FACTORIO_IMAGE_FAMILY"
+  '--sort-by=~creationTimestamp'
+)
+
+images=$(gcloud "${gcloud_args[@]}")
+
+# 'i' starts from 1 to preserve the first/newest image
+for ((i = 1; i < $(jq length <<< "$images"); i += 1)); do
+  image_name=$(jq --raw-output ".[$i].name" <<< "$images")
+
+  echo "Pruning old image '$image_name'..."
+  gcloud \
+    --project=jlucktay-factorio \
+    compute \
+    images \
+    delete \
+    --quiet \
+    "$image_name"
+done
