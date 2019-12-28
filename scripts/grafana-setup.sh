@@ -78,5 +78,5 @@ curl \
   --header "Accept: application/json" \
   --request GET \
   --silent \
-  "http://admin:${password}@${factorio_instance_ip}:3000/api/dashboards/uid/Yv5ie31Wk" \
+  "http://admin:${FACTORIO_PASSWORD:-}@${factorio_instance_ip}:3000/api/dashboards/uid/Yv5ie31Wk" \
   | jq

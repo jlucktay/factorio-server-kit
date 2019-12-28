@@ -7,10 +7,12 @@ function factorio::password() {
     exit 1
   }
 
-  factorio_password=$(jq --raw-output '.password' "$FACTORIO_ROOT/lib/password.json")
+  FACTORIO_PASSWORD=$(jq --raw-output '.password' "$FACTORIO_ROOT/lib/password.json")
 
-  test "$factorio_password" != "null" || {
+  test "$FACTORIO_PASSWORD" != "null" || {
     echo >&2 "'$FACTORIO_ROOT/lib/password.json' did not contain a value under the 'password' key."
     exit 1
   }
+
+  export FACTORIO_PASSWORD
 }

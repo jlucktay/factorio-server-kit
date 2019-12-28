@@ -9,4 +9,4 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   source "$lib"
 done
 
-factorio::vm::delete_all
+factorio::vm::delete_all_instances

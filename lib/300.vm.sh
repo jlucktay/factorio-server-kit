@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-function factorio::vm::delete_all() {
+function factorio::vm::delete_all_instances() {
   local old_instances i
   old_instances=$(
     gcloud \
