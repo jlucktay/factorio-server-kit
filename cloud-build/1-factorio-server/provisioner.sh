@@ -26,7 +26,7 @@ apt install --assume-yes --no-install-recommends \
   google-cloud-sdk \
   jq \
   libarchive-tools
-apt upgrade --assume-yes --no-install-recommends
+apt upgrade --assume-yes
 apt autoremove --assume-yes
 
 logger "=== Set up 'factorio' user and group"

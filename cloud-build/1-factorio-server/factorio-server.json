@@ -1,22 +1,25 @@
 {
   "variables": {
-    "image_name": "packer-{{ isotime \"20060102-150405\" }}"
+    "image_family": "",
+    "image_name": "",
+    "image_zone": "",
+    "project_id": ""
   },
   "builders": [
     {
       "image_description": "https://github.com/jlucktay/factorio-workbench - baked with Packer {{ packer_version }}",
-      "image_family": "packtorio",
+      "image_family": "{{ user `image_family` }}",
       "image_name": "{{ user `image_name` }}",
       "machine_type": "n2-standard-2",
       "preemptible": false,
-      "project_id": "jlucktay-factorio",
+      "project_id": "{{ user `project_id`}}",
       "source_image_family": "ubuntu-1804-lts",
       "ssh_username": "packer",
       "tags": [
-        "ssh"
+        "ssh-from-world"
       ],
       "type": "googlecompute",
-      "zone": "australia-southeast1-b"
+      "zone": "{{ user `image_zone` }}"
     }
   ],
   "provisioners": [
@@ -24,15 +27,6 @@
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
       "script": "{{ template_dir }}/provisioner.sh",
       "type": "shell"
-    }
-  ],
-  "post-processors": [
-    {
-      "environment_vars": [
-        "IMAGE_NAME={{ user `image_name` }}"
-      ],
-      "script": "{{ template_dir }}/create-instance-template.sh",
-      "type": "shell-local"
     }
   ]
 }
