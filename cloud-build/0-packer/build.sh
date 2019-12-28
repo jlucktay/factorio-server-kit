@@ -5,4 +5,8 @@ IFS=$'\n\t'
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
 
-gcloud --project=jlucktay-factorio builds submit "$script_dir" --config="$script_dir/cloudbuild.yaml"
+gcloud \
+  builds \
+  submit \
+  --config="$script_dir/cloudbuild.yaml" \
+  "$script_dir"

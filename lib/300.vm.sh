@@ -4,9 +4,11 @@ set -euo pipefail
 function factorio::vm::delete_all() {
   local old_instances i
   old_instances=$(
-    gcloud compute instances list \
+    gcloud \
       --format=json \
-      --project=jlucktay-factorio
+      compute \
+      instances \
+      list
   )
 
   for ((i = 0; i < $(jq length <<< "$old_instances"); i += 1)); do
@@ -14,9 +16,11 @@ function factorio::vm::delete_all() {
     name=$(jq --raw-output ".[$i].name" <<< "$old_instances")
     zone=$(basename "$(jq --raw-output ".[$i].zone" <<< "$old_instances")")
 
-    gcloud compute instances delete \
+    gcloud \
       --format=json \
-      --project=jlucktay-factorio \
+      compute \
+      instances \
+      delete \
       --quiet \
       --zone="$zone" \
       "$name"

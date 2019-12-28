@@ -4,7 +4,12 @@ shopt -s nullglob globstar
 IFS=$'\n\t'
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
-image_name="packtorio-$(date +%Y%m%d-%H%M%S)"
+FACTORIO_ROOT=$script_dir/../..
+
+for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
+  # shellcheck disable=SC1090
+  source "$lib"
+done
 
 # With thanks to:
 # https://stackoverflow.com/questions/1527049/how-can-i-join-elements-of-an-array-in-bash
@@ -17,12 +22,12 @@ function join_by() {
 }
 
 substitutions=(
-  "_IMAGE_FAMILY=packtorio"
-  "_IMAGE_NAME=$image_name"
-  "_IMAGE_ZONE=australia-southeast1-b"
+  "_IMAGE_FAMILY=$FACTORIO_IMAGE_FAMILY"
+  "_IMAGE_NAME=$FACTORIO_IMAGE_NAME"
+  "_IMAGE_ZONE=$FACTORIO_IMAGE_ZONE"
 )
 
-gcloud --project=jlucktay-factorio \
+gcloud \
   builds \
   submit \
   --config="$script_dir/cloudbuild.yaml" \
@@ -32,7 +37,6 @@ gcloud --project=jlucktay-factorio \
 # Clean up old image(s); all but most recent
 gcloud_args=(
   "--format=json"
-  "--project=jlucktay-factorio"
   compute
   images
   list
@@ -48,7 +52,6 @@ for ((i = 1; i < $(jq length <<< "$images"); i += 1)); do
 
   echo "Pruning old image '$image_name'..."
   gcloud \
-    --project=jlucktay-factorio \
     compute \
     images \
     delete \

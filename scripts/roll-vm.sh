@@ -3,14 +3,13 @@ set -euo pipefail
 shopt -s nullglob globstar
 IFS=$'\n\t'
 
-FACTORIO_ROOT=$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)/..
+script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
+FACTORIO_ROOT=$script_dir/..
 
 for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   # shellcheck disable=SC1090
   source "$lib"
 done
-
-script_name=$(basename "${BASH_SOURCE[-1]}")
 
 # Associative array with valid locations/zones
 readonly -A locations=(
@@ -83,17 +82,16 @@ for i in "$@"; do
 done
 
 # Delete any old servers that may already be deployed within the project
-factorio::vm::delete_all
+factorio::vm::delete_all_instances
 
 # Look up latest instance template
 gcloud_args=(
+  "--format=value(name)"
   compute
   instance-templates
   list
   "--filter=name:packtorio-*"
-  "--format=value(name)"
   "--limit=1"
-  "--project=jlucktay-factorio"
   "--sort-by=~creationTimestamp"
 )
 
@@ -109,11 +107,10 @@ fi
 
 # Create instance from template
 gcloud_args=(
+  "--format=json"
   compute
   instances
   create
-  "--format=json"
-  "--project=jlucktay-factorio"
   "--source-instance-template=$instance_template"
   "--subnet=default"
   "--zone=${locations[$location]}"
@@ -130,7 +127,7 @@ new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].na
 echo "Server IP: $new_instance_ip"
 
 if ((open_logs == 1)); then
-  logs_link="https://console.cloud.google.com/logs/viewer?project=jlucktay-factorio"
+  logs_link="https://console.cloud.google.com/logs/viewer?project=${CLOUDSDK_CORE_PROJECT:-}"
   logs_link+="&resource=gce_instance/instance_id/${new_instance_id}"
 
   echo "Opening the log viewer link: '$logs_link'"

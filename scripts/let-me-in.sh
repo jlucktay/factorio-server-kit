@@ -3,14 +3,13 @@ set -euo pipefail
 shopt -s nullglob globstar
 IFS=$'\n\t'
 
-FACTORIO_ROOT=$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)/..
+script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
+FACTORIO_ROOT=$script_dir/..
 
 for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   # shellcheck disable=SC1090
   source "$lib"
 done
-
-script_name=$(basename "${BASH_SOURCE[-1]}")
 
 curl_output=$(curl --silent http://httpbin.org/ip | jq --raw-output '.origin')
 read -d "," -r my_ip <<< "$curl_output"
@@ -20,7 +19,6 @@ gcloud_args=(
   compute
   firewall-rules
   update
-  "--project=jlucktay-factorio"
   "--source-ranges=$my_ip/32"
   default-allow-ssh
 )
@@ -33,10 +31,12 @@ gcloud "${gcloud_args[@]}"
 
 ### Get instance and SSH into it
 instance=$(
-  gcloud compute instances list \
+  gcloud \
     --format=json \
-    --limit=1 \
-    --project=jlucktay-factorio
+    compute \
+    instances \
+    list \
+    --limit=1
 )
 
 if [ "$(jq length <<< "$instance")" == 0 ]; then
@@ -47,7 +47,8 @@ fi
 name=$(jq --raw-output ".[0].name" <<< "$instance")
 zone=$(basename "$(jq --raw-output ".[0].zone" <<< "$instance")")
 
-gcloud compute ssh \
-  --project=jlucktay-factorio \
+gcloud \
+  compute \
+  ssh \
   --zone="$zone" \
   "$name"
