@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-FACTORIO_IMAGE_FAMILY=packtorio
-FACTORIO_IMAGE_NAME="${FACTORIO_IMAGE_FAMILY}-$(date +%Y%m%d-%H%M%S)"
-FACTORIO_IMAGE_ZONE=australia-southeast1-b
+readonly FACTORIO_IMAGE_FAMILY=packtorio
+readonly FACTORIO_IMAGE_NAME="${FACTORIO_IMAGE_FAMILY}-$(date +%Y%m%d-%H%M%S)"
+readonly FACTORIO_IMAGE_ZONE=australia-southeast1-b
 export FACTORIO_IMAGE_FAMILY
 export FACTORIO_IMAGE_NAME
 export FACTORIO_IMAGE_ZONE
