@@ -159,3 +159,6 @@ func main() {
 
 	_ = cmd.Start()
 }
+
+// TODO: add log prefix with PID, e.g.:
+// systemd[7691]:
