@@ -33,8 +33,8 @@ game as outlined
 
 ## Other improvements
 
-- Bake a [proper image](https://cloud.google.com/compute/docs/images) for the server, rather than bootstrap everything
-  every time
+- ~~Bake a [proper image](https://cloud.google.com/compute/docs/images) for the server, rather than bootstrap
+  everything every time~~
 - Add more signals to `trap` call in `startup.sh`?
   - `$ bat /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/signal.h`
 - Wire all of the logs up to Stackdriver [including Docker][1]
