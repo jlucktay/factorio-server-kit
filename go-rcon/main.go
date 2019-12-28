@@ -115,7 +115,7 @@ func main() {
 		}
 
 		logger.Log(logging.Entry{
-			Payload:  fmt.Sprintf("Players: '%+v'", players),
+			Payload:  fmt.Sprintf("%+v", players),
 			Severity: logging.Info,
 		})
 
