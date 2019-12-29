@@ -126,5 +126,6 @@ EOF
 /usr/bin/google_instance_setup
 
 logger "=== Get Go and install our server seppuku binary"
+# TODO: move gopukku into its own pipeline with drone and goreleaser
 snap install go --classic
 /snap/bin/go get github.com/jlucktay/factorio-workbench/go-rcon

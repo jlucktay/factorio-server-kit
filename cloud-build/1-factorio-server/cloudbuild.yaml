@@ -1,3 +1,5 @@
+# Reference: https://cloud.google.com/cloud-build/docs/build-config
+
 steps:
   - name: "gcr.io/$PROJECT_ID/packer"
     args:
