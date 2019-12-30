@@ -137,9 +137,7 @@ tar -zxvf gopukku.tar.gz
 mv --verbose gopukku /usr/bin/
 
 logger "=== Check that the Factorio server container came up OK"
-if ! docker top factorio; then
-  false
-fi
+docker top factorio
 
 logger "=== Tidy up and get ready to shut down"
 docker stop factorio
