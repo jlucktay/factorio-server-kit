@@ -5,23 +5,16 @@ steps:
     args:
       - --progress=dot:giga
       - https://releases.hashicorp.com/packer/${_PACKER_VERSION}/packer_${_PACKER_VERSION}_linux_amd64.zip
-  - name: gcr.io/cloud-builders/docker
+  - name: gcr.io/kaniko-project/executor:latest
     args:
-      - build
       - --build-arg
       - PACKER_VERSION=${_PACKER_VERSION}
       - --build-arg
       - PACKER_VERSION_SHA256SUM=${_PACKER_VERSION_SHA256SUM}
-      - --tag
-      - gcr.io/$PROJECT_ID/packer
-      - --tag
-      - gcr.io/$PROJECT_ID/packer:${_PACKER_VERSION}
-      - .
+      - --cache=true
+      - --destination=gcr.io/$PROJECT_ID/packer
+      - --destination=gcr.io/$PROJECT_ID/packer:${_PACKER_VERSION}
 
 substitutions:
   _PACKER_VERSION: 1.5.1
   _PACKER_VERSION_SHA256SUM: 3305ede8886bc3fd83ec0640fb87418cc2a702b2cb1567b48c8cb9315e80047d
-
-images:
-  - "gcr.io/$PROJECT_ID/packer:latest"
-  - "gcr.io/$PROJECT_ID/packer:$_PACKER_VERSION"
