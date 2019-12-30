@@ -52,11 +52,12 @@ chown --changes --recursive factorio:factorio /opt/factorio
 
 logger "=== Get latest Graftorio release and extract to set up local database against"
 mkdir --parents --verbose /opt/factorio/mods
+cd /opt/factorio/mods
 get_download_url afex graftorio graftorio \
-  | wget --input-file=- --output-document=/opt/factorio/mods/graftorio.zip --progress=dot:giga
+  | wget --input-file=- --progress=dot:giga
 mkdir --parents --verbose /opt/graftorio/data/grafana
 mkdir --parents --verbose /opt/graftorio/data/prometheus
-bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio.zip --directory /opt/graftorio
+bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio*.zip --directory /opt/graftorio
 
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 cd /opt/graftorio
@@ -134,6 +135,11 @@ get_download_url jlucktay gopukku linux_amd64 \
   | wget --input-file=- --output-document=gopukku.tar.gz --progress=dot:giga
 tar -zxvf gopukku.tar.gz
 mv --verbose gopukku /usr/bin/
+
+logger "=== Check that the Factorio server container came up OK"
+if ! docker top factorio; then
+  false
+fi
 
 logger "=== Tidy up and get ready to shut down"
 docker stop factorio
