@@ -2,6 +2,16 @@
 set -euxo pipefail
 IFS=$'\n\t'
 
+### Helper functions
+function get_download_url() {
+  curl --silent "https://api.github.com/repos/$1/$2/releases/latest" 2> /dev/null \
+    | jq --raw-output ".assets[]
+      | select(.browser_download_url | contains(\"$3\"))
+      | .browser_download_url"
+}
+# Usage:   get_download_url <author> <repo> <release pattern>
+# Example: get_download_url 99designs aws-vault linux_amd64
+
 # Log setup and function
 cd /tmp
 curl --remote-name --show-error --silent https://dl.google.com/cloudagents/install-logging-agent.sh
@@ -42,12 +52,11 @@ chown --changes --recursive factorio:factorio /opt/factorio
 
 logger "=== Get latest Graftorio release and extract to set up local database against"
 mkdir --parents --verbose /opt/factorio/mods
-curl --silent https://api.github.com/repos/afex/graftorio/releases/latest \
-  | jq --raw-output ".assets[].browser_download_url" \
-  | wget --input-file=- --output-document=/opt/factorio/mods/graftorio_0.0.7.zip
+get_download_url afex graftorio graftorio \
+  | wget --input-file=- --output-document=/opt/factorio/mods/graftorio.zip
 mkdir --parents --verbose /opt/graftorio/data/grafana
 mkdir --parents --verbose /opt/graftorio/data/prometheus
-bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio_0.0.7.zip --directory /opt/graftorio
+bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio.zip --directory /opt/graftorio
 
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 cd /opt/graftorio
@@ -80,7 +89,7 @@ mv --force --verbose docker-compose.7.yml docker-compose.yml
 logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
 
-logger "=== Enable Docker auto-restart, and run everything up with Docker Compose"
+logger "=== Enable Docker auto-restart, and run everything up with Docker and Compose"
 systemctl enable docker
 docker run \
   --detach \
@@ -90,13 +99,6 @@ docker run \
   --volume /opt/factorio:/factorio \
   factoriotools/factorio
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d
-
-logger "=== Give the containers a moment to warm up"
-sleep 10s
-
-logger "=== Tidy up and get ready to shut down"
-docker stop factorio
-rm --force --verbose /opt/factorio/saves/*.zip
 
 logger "=== Manage Docker as non-root users"
 logger "+++ Users already present"
@@ -125,7 +127,14 @@ EOF
 
 /usr/bin/google_instance_setup
 
-logger "=== Get Go and install our server seppuku binary"
-# TODO: move gopukku into its own pipeline with drone and goreleaser
-snap install go --classic
-/snap/bin/go get github.com/jlucktay/factorio-workbench/go-rcon
+logger "=== Install our server seppuku binary"
+mkdir --parents --verbose /tmp/gopukku /var/log/gopukku
+cd /tmp/gopukku
+get_download_url jlucktay gopukku linux_amd64 \
+  | wget --input-file=- --output-document=gopukku.tar.gz
+tar -zxvf gopukku.tar.gz
+mv --verbose gopukku /usr/bin/
+
+logger "=== Tidy up and get ready to shut down"
+docker stop factorio
+rm --force --verbose /opt/factorio/saves/*.zip
