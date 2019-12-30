@@ -12,13 +12,13 @@ steps:
       - factorio-server.json
   - name: gcr.io/cloud-builders/gcloud
     args:
+      - --format=json
       - compute
       - instance-templates
       - create
       - --boot-disk-size=10GB
       - --boot-disk-type=pd-standard
       - --description=https://github.com/jlucktay/factorio-workbench
-      - --format=json
       - --image=$_IMAGE_NAME
       - --machine-type=n2-standard-2
       - --maintenance-policy=TERMINATE

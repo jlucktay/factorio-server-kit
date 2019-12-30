@@ -7,10 +7,8 @@ steps:
       - https://releases.hashicorp.com/packer/${_PACKER_VERSION}/packer_${_PACKER_VERSION}_linux_amd64.zip
   - name: gcr.io/kaniko-project/executor:latest
     args:
-      - --build-arg
-      - PACKER_VERSION=${_PACKER_VERSION}
-      - --build-arg
-      - PACKER_VERSION_SHA256SUM=${_PACKER_VERSION_SHA256SUM}
+      - --build-arg=PACKER_VERSION=${_PACKER_VERSION}
+      - --build-arg=PACKER_VERSION_SHA256SUM=${_PACKER_VERSION_SHA256SUM}
       - --cache=true
       - --destination=gcr.io/$PROJECT_ID/packer
       - --destination=gcr.io/$PROJECT_ID/packer:${_PACKER_VERSION}
