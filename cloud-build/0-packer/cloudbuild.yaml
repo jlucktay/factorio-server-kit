@@ -1,22 +1,22 @@
 # Reference: https://cloud.google.com/cloud-build/docs/build-config
 
 steps:
-  - name: "gcr.io/cloud-builders/wget"
+  - name: gcr.io/cloud-builders/wget
     args:
-      - "--progress=dot:giga"
-      - "https://releases.hashicorp.com/packer/${_PACKER_VERSION}/packer_${_PACKER_VERSION}_linux_amd64.zip"
-  - name: "gcr.io/cloud-builders/docker"
+      - --progress=dot:giga
+      - https://releases.hashicorp.com/packer/${_PACKER_VERSION}/packer_${_PACKER_VERSION}_linux_amd64.zip
+  - name: gcr.io/cloud-builders/docker
     args:
-      - "build"
-      - "--build-arg"
-      - "PACKER_VERSION=${_PACKER_VERSION}"
-      - "--build-arg"
-      - "PACKER_VERSION_SHA256SUM=${_PACKER_VERSION_SHA256SUM}"
-      - "--tag"
-      - "gcr.io/$PROJECT_ID/packer"
-      - "--tag"
-      - "gcr.io/$PROJECT_ID/packer:${_PACKER_VERSION}"
-      - "."
+      - build
+      - --build-arg
+      - PACKER_VERSION=${_PACKER_VERSION}
+      - --build-arg
+      - PACKER_VERSION_SHA256SUM=${_PACKER_VERSION_SHA256SUM}
+      - --tag
+      - gcr.io/$PROJECT_ID/packer
+      - --tag
+      - gcr.io/$PROJECT_ID/packer:${_PACKER_VERSION}
+      - .
 
 substitutions:
   _PACKER_VERSION: 1.5.1

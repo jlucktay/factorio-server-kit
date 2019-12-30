@@ -1,7 +1,7 @@
 # Reference: https://cloud.google.com/cloud-build/docs/build-config
 
 steps:
-  - name: "gcr.io/$PROJECT_ID/packer"
+  - name: gcr.io/$PROJECT_ID/packer
     args:
       - build
       - -timestamp-ui
@@ -10,25 +10,25 @@ steps:
       - -var=image_zone=$_IMAGE_ZONE
       - -var=project_id=$PROJECT_ID
       - factorio-server.json
-  - name: "gcr.io/cloud-builders/gcloud"
+  - name: gcr.io/cloud-builders/gcloud
     args:
-      - "compute"
-      - "instance-templates"
-      - "create"
-      - "--boot-disk-size=10GB"
-      - "--boot-disk-type=pd-standard"
-      - "--description=https://github.com/jlucktay/factorio-workbench"
-      - "--format=json"
-      - "--image=$_IMAGE_NAME"
-      - "--machine-type=n2-standard-2"
-      - "--maintenance-policy=TERMINATE"
-      - "--metadata-from-file=startup-script=startup.sh,shutdown-script=shutdown.sh"
-      - "--network-tier=PREMIUM"
-      - "--network=projects/jlucktay-factorio/global/networks/default"
-      - "--no-restart-on-failure"
-      - "--preemptible"
-      - "--reservation-affinity=any"
-      - "--scopes=https://www.googleapis.com/auth/cloud-platform"
-      - "--service-account=factorio-server@jlucktay-factorio.iam.gserviceaccount.com"
-      - "--tags=factorio,grafana,ssh"
-      - "$_IMAGE_NAME"
+      - compute
+      - instance-templates
+      - create
+      - --boot-disk-size=10GB
+      - --boot-disk-type=pd-standard
+      - --description=https://github.com/jlucktay/factorio-workbench
+      - --format=json
+      - --image=$_IMAGE_NAME
+      - --machine-type=n2-standard-2
+      - --maintenance-policy=TERMINATE
+      - --metadata-from-file=startup-script=startup.sh,shutdown-script=shutdown.sh
+      - --network-tier=PREMIUM
+      - --network=projects/jlucktay-factorio/global/networks/default
+      - --no-restart-on-failure
+      - --preemptible
+      - --reservation-affinity=any
+      - --scopes=https://www.googleapis.com/auth/cloud-platform
+      - --service-account=factorio-server@jlucktay-factorio.iam.gserviceaccount.com
+      - --tags=factorio,grafana,ssh
+      - $_IMAGE_NAME
