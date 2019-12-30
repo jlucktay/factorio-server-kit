@@ -11,16 +11,6 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   source "$lib"
 done
 
-# With thanks to:
-# https://stackoverflow.com/questions/1527049/how-can-i-join-elements-of-an-array-in-bash
-function join_by() {
-  local d=$1
-  shift
-  echo -n "$1"
-  shift
-  printf "%s" "${@/#/$d}"
-}
-
 substitutions=(
   "_IMAGE_FAMILY=$FACTORIO_IMAGE_FAMILY"
   "_IMAGE_NAME=$FACTORIO_IMAGE_NAME"
@@ -31,7 +21,7 @@ gcloud \
   builds \
   submit \
   --config="$script_dir/cloudbuild.yaml" \
-  --substitutions="$(join_by , "${substitutions[@]}")" \
+  --substitutions="$(factorio::join_by , "${substitutions[@]}")" \
   "$script_dir"
 
 # Clean up old image(s); all but most recent
