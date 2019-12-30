@@ -53,7 +53,7 @@ chown --changes --recursive factorio:factorio /opt/factorio
 logger "=== Get latest Graftorio release and extract to set up local database against"
 mkdir --parents --verbose /opt/factorio/mods
 get_download_url afex graftorio graftorio \
-  | wget --input-file=- --output-document=/opt/factorio/mods/graftorio.zip
+  | wget --input-file=- --output-document=/opt/factorio/mods/graftorio.zip --progress=dot:giga
 mkdir --parents --verbose /opt/graftorio/data/grafana
 mkdir --parents --verbose /opt/graftorio/data/prometheus
 bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio.zip --directory /opt/graftorio
@@ -131,7 +131,7 @@ logger "=== Install our server seppuku binary"
 mkdir --parents --verbose /tmp/gopukku /var/log/gopukku
 cd /tmp/gopukku
 get_download_url jlucktay gopukku linux_amd64 \
-  | wget --input-file=- --output-document=gopukku.tar.gz
+  | wget --input-file=- --output-document=gopukku.tar.gz --progress=dot:giga
 tar -zxvf gopukku.tar.gz
 mv --verbose gopukku /usr/bin/
 
