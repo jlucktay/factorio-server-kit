@@ -26,4 +26,4 @@ logger "=== Start up the Factorio server"
 docker start factorio
 
 logger "=== Start up our server seppuku binary"
-gopukku &> "/var/log/gopukku/gopukku.$(date +%Y%m%d.%H%M%S).log" &
+gopukku &> "/var/log/gopukku/gopukku.$(TZ=UTC date +%Y%m%d.%H%M%S).log" &
