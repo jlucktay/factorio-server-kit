@@ -9,11 +9,6 @@ export FACTORIO_IMAGE_NAME
 export FACTORIO_IMAGE_ZONE
 
 # Ref: https://cloud.google.com/sdk/gcloud/reference/topic/startup
-CLOUDSDK_CORE_PROJECT=jlucktay-factorio
-export CLOUDSDK_CORE_PROJECT
-
-CLOUDSDK_COMPUTE_REGION=australia-southeast1
-export CLOUDSDK_COMPUTE_REGION
-
-CLOUDSDK_COMPUTE_ZONE=australia-southeast1-b
-export CLOUDSDK_COMPUTE_ZONE
+export CLOUDSDK_CORE_PROJECT=jlucktay-factorio
+export CLOUDSDK_COMPUTE_REGION=${FACTORIO_IMAGE_ZONE:0:-2}
+export CLOUDSDK_COMPUTE_ZONE=$FACTORIO_IMAGE_ZONE
