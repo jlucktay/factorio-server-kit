@@ -45,13 +45,13 @@
   "allow_commands": "admins-only",
 
   "_comment_autosave_interval": "Autosave interval in minutes",
-  "autosave_interval": 10,
+  "autosave_interval": 30,
 
   "_comment_autosave_slots": "server autosave slots, it is cycled through when the server autosaves.",
   "autosave_slots": 5,
 
   "_comment_afk_autokick_interval": "How many minutes until someone is kicked when doing nothing, 0 for never.",
-  "afk_autokick_interval": 60,
+  "afk_autokick_interval": 15,
 
   "_comment_auto_pause": "Whether should the server be paused when no players are present.",
   "auto_pause": true,
@@ -62,6 +62,7 @@
 
   "_comment_non_blocking_saving": "Highly experimental feature, enable only at your own risk of losing your saves. On UNIX systems, server will fork itself to create an autosave. Autosaving on connected Windows clients will be disabled regardless of autosave_only_on_server option.",
   "non_blocking_saving": false,
+
   "_comment_segment_sizes": "Long network messages are split into segments that are sent over multiple ticks. Their size depends on the number of peers currently connected. Increasing the segment size will increase upload bandwidth requirement for the server and download bandwidth requirement for clients. This setting only affects server outbound messages. Changing these settings can have a negative impact on connection stability for some clients.",
   "minimum_segment_size": 25,
   "minimum_segment_size_peer_count": 20,
