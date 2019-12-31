@@ -10,8 +10,22 @@ test -n "${FACTORIO_ROOT:-}" || {
   exit 1
 }
 
+# Tool - Google Cloud SDK
+hash gcloud 2> /dev/null || {
+  echo >&2 "$script_name requires the Google Cloud SDK ('gcloud') but it's not installed: \
+https://cloud.google.com/sdk/install"
+  exit 1
+}
+
+hash gsutil 2> /dev/null || {
+  echo >&2 "$script_name requires the Google Cloud SDK ('gsutil') but it's not installed: \
+https://cloud.google.com/sdk/install"
+  exit 1
+}
+
 # Tool - JQ
 hash jq 2> /dev/null || {
-  echo >&2 "$script_name requires 'jq' but it's not installed: https://github.com/stedolan/jq/wiki/Installation"
+  echo >&2 "$script_name requires 'jq' but it's not installed: \
+https://github.com/stedolan/jq/wiki/Installation"
   exit 1
 }
