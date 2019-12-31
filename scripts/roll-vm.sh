@@ -34,7 +34,7 @@ function usage() {
 HEREDOC
 
   # https://www.reddit.com/r/bash/comments/5wma5k/is_there_a_way_to_sort_an_associative_array_by/debbjsp/
-  mapfile -d '' sorted_keys < <(printf '%s\0' "${!FACTORIO_SERVER_LOCATIONS[@]}" | sort -z)
+  mapfile -d '' sorted_keys < <(printf '%s\0' "${!FACTORIO_SERVER_LOCATIONS[@]}" | sort --zero-terminated)
 
   for key in "${sorted_keys[@]}"; do
     printf '        --%-16srun from %s' "$key" "${FACTORIO_SERVER_LOCATIONS[$key]}"
