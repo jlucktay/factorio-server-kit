@@ -11,16 +11,14 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   source "$lib"
 done
 
-# Associative array with valid locations/zones
-readonly -A locations=(
-  [london]="europe-west2-c"
-  [losangeles]="us-west2-a"
-  [sydney]="australia-southeast1-b"
-)
-
 # Default zone/location
 location=losangeles
-zone=${locations[$location]}
+zone=${FACTORIO_SERVER_LOCATIONS[$location]:-"LOCATION_KEY_NOT_FOUND"}
+
+if [ "$zone" == "LOCATION_KEY_NOT_FOUND" ]; then
+  echo >&2 "${script_name:-}: location key '$location' was not found in $(realpath "$FACTORIO_ROOT/lib/locations.json")."
+  exit 1
+fi
 
 ### Set up usage/help output
 function usage() {
@@ -36,12 +34,12 @@ function usage() {
 HEREDOC
 
   # https://www.reddit.com/r/bash/comments/5wma5k/is_there_a_way_to_sort_an_associative_array_by/debbjsp/
-  mapfile -d '' sorted_keys < <(printf '%s\0' "${!locations[@]}" | sort -z)
+  mapfile -d '' sorted_keys < <(printf '%s\0' "${!FACTORIO_SERVER_LOCATIONS[@]}" | sort -z)
 
   for key in "${sorted_keys[@]}"; do
-    printf '        --%-16srun from %s' "$key" "${locations[$key]}"
+    printf '        --%-16srun from %s' "$key" "${FACTORIO_SERVER_LOCATIONS[$key]}"
 
-    if [ "$zone" == "${locations[$key]}" ]; then
+    if [ "$zone" == "${FACTORIO_SERVER_LOCATIONS[$key]}" ]; then
       printf ' (default location)'
     fi
 
@@ -71,7 +69,7 @@ for i in "$@"; do
     ;;
   *)
     location=${1:2}
-    if test "${locations[$location]+is_set}"; then
+    if test "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}"; then
       shift
     else
       usage
@@ -113,7 +111,7 @@ gcloud_args=(
   create
   "--source-instance-template=$instance_template"
   "--subnet=default"
-  "--zone=${locations[$location]}"
+  "--zone=${FACTORIO_SERVER_LOCATIONS[$location]}"
   "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 
