@@ -11,6 +11,17 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   source "$lib"
 done
 
+# Push locations.json to Storage
+gsutil_args=(
+  cp
+  -P
+  "${FACTORIO_ROOT}/lib/locations.json"
+  gs://jlucktay-factorio-asia/lib/locations.json
+)
+
+gsutil "${gsutil_args[@]}"
+
+# Submit build and block (not async)
 substitutions=(
   "_IMAGE_FAMILY=$FACTORIO_IMAGE_FAMILY"
   "_IMAGE_NAME=$FACTORIO_IMAGE_NAME"
