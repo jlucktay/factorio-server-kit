@@ -13,7 +13,7 @@ done
 
 mkdir -pv "${FACTORIO_ROOT}/gs/jlucktay-factorio-asia/"
 
-gsutil -m rsync -P -r -u \
-  -x "saves/_autosave.\.zip$|saves/_autosave.\.tmp\.zip$|saves-.*/.*\.zip$" \
+gsutil -m rsync -r -u \
+  -x "saves.*" \
   gs://jlucktay-factorio-asia/ \
   "${FACTORIO_ROOT}/gs/jlucktay-factorio-asia/"
