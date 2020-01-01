@@ -6,7 +6,7 @@ Running our own Factorio server.
 
 ### Create VM
 
-See the [(re)roll VM script](roll-vm.sh) and related [library](lib/) functions.
+See the [(re)roll VM script](scripts/roll-vm.sh) and related [library](lib/) functions.
 
 #### Optional
 

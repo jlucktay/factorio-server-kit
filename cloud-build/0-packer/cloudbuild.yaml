@@ -5,6 +5,7 @@ steps:
     args:
       - --progress=dot:giga
       - https://releases.hashicorp.com/packer/${_PACKER_VERSION}/packer_${_PACKER_VERSION}_linux_amd64.zip
+
   - name: gcr.io/kaniko-project/executor:latest
     args:
       - --build-arg=PACKER_VERSION=${_PACKER_VERSION}

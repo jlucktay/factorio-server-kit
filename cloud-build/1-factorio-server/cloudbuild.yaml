@@ -10,6 +10,7 @@ steps:
       - -var=image_zone=$_IMAGE_ZONE
       - -var=project_id=$PROJECT_ID
       - factorio-server.json
+
   - name: gcr.io/cloud-builders/gcloud
     args:
       - --format=json
