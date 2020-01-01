@@ -15,6 +15,8 @@ done
 location=losangeles
 zone=${FACTORIO_SERVER_LOCATIONS[$location]:-"LOCATION_KEY_NOT_FOUND"}
 
+# TODO: Los Angeles DC doesn't have N2 machine type, but it does have E2
+
 if [ "$zone" == "LOCATION_KEY_NOT_FOUND" ]; then
   echo >&2 "${script_name:-}: location key '$location' was not found in $(realpath "$FACTORIO_ROOT/lib/locations.json")."
   exit 1
