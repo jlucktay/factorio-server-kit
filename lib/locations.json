@@ -1,5 +1,14 @@
-{
-  "london": "europe-west2-c",
-  "losangeles": "us-west2-a",
-  "sydney": "australia-southeast1-b"
-}
+[
+  {
+    "location": "london",
+    "zone": "europe-west2-c"
+  },
+  {
+    "location": "losangeles",
+    "zone": "us-west2-a"
+  },
+  {
+    "location": "sydney",
+    "zone": "australia-southeast1-b"
+  }
+]
