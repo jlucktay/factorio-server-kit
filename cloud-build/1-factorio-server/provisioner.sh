@@ -132,8 +132,8 @@ logger "=== Install our server seppuku binary"
 mkdir --parents --verbose /tmp/gopukku /var/log/gopukku
 cd /tmp/gopukku
 get_download_url jlucktay gopukku linux_amd64 \
-  | wget --input-file=- --output-document=gopukku.tar.gz --progress=dot:giga
-tar -zxvf gopukku.tar.gz
+  | wget --input-file=- --progress=dot:giga
+tar -zxvf gopukku*.tar.gz
 mv --verbose gopukku /usr/bin/
 
 logger "=== Check that the Factorio server container came up OK"
