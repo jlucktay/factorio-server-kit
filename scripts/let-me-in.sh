@@ -29,13 +29,14 @@ echo "${gcloud_args[@]}"
 
 gcloud "${gcloud_args[@]}"
 
-### Get instance and SSH into it
+### Get Factorio server instance and SSH into it
 instance=$(
   gcloud \
     --format=json \
     compute \
     instances \
     list \
+    --filter="name:factorio-*" \
     --limit=1
 )
 
