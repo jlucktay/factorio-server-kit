@@ -10,7 +10,7 @@
       "image_description": "https://github.com/jlucktay/factorio-workbench - baked with Packer {{ packer_version }}",
       "image_family": "{{ user `image_family` }}",
       "image_name": "{{ user `image_name` }}",
-      "machine_type": "n2-custom-2-4096",
+      "machine_type": "n2-standard-2",
       "preemptible": false,
       "project_id": "{{ user `project_id`}}",
       "source_image_family": "ubuntu-1804-lts",

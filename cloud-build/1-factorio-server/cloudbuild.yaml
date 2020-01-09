@@ -22,7 +22,7 @@ steps:
       - --boot-disk-type=pd-standard
       - --description=https://github.com/jlucktay/factorio-workbench
       - --image=$_IMAGE_NAME
-      - --machine-type=n2-custom-2-4096
+      - --machine-type=n2-standard-2
       - --maintenance-policy=TERMINATE
       - --metadata-from-file=startup-script=startup.sh,shutdown-script=shutdown.sh
       - --network-tier=PREMIUM
