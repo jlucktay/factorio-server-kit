@@ -12,10 +12,12 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
 done
 
 gcloud \
+  --format=json \
   functions \
   deploy \
   cleanup-instances \
   --entry-point="Instances" \
   --runtime=go111 \
   --max-instances=1 \
-  --trigger-topic="cleanup-instances"
+  --trigger-topic="cleanup-instances" \
+  | jq
