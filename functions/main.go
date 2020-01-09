@@ -1,10 +1,9 @@
-package main
+package cleanup
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"log"
 	"strings"
 
 	"cloud.google.com/go/storage"
@@ -19,38 +18,48 @@ const (
 	locationsObject = "lib/locations.json"
 )
 
+// PubSubMessage is the payload of a Pub/Sub event.
+// See here for the whole enchilada:
+// https://github.com/googleapis/google-cloud-go/blob/da586d9883c96cfded5bd0286f1f7ae7fac58c92/pubsub/message.go#L25
+type PubSubMessage struct {
+	Data []byte `json:"data"`
+}
+
+// location describes the structure of a JSON file that we use to denote which GCP regions and zones are in use by this
+// project.
 type location struct {
 	Location string `json:"location"`
 	Zone     string `json:"zone"`
 }
 
-type locations []location
-
-func main() {
-	storageClient, errStorage := storage.NewClient(context.TODO())
+// Instances will iterate across all zones listed in our gs://jlucktay-factorio-asia/lib/locations.json file in Storage
+// and delete all instances which (1) are named using the same pattern that /scripts/roll-vm.sh uses to create
+// instances, and (2) have a status of TERMINATED.
+func Instances(ctx context.Context, _ PubSubMessage) error {
+	storageClient, errStorage := storage.NewClient(ctx)
 	if errStorage != nil {
-		log.Fatalf("error creating Storage client: %v", errStorage)
+		return fmt.Errorf("error creating Storage client: %v", errStorage)
 	}
 
 	bkt := storageClient.Bucket(locationsBucket)
 	objLocs := bkt.Object(locationsObject)
 
-	r, errReader := objLocs.NewReader(context.TODO())
+	r, errReader := objLocs.NewReader(ctx)
 	if errReader != nil {
-		log.Fatalf("error reading JSON object: %v", errReader)
+		return fmt.Errorf("error reading JSON object: %v", errReader)
 	}
 	defer r.Close()
 
-	var locs locations
+	var locs []location
 
 	dec := json.NewDecoder(r)
 	if errDecode := dec.Decode(&locs); errDecode != nil {
-		log.Fatalf("error decoding locations JSON: %v", errDecode)
+		return fmt.Errorf("error decoding locations JSON: %v", errDecode)
 	}
 
-	computeService, errService := compute.NewService(context.TODO())
+	computeService, errService := compute.NewService(ctx)
 	if errService != nil {
-		log.Fatalf("error creating Compute service: %v", errService)
+		return fmt.Errorf("error creating Compute service: %v", errService)
 	}
 
 	for _, loc := range locs {
@@ -59,7 +68,7 @@ func main() {
 
 		list, errList := listCall.Do()
 		if errList != nil {
-			log.Fatalf("error listing instances in zone %s: %v", loc.Zone, errList)
+			return fmt.Errorf("error listing instances in zone %s: %v", loc.Zone, errList)
 		}
 
 		for _, inst := range list.Items {
@@ -68,9 +77,12 @@ func main() {
 
 				_, errDelete := deleteCall.Do()
 				if errDelete != nil {
-					log.Fatalf("error executing delete operation for instance %s in zone %s: %v", inst.Name, loc.Zone, errDelete)
+					return fmt.Errorf("error executing delete operation for instance %s in zone %s: %v",
+						inst.Name, loc.Zone, errDelete)
 				}
 			}
 		}
 	}
+
+	return nil
 }
