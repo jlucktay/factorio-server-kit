@@ -16,3 +16,25 @@ gcloud alpha resources list \
   --uri \
   | grep --extended-regexp --invert-match "\/subnetworks\/default$" \
   | sort --ignore-case
+
+#
+# VSCode support for Terraform 0.12 is available and experimental:
+# https://github.com/mauve/vscode-terraform/issues/157
+#
+
+# https://www.terraform.io/docs/providers/google/r/cloudfunctions_function.html
+# -> gcloud --format=json functions describe cleanup-instances | jq
+#
+# https://www.terraform.io/docs/providers/google/r/cloud_scheduler_job.html
+# -> gcloud --format=json scheduler jobs describe cleanup-instances | jq
+#
+# https://www.terraform.io/docs/providers/google/r/pubsub_topic.html
+# -> gcloud --format=json pubsub topics describe cleanup-instances | jq
+#
+# https://www.terraform.io/docs/providers/google/r/storage_bucket.html
+# -> gsutil ls -p jlucktay-factorio
+# --> one bucket per location/zone in lib/locations.json
+# --> other one-off buckets
+#
+# https://www.terraform.io/docs/providers/google/r/storage_bucket_object.html
+# -> aforementioned locations.json
