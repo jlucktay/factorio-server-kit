@@ -124,7 +124,45 @@ new_instance=$(gcloud "${gcloud_args[@]}")
 new_instance_id=$(jq --raw-output '.[0].id' <<< "$new_instance")
 new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].natIP' <<< "$new_instance")
 
-echo "Server IP: $new_instance_ip"
+echo "Updating 'factorio.menagerie.games' A record in Cloud DNS with new IP of '$new_instance_ip'..."
+
+gcloud \
+  dns record-sets transaction \
+  start \
+  --zone=factorio-server \
+  &> /dev/null
+
+old_dns_ip=$(
+  gcloud --format=json \
+    dns record-sets list \
+    --filter="name:factorio.menagerie.games." \
+    --zone=factorio-server \
+    | jq --raw-output '.[].rrdatas[]'
+)
+
+gcloud --format=json \
+  dns record-sets transaction \
+  remove "$old_dns_ip" \
+  --name=factorio.menagerie.games. \
+  --ttl=30 \
+  --type=A \
+  --zone=factorio-server \
+  &> /dev/null
+
+gcloud --format=json \
+  dns record-sets transaction \
+  add "$new_instance_ip" \
+  --name=factorio.menagerie.games. \
+  --ttl=30 \
+  --type=A \
+  --zone=factorio-server \
+  &> /dev/null
+
+gcloud \
+  dns record-sets transaction \
+  execute \
+  --zone=factorio-server \
+  &> /dev/null
 
 if ((open_logs == 1)); then
   logs_link="https://console.cloud.google.com/logs/viewer?project=${CLOUDSDK_CORE_PROJECT:-}"
