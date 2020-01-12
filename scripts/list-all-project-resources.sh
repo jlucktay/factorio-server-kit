@@ -38,3 +38,9 @@ gcloud alpha resources list \
 #
 # https://www.terraform.io/docs/providers/google/r/storage_bucket_object.html
 # -> aforementioned locations.json
+#
+# https://www.terraform.io/docs/providers/google/r/dns_managed_zone.html
+# -> gcloud dns managed-zones describe factorio-server
+#
+# https://www.terraform.io/docs/providers/google/r/dns_record_set.html
+# -> gcloud dns record-sets list --zone=factorio-server
