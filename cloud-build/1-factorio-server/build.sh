@@ -16,7 +16,7 @@ gsutil_args=(
   cp
   -P
   "${FACTORIO_ROOT}/lib/locations.json"
-  gs://jlucktay-factorio-asia/lib/locations.json
+  gs://jlucktay-factorio-storage/lib/locations.json
 )
 
 gsutil "${gsutil_args[@]}"

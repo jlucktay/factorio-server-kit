@@ -11,7 +11,8 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   source "$lib"
 done
 
-# Iterate through location-specific '-saves' buckets, and backup into another bucket with timestamp sub-directories
+# Iterate through all location-specific '-saves' buckets defined in our lib JSON and backup into an Archive-class
+# bucket with location/timestamp sub-directories
 
 # shellcheck disable=SC2154
 for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
@@ -33,5 +34,5 @@ for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
   gsutil -m \
     rsync -P -x ".*\.tmp\.zip" \
     "gs://jlucktay-factorio-saves-$location" \
-    "gs://jlucktay-factorio-asia/saves-$location-$(TZ=UTC date -r "$mtime_high_score" +%Y%m%d)"
+    "gs://jlucktay-factorio-backup-saves/$location-$(TZ=UTC date -r "$mtime_high_score" "+%Y%m%d.%H%M%S%z")"
 done

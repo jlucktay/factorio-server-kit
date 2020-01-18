@@ -11,9 +11,11 @@ for lib in "${FACTORIO_ROOT}"/lib/*.sh; do
   source "$lib"
 done
 
-# Default zone/location
+# Argument defaults
 location=losangeles
 zone=${FACTORIO_SERVER_LOCATIONS[$location]:-"LOCATION_KEY_NOT_FOUND"}
+
+open_logs=0
 
 # TODO: Los Angeles DC doesn't have N2 machine type, but it does have E2
 
@@ -29,8 +31,8 @@ function usage() {
   Usage: ${script_name:-} [--help | [--logs] --<location>]
 
   Optional arguments:
-    -h, --help            show this help message and exit
-    -l, --logs            open the Stackdriver Logging page after creating the server
+    -h, --help             show this help message and exit
+    -l, --logs             open the Stackdriver Logging page after creating the server
 
   Server location:
 HEREDOC
@@ -39,7 +41,7 @@ HEREDOC
   mapfile -d '' sorted_keys < <(printf '%s\0' "${!FACTORIO_SERVER_LOCATIONS[@]}" | sort --zero-terminated)
 
   for key in "${sorted_keys[@]}"; do
-    printf '        --%-16srun from %s' "$key" "${FACTORIO_SERVER_LOCATIONS[$key]}"
+    printf '        --%-16s run from %s' "$key" "${FACTORIO_SERVER_LOCATIONS[$key]}"
 
     if [ "$zone" == "${FACTORIO_SERVER_LOCATIONS[$key]}" ]; then
       printf ' (default location)'
@@ -55,29 +57,26 @@ HEREDOC
 HEREDOC
 }
 
-# Other argument defaults
-open_logs=0
-
 ### Parse given arguments
 for i in "$@"; do
   case $i in
-  -h | --help)
-    usage
-    exit 0
-    ;;
-  -l | --logs)
-    open_logs=1
-    shift
-    ;;
-  *)
-    location=${1:2}
-    if test "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}"; then
-      shift
-    else
+    -h | --help)
       usage
-      exit 1
-    fi
-    ;;
+      exit 0
+      ;;
+    -l | --logs)
+      open_logs=1
+      shift
+      ;;
+    *)
+      location=${1:2}
+      if test "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}"; then
+        shift
+      else
+        usage
+        exit 1
+      fi
+      ;;
   esac
 done
 

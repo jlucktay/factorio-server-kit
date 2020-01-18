@@ -14,7 +14,7 @@ const (
 	project          = "jlucktay-factorio"
 	statusTerminated = "TERMINATED"
 
-	locationsBucket = project + "-asia"
+	locationsBucket = project + "-storage"
 	locationsObject = "lib/locations.json"
 )
 
@@ -32,7 +32,7 @@ type location struct {
 	Zone     string `json:"zone"`
 }
 
-// Instances will iterate across all zones listed in our gs://jlucktay-factorio-asia/lib/locations.json file in Storage
+// Instances will iterate across all zones listed in our gs://jlucktay-factorio-storage/lib/locations.json file in Storage
 // and delete all instances which (1) are named using the same pattern that /scripts/roll-vm.sh uses to create
 // instances, and (2) have a status of TERMINATED.
 func Instances(ctx context.Context, _ PubSubMessage) error {

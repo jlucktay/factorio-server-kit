@@ -4,10 +4,10 @@ IFS=$'\n\t'
 
 logger "=== Get configs from Storage"
 locations_json="/etc/locations.json"
-gsutil cp -P gs://jlucktay-factorio-asia/lib/locations.json "$locations_json"
-# gsutil -m cp gs://jlucktay-factorio-asia/fluentd/* /etc/google-fluentd/config.d/ # currently empty
-gsutil -m cp gs://jlucktay-factorio-asia/*-settings.json /opt/factorio/config/
-gsutil -m cp gs://jlucktay-factorio-asia/server-*list.json /opt/factorio/config/
+gsutil cp gs://jlucktay-factorio-storage/lib/locations.json "$locations_json"
+# gsutil -m cp gs://jlucktay-factorio-storage/fluentd/* /etc/google-fluentd/config.d/ # currently empty
+gsutil -m cp gs://jlucktay-factorio-storage/config/*-settings.json /opt/factorio/config/
+gsutil -m cp gs://jlucktay-factorio-storage/config/server-*list.json /opt/factorio/config/
 
 logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
