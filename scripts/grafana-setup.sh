@@ -11,32 +11,24 @@ done
 
 factorio::password
 
-factorio_instance=$(
-  gcloud \
-    --format=json \
-    compute \
-    instances \
-    list
-)
+# One time only
 
-factorio_instance_name=$(jq --raw-output '.[].name' <<< "$factorio_instance")
-# echo "factorio_instance_name: '$factorio_instance_name'"
+curl \
+  --data '{
+    "confirmNew": "'"${FACTORIO_PASSWORD:-}"'",
+    "newPassword": "'"${FACTORIO_PASSWORD}"'",
+    "oldPassword": "admin"
+  }' \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --request PUT \
+  --silent \
+  "http://admin:admin@${FACTORIO_DNS_NAME:-}:3000/api/user/password" \
+  | jq
 
-factorio_instance_ip=$(jq --raw-output '.[].networkInterfaces[].accessConfigs[].natIP' <<< "$factorio_instance")
-# echo "factorio_instance_ip: '$factorio_instance_ip'"
+# Per boot
 
-# curl \
-#     --data '{
-#         "confirmNew": "'"${password:-}"'",
-#         "newPassword": "'"${password}"'",
-#         "oldPassword": "admin"
-#     }' \
-#     --header "Accept: application/json" \
-#     --header "Content-Type: application/json" \
-#     --request PUT \
-#     --silent \
-#     "http://admin:admin@${factorio_instance_ip}:3000/api/user/password" \
-#     | jq
+# One time vs per boot? TBD
 
 # curl \
 #     --data '{
@@ -53,7 +45,7 @@ factorio_instance_ip=$(jq --raw-output '.[].networkInterfaces[].accessConfigs[].
 #     --header "Content-Type: application/json" \
 #     --request POST \
 #     --silent \
-#     "http://admin:${password}@${factorio_instance_ip}:3000/api/datasources" \
+#     "http://admin:${FACTORIO_PASSWORD}@${factorio_instance_ip}:3000/api/datasources" \
 #     | jq
 
 # curl \
