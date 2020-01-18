@@ -22,6 +22,7 @@
       "zone": "{{ user `image_zone` }}"
     }
   ],
+  "description": "https://github.com/jlucktay/factorio-workbench",
   "provisioners": [
     {
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
