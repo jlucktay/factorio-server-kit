@@ -140,7 +140,7 @@ old_dns_ip=$(
     | jq --raw-output '.[].rrdatas[]'
 )
 
-gcloud --format=json \
+gcloud \
   dns record-sets transaction \
   remove "$old_dns_ip" \
   --name=factorio.menagerie.games. \
@@ -149,7 +149,7 @@ gcloud --format=json \
   --zone=factorio-server \
   &> /dev/null
 
-gcloud --format=json \
+gcloud \
   dns record-sets transaction \
   add "$new_instance_ip" \
   --name=factorio.menagerie.games. \
