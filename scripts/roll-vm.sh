@@ -20,7 +20,7 @@ open_logs=0
 # TODO: Los Angeles DC doesn't have N2 machine type, but it does have E2
 
 if [ "$zone" == "LOCATION_KEY_NOT_FOUND" ]; then
-  echo >&2 "${script_name:-}: location key '$location' was not found in $(realpath "$FACTORIO_ROOT/lib/locations.json")."
+  err "location key '$location' was not found in $(realpath "$FACTORIO_ROOT/lib/locations.json")."
   exit 1
 fi
 
@@ -100,7 +100,7 @@ echo "${gcloud_args[@]}"
 instance_template=$(gcloud "${gcloud_args[@]}")
 
 if test -z "$instance_template"; then
-  echo "$script_name: no instance templates named 'packtorio-*' were found"
+  err "no instance templates named 'packtorio-*' were found"
   exit 1
 fi
 
