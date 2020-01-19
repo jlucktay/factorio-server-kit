@@ -16,7 +16,7 @@ factorio::password
 curl \
   --data '{
     "confirmNew": "'"${FACTORIO_PASSWORD:-}"'",
-    "newPassword": "'"${FACTORIO_PASSWORD}"'",
+    "newPassword": "'"$FACTORIO_PASSWORD"'",
     "oldPassword": "admin"
   }' \
   --header "Accept: application/json" \
@@ -41,34 +41,46 @@ curl \
   --header "Content-Type: application/json" \
   --request POST \
   --silent \
-  "http://admin:${FACTORIO_PASSWORD}@$FACTORIO_DNS_NAME:3000/api/datasources" \
+  "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/datasources" \
   | jq
 
 # Per boot
 
 # One time vs per boot? TBD
 
-curl \
-  --data '{
-    "dashboard": {
-      "id": null,
-      "timezone": "browser",
-      "title": "Hello Factorio",
-      "uid": null
-    },
-    "message": "grafana-setup.sh",
-    "overwrite": false
-  }' \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
-  --request POST \
-  --silent \
-  "http://admin:${FACTORIO_PASSWORD}@${FACTORIO_DNS_NAME}:3000/api/dashboards/db" \
-  | jq
+new_dashboard=$(
+  curl \
+    --data '{
+      "dashboard": {
+        "id": null,
+        "timezone": "browser",
+        "title": "Hello Factorio",
+        "uid": null
+      },
+      "message": "grafana-setup.sh",
+      "overwrite": false
+    }' \
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --request POST \
+    --silent \
+    "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/dashboards/db" \
+    | jq
+)
+
+jq '.' <<< "$new_dashboard"
+
+new_dashboard_uid=$(jq '.uid' <<< "$new_dashboard")
+
+echo "New dashboard UID: $new_dashboard_uid"
+
+# Grafana takes a moment to set up the newly-created dashboard
+sleep 3s
 
 curl \
   --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
   --request GET \
   --silent \
-  "http://admin:${FACTORIO_PASSWORD}@${FACTORIO_DNS_NAME}:3000/api/dashboards/uid/Yv5ie31Wk" \
+  "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/dashboards/uid/$new_dashboard_uid" \
   | jq
