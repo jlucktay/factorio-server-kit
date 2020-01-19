@@ -15,6 +15,7 @@ done
 location=losangeles
 zone=${FACTORIO_SERVER_LOCATIONS[$location]:-"LOCATION_KEY_NOT_FOUND"}
 
+machine_type=
 open_logs=0
 
 # TODO: Los Angeles DC doesn't have N2 machine type, but it does have E2
@@ -28,11 +29,13 @@ fi
 function usage() {
   cat << HEREDOC
 
-  Usage: ${script_name:-} [--help | [--logs] --<location>]
+  Usage: ${script_name:-} [--help | [--logs] [--machine-type=...] --<location>]
 
   Optional arguments:
     -h, --help             show this help message and exit
     -l, --logs             open the Stackdriver Logging page after creating the server
+    -m, --machine-type     provision the server VM with this machine-type hardware spec
+                           see 'gcloud compute machine-types list' for valid values
 
   Server location:
 HEREDOC
@@ -68,6 +71,10 @@ for i in "$@"; do
       open_logs=1
       shift
       ;;
+    -m=* | --machine-type=*)
+      machine_type=${i#*=}
+      shift
+      ;;
     *)
       location=${1:2}
       if test "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}"; then
@@ -79,6 +86,35 @@ for i in "$@"; do
       ;;
   esac
 done
+
+if test -n "$machine_type"; then
+  echo -n "Validating machine type '$machine_type'..."
+  mapfile -t valid_machine_types_in_zone < <(
+    gcloud "--format=value(name)" \
+      compute \
+      machine-types \
+      list \
+      --zones="${FACTORIO_SERVER_LOCATIONS[$location]}"
+  )
+
+  valid_mt=0
+
+  for ((i = 0; i < ${#valid_machine_types_in_zone}; i += 1)); do
+    echo -n "."
+    if [ "$machine_type" == "${valid_machine_types_in_zone[$i]}" ]; then
+      valid_mt=1
+      break
+    fi
+  done
+
+  if ((valid_mt == 0)); then
+    echo
+    err "machine type '$machine_type' is not valid in this zone"
+    exit 1
+  fi
+
+  echo " valid and available in zone '${FACTORIO_SERVER_LOCATIONS[$location]}'."
+fi
 
 # Delete any old servers that may already be deployed within the project
 factorio::vm::delete_all_instances
@@ -110,6 +146,13 @@ gcloud_args=(
   compute
   instances
   create
+)
+
+if test -n "$machine_type"; then
+  gcloud_args+=("--machine-type=$machine_type")
+fi
+
+gcloud_args+=(
   "--source-instance-template=$instance_template"
   "--subnet=default"
   "--zone=${FACTORIO_SERVER_LOCATIONS[$location]}"
