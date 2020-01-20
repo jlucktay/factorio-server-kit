@@ -103,7 +103,7 @@ if test -n "$machine_type"; then
 
   valid_mt=0
 
-  for ((i = 0; i < ${#valid_machine_types_in_zone}; i += 1)); do
+  for ((i = 0; i < ${#valid_machine_types_in_zone[@]}; i += 1)); do
     echo -n "."
     if [ "$machine_type" == "${valid_machine_types_in_zone[$i]}" ]; then
       valid_mt=1
