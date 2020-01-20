@@ -32,9 +32,10 @@ type location struct {
 	Zone     string `json:"zone"`
 }
 
-// Instances will iterate across all zones listed in our gs://jlucktay-factorio-storage/lib/locations.json file in Storage
-// and delete all instances which (1) are named using the same pattern that /scripts/roll-vm.sh uses to create
-// instances, and (2) have a status of TERMINATED.
+// Instances will iterate across all zones listed in our gs://jlucktay-factorio-storage/lib/locations.json file and
+// delete all instances which:
+// (1) are named using the same pattern that /scripts/roll-vm.sh uses to create instances
+// (2) have a status of TERMINATED
 func Instances(ctx context.Context, _ PubSubMessage) error {
 	storageClient, errStorage := storage.NewClient(ctx)
 	if errStorage != nil {
