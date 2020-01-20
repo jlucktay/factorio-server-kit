@@ -37,7 +37,7 @@ function usage() {
     -m, --machine-type     provision the server VM with this machine-type hardware spec
                            see 'gcloud compute machine-types list' for valid values
 
-  Server location:
+  Optional arguments for server location:
 HEREDOC
 
   # https://www.reddit.com/r/bash/comments/5wma5k/is_there_a_way_to_sort_an_associative_array_by/debbjsp/
