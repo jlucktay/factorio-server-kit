@@ -70,13 +70,9 @@ echo " done."
 
 jq '.' <<< "$new_dashboard"
 
-new_dashboard_uid=$(jq '.uid' <<< "$new_dashboard")
+new_dashboard_uid=$(jq --raw-output '.uid' <<< "$new_dashboard")
 
-echo "New dashboard UID: $new_dashboard_uid"
-
-# Grafana takes a moment to set up the newly-created dashboard
-echo "3s nap."
-sleep 3s
+echo "New dashboard UID: '$new_dashboard_uid'"
 
 echo "Getting new dashboard..."
 curl \
