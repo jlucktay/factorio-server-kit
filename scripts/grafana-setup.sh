@@ -13,6 +13,7 @@ factorio::password
 
 # One time only
 
+echo "Updating password..."
 curl \
   --data '{
     "confirmNew": "'"${FACTORIO_PASSWORD:-}"'",
@@ -26,6 +27,7 @@ curl \
   "http://admin:admin@${FACTORIO_DNS_NAME:-}:3000/api/user/password" \
   | jq
 
+echo "Adding Prometheus data source..."
 curl \
   --data '{
     "access": "proxy",
@@ -44,10 +46,7 @@ curl \
   "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/datasources" \
   | jq
 
-# Per boot
-
-# One time vs per boot? TBD
-
+echo -n "Adding new dashboard..."
 new_dashboard=$(
   curl \
     --data '{
@@ -67,6 +66,7 @@ new_dashboard=$(
     "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/dashboards/db" \
     | jq
 )
+echo " done."
 
 jq '.' <<< "$new_dashboard"
 
@@ -75,8 +75,10 @@ new_dashboard_uid=$(jq '.uid' <<< "$new_dashboard")
 echo "New dashboard UID: $new_dashboard_uid"
 
 # Grafana takes a moment to set up the newly-created dashboard
+echo "3s nap."
 sleep 3s
 
+echo "Getting new dashboard..."
 curl \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
@@ -84,3 +86,7 @@ curl \
   --silent \
   "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/dashboards/uid/$new_dashboard_uid" \
   | jq
+
+# Per boot
+
+# One time vs per boot? TBD
