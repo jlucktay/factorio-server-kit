@@ -57,6 +57,10 @@ HEREDOC
 
   NOTE: if multiple locations are specified, the last one wins
 
+  Example:
+    $script_name --logs --machine-type=f1-micro --sydney
+      provision a server with f1-micro hardware in the Sydney (australia-southeast1) region, and open the Stackdriver
+      logs page after the server is created
 HEREDOC
 }
 
