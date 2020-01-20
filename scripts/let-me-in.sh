@@ -41,7 +41,7 @@ instance=$(
 )
 
 if [ "$(jq length <<< "$instance")" == 0 ]; then
-  echo "${script_name:-}: there are currently no instances running"
+  err "there are currently no instances running"
   exit 0
 fi
 

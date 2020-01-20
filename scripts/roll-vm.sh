@@ -113,7 +113,7 @@ if test -n "$machine_type"; then
 
   if ((valid_mt == 0)); then
     echo
-    err "machine type '$machine_type' is not valid in this zone"
+    err "machine type '$machine_type' is not valid in zone '${FACTORIO_SERVER_LOCATIONS[$location]}'."
     exit 1
   fi
 
