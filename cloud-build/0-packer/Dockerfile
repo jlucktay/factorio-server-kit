@@ -8,10 +8,12 @@ RUN echo "${PACKER_VERSION_SHA256SUM}  packer_${PACKER_VERSION}_linux_amd64.zip"
   && sha256sum -c checksum \
   && /usr/bin/unzip packer_${PACKER_VERSION}_linux_amd64.zip
 
-FROM ubuntu:18.04
+FROM gcr.io/cloud-builders/gcloud
 
 RUN apt-get --assume-yes update \
-  && apt-get --assume-yes --no-install-recommends install ca-certificates \
+  && apt-get --assume-yes --no-install-recommends \
+  install \
+  ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 COPY --from=checksum packer /usr/bin/packer
 
