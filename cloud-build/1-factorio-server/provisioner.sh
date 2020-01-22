@@ -90,15 +90,24 @@ mv --force --verbose docker-compose.7.yml docker-compose.yml
 logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
 
-logger "=== Enable Docker auto-restart, and run everything up with Docker and Compose"
+logger "=== Set up Docker start script, and run everything up with Docker and Compose"
 systemctl enable docker
+
+cat << EOF > /usr/bin/docker-run-factorio.sh
+docker pull factoriotools/factorio:latest
+
 docker run \
   --detach \
   --name factorio \
   --publish 27015:27015/tcp \
   --publish 34197:34197/udp \
   --volume /opt/factorio:/factorio \
-  factoriotools/factorio
+  factoriotools/factorio:latest
+EOF
+
+chmod --changes u+x /usr/bin/docker-run-factorio.sh
+/usr/bin/docker-run-factorio.sh
+
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d
 
 logger "=== Manage Docker as non-root users"
