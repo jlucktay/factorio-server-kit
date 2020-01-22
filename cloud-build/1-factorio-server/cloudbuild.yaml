@@ -26,11 +26,11 @@ steps:
       - --maintenance-policy=TERMINATE
       - --metadata-from-file=startup-script=startup.sh,shutdown-script=shutdown.sh
       - --network-tier=PREMIUM
-      - --network=projects/jlucktay-factorio/global/networks/default
+      - --network=projects/${PROJECT_ID}/global/networks/default
       - --no-restart-on-failure
       - --preemptible
       - --reservation-affinity=any
       - --scopes=https://www.googleapis.com/auth/cloud-platform
-      - --service-account=factorio-server@jlucktay-factorio.iam.gserviceaccount.com
+      - --service-account=factorio-server@${PROJECT_ID}.iam.gserviceaccount.com
       - --tags=factorio,grafana,ssh
       - $_IMAGE_NAME
