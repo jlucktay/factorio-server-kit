@@ -29,7 +29,6 @@ steps:
       - --network=projects/${PROJECT_ID}/global/networks/default
       - --no-restart-on-failure
       - --preemptible
-      - --reservation-affinity=any
       - --scopes=https://www.googleapis.com/auth/cloud-platform
       - --service-account=factorio-server@${PROJECT_ID}.iam.gserviceaccount.com
       - --tags=factorio,grafana,ssh
