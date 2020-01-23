@@ -14,6 +14,11 @@ steps:
       - --destination=gcr.io/$PROJECT_ID/packer
       - --destination=gcr.io/$PROJECT_ID/packer:${_PACKER_VERSION}
 
+  # Version check
+  - name: gcr.io/$PROJECT_ID/packer
+    args:
+      - version
+
 substitutions:
   _PACKER_VERSION: 1.5.1
   _PACKER_VERSION_SHA256SUM: 3305ede8886bc3fd83ec0640fb87418cc2a702b2cb1567b48c8cb9315e80047d
