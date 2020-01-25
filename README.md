@@ -2,6 +2,8 @@
 
 Running our own Factorio server.
 
+[![time tracker](https://wakatime.com/badge/github/jlucktay/factorio-workbench.svg)](https://wakatime.com/badge/github/jlucktay/factorio-workbench)
+
 ## Notes
 
 ### Create VM
