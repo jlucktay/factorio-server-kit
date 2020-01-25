@@ -98,10 +98,11 @@ docker pull factoriotools/factorio:latest
 
 docker run \
   --detach \
-  --name factorio \
-  --publish 27015:27015/tcp \
-  --publish 34197:34197/udp \
-  --volume /opt/factorio:/factorio \
+  --name=factorio \
+  --publish=27015:27015/tcp \
+  --publish=34197:34197/udp \
+  --restart=on-failure \
+  --volume=/opt/factorio:/factorio \
   factoriotools/factorio:latest
 EOF
 
