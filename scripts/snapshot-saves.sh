@@ -16,7 +16,7 @@ done
 
 # shellcheck disable=SC2154
 for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
-  stat=$(gsutil stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" 2> /dev/null || true)
+  stat=$(gsutil -m stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" 2> /dev/null || true)
 
   if [ ${#stat} -eq 0 ]; then
     continue

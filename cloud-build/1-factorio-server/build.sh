@@ -13,6 +13,7 @@ done
 
 # Push lib JSON to Storage
 gsutil_args=(
+  -m
   cp
   -P
   "${FACTORIO_ROOT}/lib/locations.json"
