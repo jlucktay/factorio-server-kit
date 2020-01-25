@@ -29,12 +29,19 @@ substitutions=(
   "_IMAGE_ZONE=$FACTORIO_IMAGE_ZONE"
 )
 
-gcloud \
-  builds \
-  submit \
-  --config="$script_dir/cloudbuild.yaml" \
-  --substitutions="$(factorio::join_by , "${substitutions[@]}")" \
+gcloud_args=(
+  builds
+  submit
+  "--config=$script_dir/cloudbuild.yaml"
+  "--substitutions=$(factorio::join_by , "${substitutions[@]}")"
   "$script_dir"
+)
+
+# If the build fails, clean up any instances created
+if ! gcloud "${gcloud_args[@]}"; then
+  factorio::vm::delete_all_instances "packer-*"
+  exit 1
+fi
 
 # Clean up old image(s); all but most recent
 gcloud_args=(
