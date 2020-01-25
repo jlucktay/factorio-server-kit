@@ -12,7 +12,8 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 curl_output=$(curl --silent http://httpbin.org/ip | jq --raw-output '.origin')
-read -d "," -r my_ip <<< "$curl_output"
+[[ $curl_output =~ ([0-9]{1,3}\.){3}[0-9]{1,3} ]]
+my_ip=${BASH_REMATCH[0]}
 
 ### Build arguments list for gcloud
 gcloud_args=(
