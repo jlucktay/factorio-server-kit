@@ -11,6 +11,10 @@ done
 
 factorio::password
 
+grafana_auth="admin:${FACTORIO_PASSWORD:-}"
+grafana_host="${FACTORIO_DNS_NAME:-}:3000"
+grafana_instance="$grafana_auth@$grafana_host"
+
 # One time only
 
 echo "Adding Prometheus data source..."
@@ -29,7 +33,7 @@ curl \
   --header "Content-Type: application/json" \
   --request POST \
   --silent \
-  "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/datasources" \
+  "http://$grafana_instance/api/datasources" \
   | jq
 
 echo -n "Adding new dashboard..."
@@ -49,7 +53,7 @@ new_dashboard=$(
     --header "Content-Type: application/json" \
     --request POST \
     --silent \
-    "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/dashboards/db" \
+    "http://$grafana_instance/api/dashboards/db" \
     | jq
 )
 echo " done."
@@ -66,7 +70,7 @@ curl \
   --header "Content-Type: application/json" \
   --request GET \
   --silent \
-  "http://admin:$FACTORIO_PASSWORD@$FACTORIO_DNS_NAME:3000/api/dashboards/uid/$new_dashboard_uid" \
+  "http://$grafana_instance/api/dashboards/uid/$new_dashboard_uid" \
   | jq
 
 # Per boot
