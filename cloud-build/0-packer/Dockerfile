@@ -1,4 +1,4 @@
-FROM alpine:3.11 as checksum
+FROM alpine:3 as checksum
 
 ARG PACKER_VERSION
 ARG PACKER_VERSION_SHA256SUM
@@ -8,7 +8,7 @@ RUN echo "${PACKER_VERSION_SHA256SUM}  packer_${PACKER_VERSION}_linux_amd64.zip"
   && sha256sum -c checksum \
   && /usr/bin/unzip packer_${PACKER_VERSION}_linux_amd64.zip
 
-FROM gcr.io/cloud-builders/gcloud
+FROM gcr.io/cloud-builders/gcloud-slim
 
 COPY --from=checksum packer /usr/bin/packer
 
