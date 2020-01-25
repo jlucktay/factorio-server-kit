@@ -11,12 +11,13 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-# Push locations.json to Storage
+# Push lib JSON to Storage
 gsutil_args=(
   cp
   -P
   "${FACTORIO_ROOT}/lib/locations.json"
-  gs://jlucktay-factorio-storage/lib/locations.json
+  "${FACTORIO_ROOT}/lib/password.json"
+  gs://jlucktay-factorio-storage/lib/
 )
 
 gsutil "${gsutil_args[@]}"

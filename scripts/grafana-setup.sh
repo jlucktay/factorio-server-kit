@@ -13,20 +13,6 @@ factorio::password
 
 # One time only
 
-echo "Updating password..."
-curl \
-  --data '{
-    "confirmNew": "'"${FACTORIO_PASSWORD:-}"'",
-    "newPassword": "'"$FACTORIO_PASSWORD"'",
-    "oldPassword": "admin"
-  }' \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
-  --request PUT \
-  --silent \
-  "http://admin:admin@${FACTORIO_DNS_NAME:-}:3000/api/user/password" \
-  | jq
-
 echo "Adding Prometheus data source..."
 curl \
   --data '{

@@ -143,6 +143,20 @@ EOF
 
 /usr/bin/google_instance_setup
 
+logger "=== Reset Grafana password"
+grafana_password=$(gsutil cat gs://jlucktay-factorio-storage/lib/password.json | jq --raw-output ".password")
+curl \
+  --data '{
+    "confirmNew": "'"$grafana_password"'",
+    "newPassword": "'"$grafana_password"'",
+    "oldPassword": "admin"
+  }' \
+  --header "Accept: application/json" \
+  --header "Content-Type: application/json" \
+  --include \
+  --request PUT \
+  "http://admin:admin@localhost:3000/api/user/password"
+
 logger "=== Install our server seppuku binary"
 mkdir --parents --verbose /tmp/gopukku /var/log/gopukku
 cd /tmp/gopukku
