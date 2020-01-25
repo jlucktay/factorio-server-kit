@@ -13,7 +13,6 @@ steps:
 
   - name: gcr.io/cloud-builders/gcloud
     args:
-      - --format=json
       - compute
       - instance-templates
       - create
