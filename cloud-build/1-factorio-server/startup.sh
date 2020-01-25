@@ -56,7 +56,7 @@ if ! grep -F "$cron_job" /etc/crontab &> /dev/null; then
   echo "$cron_job" >> /etc/crontab
 fi
 
-logger "=== Update and start the Factorio server"
+logger "=== Upgrade and (re)start the Factorio server"
 /usr/bin/docker-run-factorio.sh
 
 logger "=== Start up our server seppuku binary"

@@ -94,6 +94,11 @@ logger "=== Set up Docker start script, and run everything up with Docker and Co
 systemctl enable docker
 
 cat << EOF > /usr/bin/docker-run-factorio.sh
+#!/usr/bin/env bash
+set -euxo pipefail
+IFS=$'\n\t'
+
+docker rm factorio || true
 docker pull factoriotools/factorio:latest
 
 docker run \
