@@ -29,15 +29,5 @@
       "script": "{{ template_dir }}/provisioner.sh",
       "type": "shell"
     }
-  ],
-  "post-processors": [
-    {
-      "environment_vars": [
-        "IMAGE_NAME={{ user `image_name` }}",
-        "IMAGE_ZONE={{ user `image_zone` }}"
-      ],
-      "script": "{{ template_dir }}/post-processor.sh",
-      "type": "shell-local"
-    }
   ]
 }
