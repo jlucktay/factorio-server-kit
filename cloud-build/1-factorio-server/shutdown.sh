@@ -3,7 +3,7 @@ set -euxo pipefail
 IFS=$'\n\t'
 
 logger "=== Called 'shutdown-script'!"
-locations_json="/etc/locations.json"
+locations=$(gsutil cat gs://jlucktay-factorio-storage/lib/locations.json)
 
 logger "=== Waiting for Factorio container to stop..."
 while docker top factorio &> /dev/null; do
@@ -21,7 +21,7 @@ instance_zone=$(
 push_saves_to=$(
   jq --raw-output \
     '.[] | select(.zone == "'"$(basename "$instance_zone")"'") | .location' \
-    "$locations_json"
+    <<< "$locations"
 )
 
 logger "=== Pushing Factorio saves to Storage..."

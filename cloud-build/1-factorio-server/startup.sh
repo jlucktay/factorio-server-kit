@@ -3,8 +3,7 @@ set -euxo pipefail
 IFS=$'\n\t'
 
 logger "=== Get configs from Storage"
-locations_json="/etc/locations.json"
-gsutil cp gs://jlucktay-factorio-storage/lib/locations.json "$locations_json"
+locations=$(gsutil cat gs://jlucktay-factorio-storage/lib/locations.json)
 # gsutil -m cp gs://jlucktay-factorio-storage/fluentd/* /etc/google-fluentd/config.d/ # currently empty
 gsutil -m cp gs://jlucktay-factorio-storage/config/*-settings.json /opt/factorio/config/
 gsutil -m cp gs://jlucktay-factorio-storage/config/server-*list.json /opt/factorio/config/
@@ -12,8 +11,8 @@ gsutil -m cp gs://jlucktay-factorio-storage/config/server-*list.json /opt/factor
 logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
 
-for ((i = 0; i < $(jq length "$locations_json"); i += 1)); do
-  location="$(jq --raw-output ".[$i] | .location" "$locations_json")"
+for ((i = 0; i < $(jq length <<< "$locations"); i += 1)); do
+  location="$(jq --raw-output ".[$i] | .location" <<< "$locations")"
 
   for mtime in $(gsutil stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" \
     | grep goog-reserved-file-mtime \
@@ -42,7 +41,7 @@ instance_zone=$(
 push_saves_to=$(
   jq --raw-output \
     '.[] | select(.zone == "'"$(basename "$instance_zone")"'") | .location' \
-    "$locations_json"
+    <<< "$locations"
 )
 
 logger "=== Schedule a cron job (if not already present) to push the saves back to Storage"
