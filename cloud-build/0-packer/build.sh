@@ -11,10 +11,17 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
+# Submit build and block (not async)
+substitutions=(
+  "_PACKER_VERSION=$FACTORIO_PACKER_VERSION"
+  "_PACKER_VERSION_SHA256SUM=$FACTORIO_PACKER_VERSION_SHA256SUM"
+)
+
 gcloud \
   builds \
   submit \
   --config="$script_dir/cloudbuild.yaml" \
+  --substitutions="$(factorio::join_by , "${substitutions[@]}")" \
   "$script_dir"
 
 # Collect untagged digest(s)
