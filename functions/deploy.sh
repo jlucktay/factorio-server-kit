@@ -17,7 +17,7 @@ gcloud_deploy_args=(
   cleanup-instances
   --entry-point "Instances"
   --max-instances 1
-  --runtime go111
+  --runtime go113
   --trigger-topic "cleanup-instances"
 )
 
