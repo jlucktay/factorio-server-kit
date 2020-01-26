@@ -10,5 +10,9 @@
   {
     "location": "sydney",
     "zone": "australia-southeast1-b"
+  },
+  {
+    "location": "tokyo",
+    "zone": "asia-northeast1-c"
   }
 ]
