@@ -39,7 +39,7 @@ type location struct {
 func Instances(ctx context.Context, _ PubSubMessage) error {
 	storageClient, errStorage := storage.NewClient(ctx)
 	if errStorage != nil {
-		return fmt.Errorf("error creating Storage client: %v", errStorage)
+		return fmt.Errorf("error creating Storage client: %w", errStorage)
 	}
 
 	bkt := storageClient.Bucket(locationsBucket)
@@ -47,7 +47,7 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 
 	r, errReader := objLocs.NewReader(ctx)
 	if errReader != nil {
-		return fmt.Errorf("error reading JSON object: %v", errReader)
+		return fmt.Errorf("error reading JSON object: %w", errReader)
 	}
 	defer r.Close()
 
@@ -55,12 +55,12 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 
 	dec := json.NewDecoder(r)
 	if errDecode := dec.Decode(&locs); errDecode != nil {
-		return fmt.Errorf("error decoding locations JSON: %v", errDecode)
+		return fmt.Errorf("error decoding locations JSON: %w", errDecode)
 	}
 
 	computeService, errService := compute.NewService(ctx)
 	if errService != nil {
-		return fmt.Errorf("error creating Compute service: %v", errService)
+		return fmt.Errorf("error creating Compute service: %w", errService)
 	}
 
 	for _, loc := range locs {
@@ -69,7 +69,7 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 
 		list, errList := listCall.Do()
 		if errList != nil {
-			return fmt.Errorf("error listing instances in zone %s: %v", loc.Zone, errList)
+			return fmt.Errorf("error listing instances in zone %s: %w", loc.Zone, errList)
 		}
 
 		for _, inst := range list.Items {
@@ -78,7 +78,7 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 
 				_, errDelete := deleteCall.Do()
 				if errDelete != nil {
-					return fmt.Errorf("error executing delete operation for instance %s in zone %s: %v",
+					return fmt.Errorf("error executing delete operation for instance %s in zone %s: %w",
 						inst.Name, loc.Zone, errDelete)
 				}
 			}
