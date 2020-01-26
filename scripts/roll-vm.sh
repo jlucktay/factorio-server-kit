@@ -12,7 +12,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Argument defaults
-location=losangeles
+location=tokyo
 zone=${FACTORIO_SERVER_LOCATIONS[$location]:-"LOCATION_KEY_NOT_FOUND"}
 
 machine_type=
