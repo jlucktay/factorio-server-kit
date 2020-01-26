@@ -31,8 +31,10 @@ for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
     fi
   done
 
+  snapshot_timestamp=$(TZ=UTC factorio::run_date --date="@$mtime_high_score" "+%Y%m%d.%H%M%S%z")
+
   gsutil -m \
     rsync -P -x ".*\.tmp\.zip" \
     "gs://jlucktay-factorio-saves-$location" \
-    "gs://jlucktay-factorio-backup-saves/$location-$(TZ=UTC date -r "$mtime_high_score" "+%Y%m%d.%H%M%S%z")"
+    "gs://jlucktay-factorio-backup-saves/$location-$snapshot_timestamp"
 done
