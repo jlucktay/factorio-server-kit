@@ -11,13 +11,17 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-gcloud \
-  --format=json \
-  functions \
-  deploy \
-  cleanup-instances \
-  --entry-point="Instances" \
-  --runtime=go111 \
-  --max-instances=1 \
-  --trigger-topic="cleanup-instances" \
-  | jq
+gcloud_deploy_args=(
+  functions
+  deploy
+  cleanup-instances
+  --entry-point "Instances"
+  --max-instances 1
+  --runtime go111
+  --trigger-topic "cleanup-instances"
+)
+
+echo "Running 'gcloud' with following arguments:"
+echo "${gcloud_deploy_args[@]}"
+
+gcloud "${gcloud_deploy_args[@]}"
