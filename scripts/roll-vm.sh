@@ -121,7 +121,7 @@ if test -n "$machine_type"; then
 fi
 
 # Delete any old servers that may already be deployed within the project
-factorio::vm::delete_all_instances
+factorio::vm::delete_instances factorio-*
 
 # Look up latest instance template
 gcloud_args=(

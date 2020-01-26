@@ -40,7 +40,7 @@ gcloud_args=(
 
 # If the build fails, clean up any instances created
 if ! gcloud "${gcloud_args[@]}"; then
-  factorio::vm::delete_all_instances "packer-*"
+  factorio::vm::delete_instances "packer-*"
   exit 1
 fi
 
