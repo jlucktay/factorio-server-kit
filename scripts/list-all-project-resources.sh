@@ -44,3 +44,8 @@ gcloud alpha resources list \
 #
 # https://www.terraform.io/docs/providers/google/r/dns_record_set.html
 # -> gcloud dns record-sets list --zone=factorio-server
+#
+# Google Cloud resource IP ranges, to e.g. whitelist incoming ssh traffic for the build pipeline
+#
+# https://www.terraform.io/docs/providers/google/d/datasource_google_netblock_ip_ranges.html
+# https://cloud.google.com/compute/docs/faq#find_ip_range
