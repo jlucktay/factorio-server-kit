@@ -112,6 +112,7 @@ docker run \
 EOF
 
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
+export UPDATE_MODS_ON_START=1
 /usr/bin/docker-run-factorio.sh
 
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d

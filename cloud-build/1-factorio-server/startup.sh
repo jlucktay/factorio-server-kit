@@ -56,6 +56,7 @@ if ! grep -F "$cron_job" /etc/crontab &> /dev/null; then
 fi
 
 logger "=== Upgrade and (re)start the Factorio server"
+export UPDATE_MODS_ON_START=1
 /usr/bin/docker-run-factorio.sh
 
 logger "=== Start up our server seppuku binary"
