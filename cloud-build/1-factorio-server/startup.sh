@@ -55,8 +55,19 @@ if ! grep -F "$cron_job" /etc/crontab &> /dev/null; then
   echo "$cron_job" >> /etc/crontab
 fi
 
+logger "=== Add factorio.com secrets to environment"
+if ! secrets=$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json) \
+  || ! USERNAME=$(jq --exit-status --raw-output ".username" <<< "$secrets") \
+  || ! TOKEN=$(jq --exit-status --raw-output ".token" <<< "$secrets"); then
+
+  echo >&2 "Error retrieving secrets."
+  exit 1
+fi
+export USERNAME
+export TOKEN
+# export UPDATE_MODS_ON_START=true # TODO(jlucktay): re-enable once Graftorio is OK with Factorio v0.18
+
 logger "=== Upgrade and (re)start the Factorio server"
-export UPDATE_MODS_ON_START=1
 /usr/bin/docker-run-factorio.sh
 
 logger "=== Start up our server seppuku binary"

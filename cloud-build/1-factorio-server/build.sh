@@ -17,7 +17,7 @@ gsutil_args=(
   cp
   -P
   "${FACTORIO_ROOT}/lib/locations.json"
-  "${FACTORIO_ROOT}/lib/password.json"
+  "${FACTORIO_ROOT}/lib/secrets.json"
   gs://jlucktay-factorio-storage/lib/
 )
 

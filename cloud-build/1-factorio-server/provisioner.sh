@@ -90,6 +90,18 @@ mv --force --verbose docker-compose.7.yml docker-compose.yml
 logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
 
+logger "=== Add factorio.com secrets to environment"
+if ! secrets=$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json) \
+  || ! USERNAME=$(jq --exit-status --raw-output ".username" <<< "$secrets") \
+  || ! TOKEN=$(jq --exit-status --raw-output ".token" <<< "$secrets"); then
+
+  echo >&2 "Error retrieving secrets."
+  exit 1
+fi
+export USERNAME
+export TOKEN
+# export UPDATE_MODS_ON_START=true # TODO(jlucktay): re-enable once Graftorio is OK with Factorio v0.18
+
 logger "=== Set up Docker start script, and run everything up with Docker and Compose"
 systemctl enable docker
 
@@ -103,6 +115,9 @@ docker pull factoriotools/factorio:latest
 
 docker run \
   --detach \
+  --env USERNAME \
+  --env TOKEN \
+  --env UPDATE_MODS_ON_START \
   --name=factorio \
   --publish=27015:27015/tcp \
   --publish=34197:34197/udp \
@@ -112,7 +127,6 @@ docker run \
 EOF
 
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
-export UPDATE_MODS_ON_START=1
 /usr/bin/docker-run-factorio.sh
 
 docker-compose --file=/opt/graftorio/docker-compose.yml up -d
@@ -145,7 +159,10 @@ EOF
 /usr/bin/google_instance_setup
 
 logger "=== Reset Grafana password"
-grafana_password=$(gsutil cat gs://jlucktay-factorio-storage/lib/password.json | jq --raw-output ".password")
+if ! grafana_password=$(jq --exit-status --raw-output ".password" <<< "$secrets"); then
+  echo >&2 "Error retrieving secrets."
+  exit 1
+fi
 curl \
   --data '{
     "confirmNew": "'"$grafana_password"'",

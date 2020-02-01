@@ -2,16 +2,17 @@
 set -euo pipefail
 
 function factorio::password() {
-  if [ ! -f "${FACTORIO_ROOT:?}/lib/password.json" ]; then
-    err "'$FACTORIO_ROOT/lib/password.json' required but not found."
-    exit 1
+  local secrets_json="${FACTORIO_ROOT:?}/lib/secrets.json"
+
+  if [ ! -f "$secrets_json" ]; then
+    err "'$secrets_json' required but not found."
   fi
 
-  local tmp_password
+  local password
 
-  if ! tmp_password="$(jq --exit-status --raw-output '.password' "$FACTORIO_ROOT/lib/password.json")"; then
-    err "'$FACTORIO_ROOT/lib/password.json' did not contain a value under the 'password' key."
+  if ! password="$(jq --exit-status --raw-output '.password' "$secrets_json")"; then
+    err "'$secrets_json' did not contain a value under the 'password' key."
   fi
 
-  echo "$tmp_password"
+  echo "$password"
 }
