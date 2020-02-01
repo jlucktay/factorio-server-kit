@@ -1,48 +1,51 @@
-# Factorio Workbench
+# Welcome to Factorio Workbench 👋
 
-Running our own Factorio server.
+[![License: The Unlicense](https://img.shields.io/badge/License-The%20Unlicense-yellow.svg)][1]
+[![Twitter: jlucktay](https://img.shields.io/twitter/follow/jlucktay.svg?style=social)][2]
 
-[![time tracker](https://wakatime.com/badge/github/jlucktay/factorio-workbench.svg)](https://wakatime.com/badge/github/jlucktay/factorio-workbench)
+> Running our own Factorio server on Google Cloud
 
-## Notes
+Much like the game itself, this project aims to automate as much as possible.
 
-### Create VM
+## Usage
 
-See the [(re)roll VM script](scripts/roll-vm.sh) and related [library](lib/) functions.
+The project is primarily driven by Bash scripts, supported by Cloud Build pipelines and Terraform infrastructure-as-code.
 
-#### Optional
+### Bash scripts
 
-- set VM size with `--machine-type=<NAME>`
-  - look up available sizes with `gcloud compute machine-types list --zones=us-west2-b --sort-by=CPUS`
-  - e.g. `--machine-type=n1-standard-2`
+- [roll-vm.sh](scripts/roll-vm.sh) - the main point of execution; will run up a GCE VM in the given location (see `--help`) with
+    Docker containers for the Factorio server itself, as well as Grafana and Prometheus to tie into
+    [Graftorio](https://github.com/afex/graftorio)
 
-``` text
-To "disable" RCON don't expose port 27015, i.e. start the server without -p 27015:27015/tcp.
-RCON is still running, but nobody can to connect to it.
-```
+#### Library
 
-### Startup script
+Each of the above scripts taps into a common library of functionality under the [lib](lib/) directory.
 
-- ~~set up Fuse to mount GCS bucket~~
-- ~~get Factorio config/server settings from bucket~~
-- ~~start up Docker container~~
+### Cloud Build pipelines
 
-### Map (generation) settings
+### Terraform IaC
 
-The two settings files `map-settings.json` and `map-gen-settings.json` can be created from a map exchange string in the
-game as outlined
-[here](https://wiki.factorio.com/Command_line_parameters#Creating_the_JSON_files_from_a_map_exchange_string).
+## Author
 
-## Other improvements
+👤 **James Lucktaylor**
 
-- ~~Bake a [proper image](https://cloud.google.com/compute/docs/images) for the server, rather than bootstrap
-  everything every time~~
-- Add more signals to `trap` call in `startup.sh`?
-  - `$ bat /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/sys/signal.h`
-- Wire all of the logs up to Stackdriver [including Docker][1]
-  - Further reading:
-    - [Google Cloud Logging driver](https://docs.docker.com/config/containers/logging/gcplogs/)
-    - [Docker Logging](https://www.fluentd.org/guides/recipes/docker-logging)
-    - [About the Logging agent](https://cloud.google.com/logging/docs/agent/)
+- Website: jameslucktaylor.info
+- GitHub: [@jlucktay](https://github.com/jlucktay)
+- Twitter: [@jlucktay][2]
+- LinkedIn: [@jlucktay](https://linkedin.com/in/jlucktay)
 
-[1]: https://cloud.google.com/community/tutorials/docker-gcplogs-driver
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+## 📝 License
+
+Copyright © 2020 [James Lucktaylor](https://github.com/jlucktay).
+
+This project is [The Unlicense](https://choosealicense.com/licenses/unlicense/) licensed.
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+
+[1]: https://choosealicense.com/licenses/unlicense/
+[2]: https://twitter.com/jlucktay
