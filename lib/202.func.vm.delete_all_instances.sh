@@ -10,7 +10,7 @@ function factorio::vm::delete_instances() {
     list
   )
 
-  if test -n "${1:-}"; then
+  if [ -n "${1:-}" ]; then
     gcloud_list_args+=("--filter=name:$1")
   fi
 

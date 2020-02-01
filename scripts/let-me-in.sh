@@ -43,7 +43,6 @@ instance=$(
 
 if [ "$(jq length <<< "$instance")" == 0 ]; then
   err "there are currently no instances running"
-  exit 0
 fi
 
 name=$(jq --raw-output ".[0].name" <<< "$instance")

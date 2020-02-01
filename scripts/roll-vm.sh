@@ -22,7 +22,6 @@ open_logs=0
 
 if [ "$zone" == "LOCATION_KEY_NOT_FOUND" ]; then
   err "location key '$location' was not found in $(realpath "$FACTORIO_ROOT/lib/locations.json")."
-  exit 1
 fi
 
 ### Set up usage/help output
@@ -114,7 +113,6 @@ if test -n "$machine_type"; then
   if ((valid_mt == 0)); then
     echo
     err "machine type '$machine_type' is not valid in zone '${FACTORIO_SERVER_LOCATIONS[$location]}'."
-    exit 1
   fi
 
   echo " valid and available in zone '${FACTORIO_SERVER_LOCATIONS[$location]}'."
@@ -141,7 +139,6 @@ instance_template=$(gcloud "${gcloud_args[@]}")
 
 if test -z "$instance_template"; then
   err "no instance templates named 'packtorio-*' were found"
-  exit 1
 fi
 
 # Create instance from template

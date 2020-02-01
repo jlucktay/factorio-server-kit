@@ -5,40 +5,36 @@ readonly script_name=$(basename "${BASH_SOURCE[-1]}")
 
 # Error logging function
 function err() {
-  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')] ${script_name:?}: $*" >&2
+  echo >&2 "[$(date +'%Y-%m-%dT%H:%M:%S%z')] ${script_name:?}: $*"
+  exit 1
 }
 
 ### Check for presence of other variables/tools
 # Variable - FACTORIO_ROOT
-test -n "${FACTORIO_ROOT:?}" || {
+if [ -z "${FACTORIO_ROOT:?}" ]; then
   err "FACTORIO_ROOT is not defined; it should be set to the root path of this project."
-  exit 1
-}
+fi
 
 # Tool - Google Cloud SDK
-hash gcloud 2> /dev/null || {
+if ! hash gcloud 2> /dev/null; then
   err "Google Cloud SDK ('gcloud') required but not found:
 - https://cloud.google.com/sdk/install"
-  exit 1
-}
+fi
 
-hash gsutil 2> /dev/null || {
+if ! hash gsutil 2> /dev/null; then
   err "Google Cloud SDK ('gsutil') required but not found:
 - https://cloud.google.com/sdk/install"
-  exit 1
-}
+fi
 
 # Tool - JQ
-hash jq 2> /dev/null || {
+if ! hash jq 2> /dev/null; then
   err "'jq' required but not found:
 - https://github.com/stedolan/jq/wiki/Installation"
-  exit 1
-}
+fi
 
 # Tool - realpath from GNU coreutils
-hash realpath 2> /dev/null || {
+if ! hash realpath 2> /dev/null; then
   err "'realpath' from GNU coreutils required but not found:
 - https://formulae.brew.sh/formula/coreutils
 - https://www.gnu.org/software/coreutils/"
-  exit 1
-}
+fi
