@@ -9,9 +9,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-factorio::password
-
-grafana_auth="admin:${FACTORIO_PASSWORD:-}"
+grafana_auth="admin:$(factorio::password)"
 grafana_host="${FACTORIO_DNS_NAME:?}:3000"
 grafana_instance="$grafana_auth@$grafana_host"
 
