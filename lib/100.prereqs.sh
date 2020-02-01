@@ -5,12 +5,12 @@ readonly script_name=$(basename "${BASH_SOURCE[-1]}")
 
 # Error logging function
 function err() {
-  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')] ${script_name:-}: $*" >&2
+  echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')] ${script_name:?}: $*" >&2
 }
 
 ### Check for presence of other variables/tools
 # Variable - FACTORIO_ROOT
-test -n "${FACTORIO_ROOT:-}" || {
+test -n "${FACTORIO_ROOT:?}" || {
   err "FACTORIO_ROOT is not defined; it should be set to the root path of this project."
   exit 1
 }

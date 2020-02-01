@@ -12,7 +12,7 @@ done
 factorio::password
 
 grafana_auth="admin:${FACTORIO_PASSWORD:-}"
-grafana_host="${FACTORIO_DNS_NAME:-}:3000"
+grafana_host="${FACTORIO_DNS_NAME:?}:3000"
 grafana_instance="$grafana_auth@$grafana_host"
 
 # One time only

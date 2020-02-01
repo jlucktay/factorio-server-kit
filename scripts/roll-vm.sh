@@ -29,7 +29,7 @@ fi
 function usage() {
   cat << HEREDOC
 
-  Usage: ${script_name:-} [--help | [--logs] [--machine-type=...] --<location>]
+  Usage: ${script_name:?} [--help | [--logs] [--machine-type=...] --<location>]
 
   Optional arguments:
     -h, --help             show this help message and exit
@@ -170,7 +170,7 @@ new_instance=$(gcloud "${gcloud_args[@]}")
 new_instance_id=$(jq --raw-output '.[0].id' <<< "$new_instance")
 new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].natIP' <<< "$new_instance")
 
-echo "Updating the A record '${FACTORIO_DNS_NAME:-}' in Cloud DNS with new IP of '$new_instance_ip'..."
+echo "Updating the A record '${FACTORIO_DNS_NAME:?}' in Cloud DNS with new IP of '$new_instance_ip'..."
 
 gcloud \
   dns record-sets transaction \
@@ -211,7 +211,7 @@ gcloud \
   &> /dev/null
 
 if ((open_logs == 1)); then
-  logs_link="https://console.cloud.google.com/logs/viewer?project=${CLOUDSDK_CORE_PROJECT:-}"
+  logs_link="https://console.cloud.google.com/logs/viewer?project=${CLOUDSDK_CORE_PROJECT:?}"
   logs_link+="&resource=gce_instance/instance_id/${new_instance_id}"
 
   echo "Opening the log viewer link: '$logs_link'"

@@ -25,7 +25,7 @@ gcloud \
   "$script_dir"
 
 # Collect untagged digest(s)
-base_image=gcr.io/${CLOUDSDK_CORE_PROJECT:-}/packer
+base_image=gcr.io/${CLOUDSDK_CORE_PROJECT:?}/packer
 
 gcloud_list_tags_args=(
   "--format=json"

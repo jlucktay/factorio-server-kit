@@ -2,7 +2,7 @@
 set -euo pipefail
 
 function factorio::password() {
-  test -f "${FACTORIO_ROOT:-}/lib/password.json" || {
+  test -f "${FACTORIO_ROOT:?}/lib/password.json" || {
     err "'$FACTORIO_ROOT/lib/password.json' required but not found."
     exit 1
   }
