@@ -31,10 +31,3 @@ if ! hash jq 2> /dev/null; then
   err "'jq' required but not found:
 - https://github.com/stedolan/jq/wiki/Installation"
 fi
-
-# Tool - realpath from GNU coreutils
-if ! hash realpath 2> /dev/null; then
-  err "'realpath' from GNU coreutils required but not found:
-- https://formulae.brew.sh/formula/coreutils
-- https://www.gnu.org/software/coreutils/"
-fi

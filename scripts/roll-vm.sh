@@ -20,7 +20,7 @@ open_logs=0
 # TODO: Los Angeles DC doesn't have N2 machine type, but it does have E2
 
 if [ "$zone" == "LOCATION_KEY_NOT_FOUND" ]; then
-  err "location key '$location' was not found in $(realpath "$FACTORIO_ROOT/lib/locations.json")."
+  err "location key '$location' was not found in '$FACTORIO_ROOT/lib/locations.json'."
 fi
 
 ### Set up usage/help output
