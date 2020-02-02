@@ -10,14 +10,20 @@ gsutil -m cp gs://jlucktay-factorio-storage/config/server-*list.json /opt/factor
 
 logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
+most_recent_saves_location=
 
-for ((i = 0; i < "$(jq length <<< "$locations")"; i += 1)); do
-  location="$(jq --raw-output ".[$i] | .location" <<< "$locations")"
+mapfile -t arr_locations < <(jq --raw-output ".[].location" <<< "$locations")
 
-  for mtime in "$(gsutil stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" \
-    | grep goog-reserved-file-mtime \
-    | cut -d":" -f2)"; do
+for location in "${arr_locations[@]}"; do
+  stat=$(gsutil -m stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" 2> /dev/null || true)
 
+  if [ ${#stat} -eq 0 ]; then
+    continue
+  fi
+
+  mapfile -t mtimes < <(grep goog-reserved-file-mtime <<< "$stat" | cut -d":" -f2)
+
+  for mtime in "${mtimes[@]}"; do
     if ((mtime > mtime_high_score)); then
       mtime_high_score=$mtime
       most_recent_saves_location=$location
@@ -25,7 +31,9 @@ for ((i = 0; i < "$(jq length <<< "$locations")"; i += 1)); do
   done
 done
 
-gsutil -m cp -P "gs://jlucktay-factorio-saves-$most_recent_saves_location/*" /opt/factorio/saves/
+if [ -n "$most_recent_saves_location" ]; then
+  gsutil -m cp -P "gs://jlucktay-factorio-saves-$most_recent_saves_location/*" /opt/factorio/saves/
+fi
 
 logger "=== Fix up Factorio permissions"
 chown --changes --recursive factorio:factorio /opt/factorio
