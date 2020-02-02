@@ -35,6 +35,7 @@
     "cache_path_start_distance_rating_multiplier": 10,
     "direct_distance_to_consider_short_request": 100,
     "enemy_with_different_destination_collision_penalty": 30,
+    "extended_collision_penalty": 3,
     "fwd2bwd_ratio": 5,
     "general_entity_collision_penalty": 10,
     "general_entity_subsequent_collision_penalty": 3,
@@ -49,6 +50,16 @@
     "min_steps_to_check_path_find_termination": 2000,
     "negative_cache_accept_path_end_distance_ratio": 0.3,
     "negative_cache_accept_path_start_distance_ratio": 0.3,
+    "overload_levels": [
+      0,
+      100,
+      500
+    ],
+    "overload_multipliers": [
+      2,
+      3,
+      4
+    ],
     "short_cache_min_algo_steps_to_cache": 50,
     "short_cache_min_cacheable_distance": 10,
     "short_cache_size": 5,
@@ -61,7 +72,7 @@
   "pollution": {
     "ageing": 1,
     "diffusion_ratio": 0.02,
-    "enabled": true,
+    "enabled": false,
     "enemy_attack_pollution_consumption_modifier": 1,
     "expected_max_per_chunk": 150,
     "max_pollution_to_restore_trees": 20,

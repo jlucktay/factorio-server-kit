@@ -1,19 +1,19 @@
 {
   "autoplace_controls": {
     "coal": {
-      "frequency": 2,
+      "frequency": 1,
       "richness": 6,
-      "size": 2
+      "size": 1
     },
     "copper-ore": {
-      "frequency": 2,
+      "frequency": 1,
       "richness": 6,
-      "size": 2
+      "size": 1
     },
     "crude-oil": {
-      "frequency": 2,
+      "frequency": 1,
       "richness": 6,
-      "size": 2
+      "size": 1
     },
     "enemy-base": {
       "frequency": 1,
@@ -21,14 +21,14 @@
       "size": 1
     },
     "iron-ore": {
-      "frequency": 2,
+      "frequency": 1,
       "richness": 6,
-      "size": 2
+      "size": 1
     },
     "stone": {
-      "frequency": 2,
+      "frequency": 1,
       "richness": 6,
-      "size": 2
+      "size": 1
     },
     "trees": {
       "frequency": 1,
@@ -36,9 +36,9 @@
       "size": 1
     },
     "uranium-ore": {
-      "frequency": 2,
+      "frequency": 1,
       "richness": 6,
-      "size": 2
+      "size": 1
     }
   },
   "autoplace_settings": {},
@@ -50,9 +50,11 @@
   },
   "height": 2000000,
   "peaceful_mode": false,
-  "property_expression_names": {},
-  "seed": 2727145720,
-  "starting_area": 6,
+  "property_expression_names": {
+    "elevation": "0_17-island"
+  },
+  "seed": 2243136635,
+  "starting_area": 1,
   "starting_points": [
     {
       "x": 0,
