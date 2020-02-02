@@ -27,7 +27,7 @@ fi
 function usage() {
   cat << HEREDOC
 
-  Usage: ${script_name:?} [--help | [--logs] [--machine-type=...] --<location>]
+  Usage: ${script_name:?} [ --help | [--logs] [--machine-type=...] --<location> ]
 
   Optional arguments:
     -h, --help             show this help message and exit
@@ -79,7 +79,7 @@ for i in "$@"; do
       ;;
     *)
       location=${1:2}
-      if test "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}"; then
+      if [ -n "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}" ]; then
         shift
       else
         usage
@@ -89,7 +89,7 @@ for i in "$@"; do
   esac
 done
 
-if test -n "$machine_type"; then
+if [ -n "$machine_type" ]; then
   echo -n "Validating machine type '$machine_type'..."
   mapfile -t valid_machine_types_in_zone < <(
     gcloud "--format=value(name)" \
@@ -120,13 +120,15 @@ fi
 # Delete any old servers that may already be deployed within the project
 factorio::vm::delete_instances factorio-*
 
+template_filter="packtorio-*"
+
 # Look up latest instance template
 gcloud_args=(
   "--format=value(name)"
   compute
   instance-templates
   list
-  "--filter=name:packtorio-*"
+  "--filter=name:$template_filter"
   "--limit=1"
   "--sort-by=~creationTimestamp"
 )
@@ -136,8 +138,8 @@ echo "${gcloud_args[@]}"
 
 instance_template=$(gcloud "${gcloud_args[@]}")
 
-if test -z "$instance_template"; then
-  err "no instance templates named 'packtorio-*' were found"
+if [ -z "$instance_template" ]; then
+  err "no instance templates named '$template_filter' were found"
 fi
 
 # Create instance from template
@@ -148,7 +150,7 @@ gcloud_args=(
   create
 )
 
-if test -n "$machine_type"; then
+if [ -n "$machine_type" ]; then
   gcloud_args+=("--machine-type=$machine_type")
 fi
 
