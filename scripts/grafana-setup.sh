@@ -74,3 +74,12 @@ curl \
 # Per boot
 
 # One time vs per boot? TBD
+
+# ###
+#
+# curl \
+#   --data @grafana-dashboard.json \
+#   --header "Content-Type: application/json" \
+#   --include \
+#   --request POST \
+#   "http://$grafana_instance/api/dashboards/db"
