@@ -46,7 +46,7 @@ gcloud_delete_args=(
   --quiet
 )
 
-for ((i = 0; i < $(jq length <<< "$digests"); i += 1)); do
+for ((i = 0; i < "$(jq length <<< "$digests")"; i += 1)); do
   digest_hash=$(jq --raw-output ".[$i].digest" <<< "$digests")
   gcloud_delete_args+=("$base_image@$digest_hash")
 done

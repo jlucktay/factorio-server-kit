@@ -11,9 +11,9 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-gmkdir --parents --verbose "${FACTORIO_ROOT}/gs/jlucktay-factorio-storage/"
+mkdir -pv "$FACTORIO_ROOT/gs/jlucktay-factorio-storage/"
 
 gsutil -m rsync -r -u \
   -x "saves.*" \
   gs://jlucktay-factorio-storage/ \
-  "${FACTORIO_ROOT}/gs/jlucktay-factorio-storage/"
+  "$FACTORIO_ROOT/gs/jlucktay-factorio-storage/"

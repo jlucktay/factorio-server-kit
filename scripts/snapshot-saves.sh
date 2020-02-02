@@ -25,7 +25,7 @@ for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
   mtimes=$(grep goog-reserved-file-mtime <<< "$stat" | cut -d":" -f2)
   mtime_high_score=0
 
-  for mtime in $mtimes; do
+  for mtime in "$mtimes"; do
     if ((mtime > mtime_high_score)); then
       mtime_high_score=$mtime
     fi

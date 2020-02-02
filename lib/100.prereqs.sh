@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly script_name=$(basename "${BASH_SOURCE[-1]}")
+readonly script_name="$(basename "${BASH_SOURCE[-1]}")"
 
 # Error logging function
 function err() {

@@ -12,6 +12,6 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # shellcheck disable=SC2154
-export TF_VAR_project_id=$CLOUDSDK_CORE_PROJECT
+export TF_VAR_project_id="$CLOUDSDK_CORE_PROJECT"
 
 terraform plan

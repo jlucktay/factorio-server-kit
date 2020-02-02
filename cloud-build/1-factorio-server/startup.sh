@@ -11,12 +11,12 @@ gsutil -m cp gs://jlucktay-factorio-storage/config/server-*list.json /opt/factor
 logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
 
-for ((i = 0; i < $(jq length <<< "$locations"); i += 1)); do
+for ((i = 0; i < "$(jq length <<< "$locations")"; i += 1)); do
   location="$(jq --raw-output ".[$i] | .location" <<< "$locations")"
 
-  for mtime in $(gsutil stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" \
+  for mtime in "$(gsutil stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" \
     | grep goog-reserved-file-mtime \
-    | cut -d":" -f2); do
+    | cut -d":" -f2)"; do
 
     if ((mtime > mtime_high_score)); then
       mtime_high_score=$mtime
@@ -56,9 +56,9 @@ if ! grep -F "$cron_job" /etc/crontab &> /dev/null; then
 fi
 
 logger "=== Add factorio.com secrets to environment"
-if ! secrets=$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json) \
-  || ! USERNAME=$(jq --exit-status --raw-output ".username" <<< "$secrets") \
-  || ! TOKEN=$(jq --exit-status --raw-output ".token" <<< "$secrets"); then
+if ! secrets="$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json)" \
+  || ! USERNAME="$(jq --exit-status --raw-output ".username" <<< "$secrets")" \
+  || ! TOKEN="$(jq --exit-status --raw-output ".token" <<< "$secrets")"; then
 
   echo >&2 "Error retrieving secrets."
   exit 1

@@ -16,8 +16,8 @@ gsutil_args=(
   -m
   cp
   -P
-  "${FACTORIO_ROOT}/lib/locations.json"
-  "${FACTORIO_ROOT}/lib/secrets.json"
+  "$FACTORIO_ROOT/lib/locations.json"
+  "$FACTORIO_ROOT/lib/secrets.json"
   gs://jlucktay-factorio-storage/lib/
 )
 
@@ -57,7 +57,7 @@ gcloud_args=(
 images=$(gcloud "${gcloud_args[@]}")
 
 # 'i' starts from 1 to preserve the first/newest image
-for ((i = 1; i < $(jq length <<< "$images"); i += 1)); do
+for ((i = 1; i < "$(jq length <<< "$images")"; i += 1)); do
   image_name=$(jq --raw-output ".[$i].name" <<< "$images")
 
   echo "Pruning old image '$image_name'..."

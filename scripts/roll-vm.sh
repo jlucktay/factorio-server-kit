@@ -178,7 +178,7 @@ gcloud \
 old_dns_ip=$(
   gcloud --format=json \
     dns record-sets list \
-    --filter="name:${FACTORIO_DNS_NAME}." \
+    --filter="name:$FACTORIO_DNS_NAME." \
     --zone=factorio-server \
     | jq --raw-output '.[].rrdatas[]'
 )
@@ -186,7 +186,7 @@ old_dns_ip=$(
 gcloud \
   dns record-sets transaction \
   remove "$old_dns_ip" \
-  --name="${FACTORIO_DNS_NAME}." \
+  --name="$FACTORIO_DNS_NAME." \
   --ttl=30 \
   --type=A \
   --zone=factorio-server \
@@ -195,7 +195,7 @@ gcloud \
 gcloud \
   dns record-sets transaction \
   add "$new_instance_ip" \
-  --name="${FACTORIO_DNS_NAME}." \
+  --name="$FACTORIO_DNS_NAME." \
   --ttl=30 \
   --type=A \
   --zone=factorio-server \
@@ -209,7 +209,7 @@ gcloud \
 
 if ((open_logs == 1)); then
   logs_link="https://console.cloud.google.com/logs/viewer?project=${CLOUDSDK_CORE_PROJECT:?}"
-  logs_link+="&resource=gce_instance/instance_id/${new_instance_id}"
+  logs_link+="&resource=gce_instance/instance_id/$new_instance_id"
 
   echo "Opening the log viewer link: '$logs_link'"
   open "$logs_link"

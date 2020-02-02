@@ -91,9 +91,9 @@ logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
 
 logger "=== Add factorio.com secrets to environment"
-if ! secrets=$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json) \
-  || ! USERNAME=$(jq --exit-status --raw-output ".username" <<< "$secrets") \
-  || ! TOKEN=$(jq --exit-status --raw-output ".token" <<< "$secrets"); then
+if ! secrets="$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json)" \
+  || ! USERNAME="$(jq --exit-status --raw-output ".username" <<< "$secrets")" \
+  || ! TOKEN="$(jq --exit-status --raw-output ".token" <<< "$secrets")"; then
 
   echo >&2 "Error retrieving secrets."
   exit 1
@@ -159,7 +159,7 @@ EOF
 /usr/bin/google_instance_setup
 
 logger "=== Reset Grafana password"
-if ! grafana_password=$(jq --exit-status --raw-output ".password" <<< "$secrets"); then
+if ! grafana_password="$(jq --exit-status --raw-output ".password" <<< "$secrets")"; then
   echo >&2 "Error retrieving secrets."
   exit 1
 fi
