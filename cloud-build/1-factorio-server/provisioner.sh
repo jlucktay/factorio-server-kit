@@ -104,6 +104,8 @@ export TOKEN
 
 logger "=== Set up Docker start script, and run everything up with Docker and Compose"
 systemctl enable docker
+mv -v /tmp/docker-run-factorio.sh /usr/bin/docker-run-factorio.sh
+chown --changes root:root /usr/bin/docker-run-factorio.sh
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
 /usr/bin/docker-run-factorio.sh
 

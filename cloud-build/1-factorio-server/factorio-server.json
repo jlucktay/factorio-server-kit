@@ -25,7 +25,7 @@
   ],
   "provisioners": [
     {
-      "destination": "/usr/bin/docker-run-factorio.sh",
+      "destination": "/tmp/docker-run-factorio.sh",
       "direction": "upload",
       "source": "{{ template_dir }}/docker-run-factorio.sh",
       "type": "file"
