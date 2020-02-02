@@ -6,8 +6,7 @@ shopt -s globstar nullglob
 # Linters called by this script are (where possible) configured to follow Google's shell style guide:
 # https://google.github.io/styleguide/shell.xml
 
-FACTORIO_ROOT="$(git rev-parse --show-toplevel)"
-declare -r FACTORIO_ROOT
+readonly FACTORIO_ROOT="$(git rev-parse --show-toplevel)"
 
 # https://github.com/mvdan/sh
 find -x "$FACTORIO_ROOT" -type f -iname "*sh" \

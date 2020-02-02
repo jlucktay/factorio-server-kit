@@ -3,8 +3,7 @@ set -euo pipefail
 shopt -s globstar nullglob
 IFS=$'\n\t'
 
-FACTORIO_ROOT="$(git rev-parse --show-toplevel)"
-declare -r FACTORIO_ROOT
+readonly FACTORIO_ROOT="$(git rev-parse --show-toplevel)"
 
 for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   # shellcheck disable=SC1090

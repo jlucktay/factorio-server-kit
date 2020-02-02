@@ -3,8 +3,7 @@ set -euo pipefail
 shopt -s globstar nullglob
 IFS=$'\n\t'
 
-script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
-FACTORIO_ROOT=$(realpath --canonicalize-existing "$script_dir/..")
+readonly FACTORIO_ROOT="$(git rev-parse --show-toplevel)"
 
 for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   # shellcheck disable=SC1090
