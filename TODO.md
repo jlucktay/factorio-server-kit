@@ -26,3 +26,12 @@
 - [Writing a systemd Service in Python](https://github.com/torfsen/python-systemd-tutorial)
 - [Use systemd to Start a Linux Service at Boot](https://www.linode.com/docs/quick-answers/linux/start-service-at-boot/)
 - [How to configure systemd to start a service automatically after a crash in Linux](https://www.2daygeek.com/linux-systemd-auto-restart-services-when-down/)
+
+## Wire all of the logs up to Stackdriver [including Docker][1]
+
+- Further reading:
+  - [Google Cloud Logging driver](https://docs.docker.com/config/containers/logging/gcplogs/)
+  - [Docker Logging](https://www.fluentd.org/guides/recipes/docker-logging)
+  - [About the Logging agent](https://cloud.google.com/logging/docs/agent/)
+
+[1]: https://cloud.google.com/community/tutorials/docker-gcplogs-driver
