@@ -11,7 +11,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Ref: https://cloud.google.com/community/tutorials/dnssec-cloud-dns-domains
-checksigned() {
+function checksigned() {
   ZONE=$(basename "$1" .).
   if [ "$ZONE" = .. ]; then
     ZONE=.
@@ -49,4 +49,4 @@ checksigned() {
   }
 }
 
-checksigned "$1"
+checksigned "${1:?}"
