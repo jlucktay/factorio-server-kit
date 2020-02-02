@@ -25,6 +25,12 @@
   ],
   "provisioners": [
     {
+      "destination": "/usr/bin/docker-run-factorio.sh",
+      "direction": "upload",
+      "source": "{{ template_dir }}/docker-run-factorio.sh",
+      "type": "file"
+    },
+    {
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
       "script": "{{ template_dir }}/provisioner.sh",
       "type": "shell"
