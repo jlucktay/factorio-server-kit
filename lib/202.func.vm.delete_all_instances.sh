@@ -18,8 +18,9 @@ function factorio::vm::delete_instances() {
   echo "${gcloud_list_args[@]}"
 
   delete_instances=$(gcloud "${gcloud_list_args[@]}")
+  for_loop_limit=$(jq length <<< "$delete_instances")
 
-  for ((i = 0; i < "$(jq length <<< "$delete_instances")"; i += 1)); do
+  for ((i = 0; i < for_loop_limit; i += 1)); do
     local name zone
     name=$(jq --raw-output ".[$i].name" <<< "$delete_instances")
     zone=$(basename "$(jq --raw-output ".[$i].zone" <<< "$delete_instances")")

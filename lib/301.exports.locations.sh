@@ -6,7 +6,9 @@ tmp_locations_json="$tmp_script_dir/locations.json"
 
 declare -A FACTORIO_SERVER_LOCATIONS
 
-for ((i = 0; i < "$(jq length "$tmp_locations_json")"; i += 1)); do
+for_loop_limit=$(jq length "$tmp_locations_json")
+
+for ((i = 0; i < for_loop_limit; i += 1)); do
   IFS="=" read -r tmp_location tmp_zone \
     <<< "$(jq --raw-output '.['"$i"'] | .location +"="+ .zone' "$tmp_locations_json")"
 

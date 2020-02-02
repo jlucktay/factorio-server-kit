@@ -55,9 +55,10 @@ gcloud_args=(
 )
 
 images=$(gcloud "${gcloud_args[@]}")
+for_loop_limit=$(jq length <<< "$images")
 
 # 'i' starts from 1 to preserve the first/newest image
-for ((i = 1; i < "$(jq length <<< "$images")"; i += 1)); do
+for ((i = 1; i < for_loop_limit; i += 1)); do
   image_name=$(jq --raw-output ".[$i].name" <<< "$images")
 
   echo "Pruning old image '$image_name'..."
