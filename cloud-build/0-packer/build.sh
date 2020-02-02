@@ -48,9 +48,14 @@ gcloud_delete_args=(
   --quiet
 )
 
+pre_loop_count=${#gcloud_delete_args[@]}
+
 for ((i = 0; i < for_loop_limit; i += 1)); do
   digest_hash=$(jq --raw-output ".[$i].digest" <<< "$digests")
   gcloud_delete_args+=("$base_image@$digest_hash")
 done
 
-gcloud "${gcloud_delete_args[@]}"
+# Only run the delete command if any arguments were added to the array
+if [ ${#gcloud_delete_args[@]} -gt "$pre_loop_count" ]; then
+  gcloud "${gcloud_delete_args[@]}"
+fi
