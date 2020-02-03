@@ -15,7 +15,7 @@ done
 
 # shellcheck disable=SC2154
 for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
-  stat=$(gsutil -m stat "gs://jlucktay-factorio-saves-$location/_autosave*.zip" 2> /dev/null || true)
+  stat=$(gsutil -m stat "gs://${CLOUDSDK_CORE_PROJECT:?}-saves-$location/_autosave*.zip" 2> /dev/null || true)
 
   if [ ${#stat} -eq 0 ]; then
     continue
@@ -34,6 +34,6 @@ for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
 
   gsutil -m \
     rsync -P -x ".*\.tmp\.zip" \
-    "gs://jlucktay-factorio-saves-$location" \
-    "gs://jlucktay-factorio-backup-saves/$location-$snapshot_timestamp"
+    "gs://$CLOUDSDK_CORE_PROJECT-saves-$location" \
+    "gs://$CLOUDSDK_CORE_PROJECT-backup-saves/$location-$snapshot_timestamp"
 done

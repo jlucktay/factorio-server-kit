@@ -92,7 +92,7 @@ logger "=== Fix up Graftorio permissions"
 chown --changes --recursive nobody /opt/graftorio
 
 logger "=== Add factorio.com secrets to environment"
-if ! secrets="$(gsutil cat gs://jlucktay-factorio-storage/lib/secrets.json)" \
+if ! secrets="$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/secrets.json")" \
   || ! USERNAME="$(jq --exit-status --raw-output ".username" <<< "$secrets")" \
   || ! TOKEN="$(jq --exit-status --raw-output ".token" <<< "$secrets")"; then
 

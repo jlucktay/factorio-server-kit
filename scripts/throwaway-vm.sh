@@ -11,7 +11,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 select_location=${1:-london}
-locations=$(gsutil cat gs://jlucktay-factorio-storage/lib/locations.json)
+locations=$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/locations.json")
 zone=$(jq --raw-output ".[] | select( .location == \"$select_location\" ) | .zone" <<< "$locations")
 
 gcloud_args=(

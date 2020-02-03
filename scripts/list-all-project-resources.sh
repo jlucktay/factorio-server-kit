@@ -11,7 +11,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 gcloud alpha resources list \
-  --filter="jlucktay-factorio" \
+  --filter="${CLOUDSDK_CORE_PROJECT:?}" \
   --uri \
   | grep --extended-regexp --invert-match "\/subnetworks\/default$" \
   | sort --ignore-case
@@ -31,7 +31,7 @@ gcloud alpha resources list \
 # -> gcloud --format=json pubsub topics describe cleanup-instances | jq
 #
 # https://www.terraform.io/docs/providers/google/r/storage_bucket.html
-# -> gsutil ls -p jlucktay-factorio
+# -> gsutil ls -p $CLOUDSDK_CORE_PROJECT
 # --> one bucket per location/zone in lib/locations.json
 # --> other one-off buckets
 #

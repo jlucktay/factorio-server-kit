@@ -10,9 +10,9 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-mkdir -pv "$FACTORIO_ROOT/gs/jlucktay-factorio-storage/"
+mkdir -pv "$FACTORIO_ROOT/gs/${CLOUDSDK_CORE_PROJECT:?}-storage/"
 
 gsutil -m rsync -r -u \
   -x "saves.*" \
-  gs://jlucktay-factorio-storage/ \
-  "$FACTORIO_ROOT/gs/jlucktay-factorio-storage/"
+  "gs://$CLOUDSDK_CORE_PROJECT-storage/" \
+  "$FACTORIO_ROOT/gs/$CLOUDSDK_CORE_PROJECT-storage/"

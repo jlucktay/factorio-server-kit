@@ -31,6 +31,9 @@
       "type": "file"
     },
     {
+      "environment_vars": [
+        "CLOUDSDK_CORE_PROJECT={{ user `project_id`}}"
+      ],
       "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
       "script": "{{ template_dir }}/provisioner.sh",
       "type": "shell"
