@@ -13,13 +13,18 @@ The scripts are based around the use of [preemptible VMs] which keeps running co
 
 ## Installation
 
+### Once-off (/infrequently recurring)
+
 1. Run the Cloud Build pipelines in order
     1. Packer builder Docker image
     1. Factorio server VM image
 1. Run up the Terraform infra (buckets et al)
-1. Deploy the Cloud Function
+1. Deploy the Cloud Function to clean up terminated instances
 1. Populate the configuration files with your settings
-1. Fire off the Bash scripts described below
+
+### As desired
+
+1. Fire off the `roll-vm.sh` Bash script described below
 
 ## Usage
 
