@@ -13,8 +13,9 @@ done
 select_location=${1:-london}
 locations=$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/locations.json")
 zone=$(jq --raw-output ".[] | select( .location == \"$select_location\" ) | .zone" <<< "$locations")
+name="ssh-ubuntu-$select_location"
 
-gcloud_args=(
+gcloud_create_args=(
   compute
   instances
   create
@@ -24,10 +25,24 @@ gcloud_args=(
   --preemptible
   --tags ssh
   --zone "$zone"
-  "ssh-ubuntu-$select_location"
+  "$name"
 )
 
 echo "Running 'gcloud' with following arguments:"
-echo "${gcloud_args[@]}"
+echo "${gcloud_create_args[@]}"
 
-gcloud "${gcloud_args[@]}"
+gcloud "${gcloud_create_args[@]}"
+
+echo "SSHing into '$name':"
+gcloud_ssh_args=(
+  compute
+  ssh
+  "--zone=$zone"
+  "$name"
+)
+
+while ! gcloud "${gcloud_ssh_args[@]}"; do
+  sleep 1s
+done
+
+factorio::vm::delete_instances "$name"
