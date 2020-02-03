@@ -55,6 +55,20 @@ The two settings files `map-settings.json` and `map-gen-settings.json` can be cr
 game as outlined
 [here](https://wiki.factorio.com/Command_line_parameters#Creating_the_JSON_files_from_a_map_exchange_string).
 
+## Upstream issues outstanding
+
+- [Graftorio support for Factorio 0.18.x](https://github.com/afex/graftorio/pull/15)
+
+## Related projects
+
+### `gopukku`
+
+[`gopukku`](https://github.com/jlucktay/gopukku) is a small Go binary/service I built to have a server shut itself down
+if the player count stays at zero for fifteen consecutive minutes.
+
+The latest release of `gopukku` is installed in the Factorio server image by
+[Packer's provisioner script](cloud-build/1-factorio-server/provisioner.sh).
+
 ## Author
 
 👤 **James Lucktaylor**
