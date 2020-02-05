@@ -22,7 +22,7 @@ gcloud_create_args=(
   --image-family ubuntu-1804-lts
   --image-project ubuntu-os-cloud
   --machine-type f1-micro
-  --preemptible
+  --scopes https://www.googleapis.com/auth/cloud-platform
   --tags ssh
   --zone "$zone"
   "$name"
