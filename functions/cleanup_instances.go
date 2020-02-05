@@ -6,16 +6,16 @@ import (
 	"fmt"
 	"strings"
 
+	"cloud.google.com/go/compute/metadata"
 	"cloud.google.com/go/storage"
 	"google.golang.org/api/compute/v1"
 )
 
 const (
-	project          = "jlucktay-factorio"
 	statusTerminated = "TERMINATED"
 
-	locationsBucket = project + "-storage"
-	locationsObject = "lib/locations.json"
+	fmtLocationsBucket = "%s-storage"
+	locationsObject    = "lib/locations.json"
 )
 
 // PubSubMessage is the payload of a Pub/Sub event.
@@ -32,17 +32,22 @@ type location struct {
 	Zone     string `json:"zone"`
 }
 
-// Instances will iterate across all zones listed in our gs://jlucktay-factorio-storage/lib/locations.json file and
-// delete all instances which:
+// Instances iterates across all zones listed in gs://<project>-storage/lib/locations.json file deleting all VMs which:
 // (1) are named using the same pattern that /scripts/roll-vm.sh uses to create instances
 // (2) have a status of TERMINATED
 func Instances(ctx context.Context, _ PubSubMessage) error {
+	projectID, err := metadata.ProjectID()
+	if err != nil {
+		return fmt.Errorf("error fetching project ID from metadata: %w", err)
+	}
+
 	storageClient, errStorage := storage.NewClient(ctx)
 	if errStorage != nil {
 		return fmt.Errorf("error creating Storage client: %w", errStorage)
 	}
 
-	bkt := storageClient.Bucket(locationsBucket)
+	bucketName := fmt.Sprintf(fmtLocationsBucket, projectID)
+	bkt := storageClient.Bucket(bucketName)
 	objLocs := bkt.Object(locationsObject)
 
 	r, errReader := objLocs.NewReader(ctx)
@@ -64,7 +69,7 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 	}
 
 	for _, loc := range locs {
-		listCall := computeService.Instances.List(project, loc.Zone)
+		listCall := computeService.Instances.List(projectID, loc.Zone)
 		listCall = listCall.Filter(fmt.Sprintf("name:factorio-%s-*", strings.ToLower(loc.Location)))
 
 		list, errList := listCall.Do()
@@ -74,7 +79,7 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 
 		for _, inst := range list.Items {
 			if inst.Status == statusTerminated {
-				deleteCall := computeService.Instances.Delete(project, loc.Zone, inst.Name)
+				deleteCall := computeService.Instances.Delete(projectID, loc.Zone, inst.Name)
 
 				_, errDelete := deleteCall.Do()
 				if errDelete != nil {

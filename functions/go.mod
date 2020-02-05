@@ -3,7 +3,7 @@ module github.com/jlucktay/factorio-workbench/functions
 go 1.13
 
 require (
-	cloud.google.com/go v0.51.0 // indirect
+	cloud.google.com/go v0.51.0
 	cloud.google.com/go/storage v1.5.0
 	golang.org/x/exp v0.0.0-20200119233911-0405dc783f0a // indirect
 	golang.org/x/net v0.0.0-20200114155413-6afb5195e5aa // indirect
