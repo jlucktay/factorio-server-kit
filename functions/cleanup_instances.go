@@ -41,50 +41,50 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 		return fmt.Errorf("error fetching project ID from metadata: %w", err)
 	}
 
-	storageClient, errStorage := storage.NewClient(ctx)
-	if errStorage != nil {
-		return fmt.Errorf("error creating Storage client: %w", errStorage)
+	storageClient, err := storage.NewClient(ctx)
+	if err != nil {
+		return fmt.Errorf("error creating Storage client: %w", err)
 	}
 
 	bucketName := fmt.Sprintf(fmtLocationsBucket, projectID)
 	bkt := storageClient.Bucket(bucketName)
 	objLocs := bkt.Object(locationsObject)
 
-	r, errReader := objLocs.NewReader(ctx)
-	if errReader != nil {
-		return fmt.Errorf("error reading JSON object: %w", errReader)
+	r, err := objLocs.NewReader(ctx)
+	if err != nil {
+		return fmt.Errorf("error reading JSON object: %w", err)
 	}
 	defer r.Close()
 
 	var locs []location
 
 	dec := json.NewDecoder(r)
-	if errDecode := dec.Decode(&locs); errDecode != nil {
-		return fmt.Errorf("error decoding locations JSON: %w", errDecode)
+	if err := dec.Decode(&locs); err != nil {
+		return fmt.Errorf("error decoding locations JSON: %w", err)
 	}
 
-	computeService, errService := compute.NewService(ctx)
-	if errService != nil {
-		return fmt.Errorf("error creating Compute service: %w", errService)
+	computeService, err := compute.NewService(ctx)
+	if err != nil {
+		return fmt.Errorf("error creating Compute service: %w", err)
 	}
 
 	for _, loc := range locs {
 		listCall := computeService.Instances.List(projectID, loc.Zone)
 		listCall = listCall.Filter(fmt.Sprintf("name:factorio-%s-*", strings.ToLower(loc.Location)))
 
-		list, errList := listCall.Do()
-		if errList != nil {
-			return fmt.Errorf("error listing instances in zone %s: %w", loc.Zone, errList)
+		list, err := listCall.Do()
+		if err != nil {
+			return fmt.Errorf("error listing instances in zone %s: %w", loc.Zone, err)
 		}
 
 		for _, inst := range list.Items {
 			if inst.Status == statusTerminated {
 				deleteCall := computeService.Instances.Delete(projectID, loc.Zone, inst.Name)
 
-				_, errDelete := deleteCall.Do()
-				if errDelete != nil {
+				_, err := deleteCall.Do()
+				if err != nil {
 					return fmt.Errorf("error executing delete operation for instance %s in zone %s: %w",
-						inst.Name, loc.Zone, errDelete)
+						inst.Name, loc.Zone, err)
 				}
 			}
 		}
