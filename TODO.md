@@ -47,6 +47,7 @@ Not every user will have purchased a domain to use in such a way.
 ## Make mod management more dynamic
 
 Currently hard-coded to Graftorio and that's about it.
+[This](https://github.com/mroote/factorio-server-manager) looks pretty good!
 
 ## Define VM service account with Terraform
 
