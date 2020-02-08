@@ -10,10 +10,10 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-select_location=${1:-${FACTORIO_REGION:?}}
-locations=$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/locations.json")
-zone=$(jq --raw-output ".[] | select( .location == \"$select_location\" ) | .zone" <<< "$locations")
+select_location=${1:-${FACTORIO_LOCATION:?}}
 name="ssh-ubuntu-$select_location"
+
+eval "$(factorio::set_env_location "${FACTORIO_SERVER_LOCATIONS[$select_location]:?}")"
 
 gcloud_create_args=(
   compute
@@ -24,7 +24,6 @@ gcloud_create_args=(
   --machine-type f1-micro
   --scopes https://www.googleapis.com/auth/cloud-platform
   --tags ssh
-  --zone "$zone"
   "$name"
 )
 
@@ -37,7 +36,6 @@ echo "SSHing into '$name':"
 gcloud_ssh_args=(
   compute
   ssh
-  "--zone=$zone"
   "$name"
 )
 
