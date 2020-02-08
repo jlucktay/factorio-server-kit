@@ -58,8 +58,8 @@ HEREDOC
 }
 
 ### Parse given arguments
-for i in "$@"; do
-  case $i in
+for arg in "$@"; do
+  case $arg in
     -h | --help)
       usage
       exit 0
@@ -69,11 +69,11 @@ for i in "$@"; do
       shift
       ;;
     -m=* | --machine-type=*)
-      machine_type=${i#*=}
+      machine_type=${arg#*=}
       shift
       ;;
     *)
-      location=${1:2}
+      location=${arg:2}
       if [ -n "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}" ]; then
         shift
       else
