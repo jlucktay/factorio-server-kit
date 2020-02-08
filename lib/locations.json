@@ -12,6 +12,7 @@
     "zone": "australia-southeast1-b"
   },
   {
+    "default": true,
     "location": "tokyo",
     "zone": "asia-northeast1-c"
   }

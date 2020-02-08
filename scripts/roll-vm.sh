@@ -11,8 +11,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Argument defaults
-location=tokyo
-zone=${FACTORIO_SERVER_LOCATIONS[$location]:?"'location' key '$location' not found in '$FACTORIO_ROOT/lib/locations.json'."}
+zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key '$FACTORIO_LOCATION' not found in '$FACTORIO_ROOT/lib/locations.json'."}
 
 machine_type=
 open_logs=0
@@ -85,14 +84,15 @@ for i in "$@"; do
   esac
 done
 
+eval "$(factorio::set_env_location "${FACTORIO_SERVER_LOCATIONS[$location]}")"
+
 if [ -n "$machine_type" ]; then
   echo -n "Validating machine type '$machine_type'..."
   mapfile -t valid_machine_types_in_zone < <(
     gcloud "--format=value(name)" \
       compute \
       machine-types \
-      list \
-      --zones="${FACTORIO_SERVER_LOCATIONS[$location]}"
+      list
   )
 
   valid_mt=0
@@ -107,10 +107,12 @@ if [ -n "$machine_type" ]; then
 
   if ((valid_mt == 0)); then
     echo
-    err "machine type '$machine_type' is not valid in zone '${FACTORIO_SERVER_LOCATIONS[$location]}'."
+    err "machine type '$machine_type' is not valid in zone '${CLOUDSDK_COMPUTE_ZONE:?}'."
   fi
 
-  echo " valid and available in zone '${FACTORIO_SERVER_LOCATIONS[$location]}'."
+  unset valid_mt
+
+  echo " valid and available in zone '$CLOUDSDK_COMPUTE_ZONE'."
 fi
 
 # Delete any old servers that may already be deployed within the project
@@ -153,7 +155,6 @@ fi
 gcloud_args+=(
   "--source-instance-template=$instance_template"
   "--subnet=default"
-  "--zone=${FACTORIO_SERVER_LOCATIONS[$location]}"
   "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 

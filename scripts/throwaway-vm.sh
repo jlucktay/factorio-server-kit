@@ -10,7 +10,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-select_location=${1:-london}
+select_location=${1:-${FACTORIO_REGION:?}}
 locations=$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/locations.json")
 zone=$(jq --raw-output ".[] | select( .location == \"$select_location\" ) | .zone" <<< "$locations")
 name="ssh-ubuntu-$select_location"

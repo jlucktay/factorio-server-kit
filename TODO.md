@@ -53,4 +53,6 @@ Currently hard-coded to Graftorio and that's about it.
 
 `factorio-server@${PROJECT_ID}.iam.gserviceaccount.com` won't exist by default in a new GCP project.
 
+## Los Angeles DC doesn't have N2 machine type, but it does have E2
+
 [1]: https://cloud.google.com/community/tutorials/docker-gcplogs-driver
