@@ -10,17 +10,46 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
+function_name=cleanup-instances
+topic_name=$function_name
+
+gcloud_list_args=(
+  --format json
+  functions
+  list
+  --filter "name:$function_name"
+)
+
+echo "Looking for existing '$function_name' functions deployed outside the '${CLOUDSDK_FUNCTIONS_REGION:?}' region..."
+mapfile -t functions_list < <(gcloud "${gcloud_list_args[@]}" | jq --raw-output '.[].name')
+
+delete_region=()
+
+for ((i = 0; i < ${#functions_list[@]}; i += 1)); do
+  func=${functions_list[$i]##*locations/}
+  func=${func%%/functions*}
+
+  if [ "$func" != "${CLOUDSDK_FUNCTIONS_REGION:?}" ]; then
+    delete_region+=("$func")
+  fi
+done
+
+for ((i = 0; i < ${#delete_region[@]}; i += 1)); do
+  echo "Cleaning up existing function in region '${delete_region[$i]}'..."
+  gcloud functions delete "$function_name" --region="${delete_region[$i]}" --quiet
+done
+
 gcloud_deploy_args=(
   functions
   deploy
-  cleanup-instances
+  "$function_name"
   --entry-point "Instances"
   --max-instances 1
   --runtime go113
-  --trigger-topic "cleanup-instances"
+  --trigger-topic "$topic_name"
 )
 
-echo "Running 'gcloud' with following arguments:"
+echo "Deploying '$function_name' with the following arguments:"
 echo "${gcloud_deploy_args[@]}"
 
 gcloud "${gcloud_deploy_args[@]}"
