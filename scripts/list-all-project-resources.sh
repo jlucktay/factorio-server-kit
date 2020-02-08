@@ -24,6 +24,8 @@ gcloud alpha resources list \
 # https://www.terraform.io/docs/providers/google/r/cloudfunctions_function.html
 # -> gcloud --format=json functions describe cleanup-instances | jq
 #
+# https://console.cloud.google.com/cloudscheduler?project=jlucktay-factorio
+# runs every 15 minutes to publish to Pub/Sub so that cleanup-instances Cloud Function is triggered
 # https://www.terraform.io/docs/providers/google/r/cloud_scheduler_job.html
 # -> gcloud --format=json scheduler jobs describe cleanup-instances | jq
 #
