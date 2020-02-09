@@ -31,42 +31,47 @@ substitutions=(
   "_IMAGE_ZONE=${CLOUDSDK_COMPUTE_ZONE:?}"
 )
 
-gcloud_args=(
+gcloud_build_args=(
   builds
   submit
-  "--config=$script_dir/cloudbuild.yaml"
-  "--substitutions=$(factorio::util::join_by , "${substitutions[@]}")"
+  --config "$script_dir/cloudbuild.yaml"
+  --substitutions "$(factorio::util::join_by , "${substitutions[@]}")"
   "$script_dir"
 )
 
+echo "Submitting synchronous Cloud Build with arguments '${gcloud_build_args[*]}'..."
 # If the build fails, clean up any instances created
-if ! gcloud "${gcloud_args[@]}"; then
+if ! gcloud "${gcloud_build_args[@]}"; then
   factorio::vm::delete_instances "packer-*"
   exit 1
 fi
 
 # Clean up old image(s); all but most recent
-gcloud_args=(
-  "--format=json"
+gcloud_image_list_args=(
+  --format json
   compute
   images
   list
-  "--filter=family:$FACTORIO_IMAGE_FAMILY"
-  '--sort-by=~creationTimestamp'
+  --filter "family:$FACTORIO_IMAGE_FAMILY"
+  --sort-by ~creationTimestamp
 )
 
-images=$(gcloud "${gcloud_args[@]}")
+echo "Listing images with arguments '${gcloud_image_list_args[*]}'..."
+images=$(gcloud "${gcloud_image_list_args[@]}")
 for_loop_limit=$(jq length <<< "$images")
 
 # 'i' starts from 1 to preserve the first/newest image
 for ((i = 1; i < for_loop_limit; i += 1)); do
   image_name=$(jq --raw-output ".[$i].name" <<< "$images")
 
-  echo "Pruning old image '$image_name'..."
-  gcloud \
-    compute \
-    images \
-    delete \
-    --quiet \
+  gcloud_image_delete_args=(
+    compute
+    images
+    delete
+    --quiet
     "$image_name"
+  )
+
+  echo "Pruning old image with arguments '${gcloud_image_delete_args[*]}'..."
+  gcloud "${gcloud_image_delete_args[@]}"
 done
