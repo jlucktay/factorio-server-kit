@@ -63,26 +63,39 @@ bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio*.zip --directory /
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 cd /opt/graftorio
 snap install yq
-/snap/bin/yq write - services.exporter.volumes[0] "/opt/factorio/script-output/graftorio:/textfiles" \
+/snap/bin/yq write - \
+  "services.exporter.volumes[0]" \
+  "/opt/factorio/script-output/graftorio:/textfiles" \
   < docker-compose.yml \
   > docker-compose.1.yml
-/snap/bin/yq write - services.*.restart always \
+/snap/bin/yq write - \
+  "services.*.restart" \
+  "always" \
   < docker-compose.1.yml \
   > docker-compose.2.yml
-/snap/bin/yq write - services.prometheus.user nobody \
+/snap/bin/yq write - \
+  "services.prometheus.user" \
+  "nobody" \
   < docker-compose.2.yml \
   > docker-compose.3.yml
-/snap/bin/yq write - services.grafana.user nobody \
+/snap/bin/yq write - \
+  "services.grafana.user" \
+  "nobody" \
   < docker-compose.3.yml \
   > docker-compose.4.yml
-/snap/bin/yq write - services.prometheus.volumes[0] "/opt/graftorio/data/prometheus:/prometheus" \
+/snap/bin/yq write - \
+  "services.prometheus.volumes[0]" \
+  "/opt/graftorio/data/prometheus:/prometheus" \
   < docker-compose.4.yml \
   > docker-compose.5.yml
-/snap/bin/yq write - services.prometheus.volumes[1] \
+/snap/bin/yq write - \
+  "services.prometheus.volumes[1]" \
   "/opt/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml" \
   < docker-compose.5.yml \
   > docker-compose.6.yml
-/snap/bin/yq write - services.grafana.volumes[0] "/opt/graftorio/data/grafana:/var/lib/grafana" \
+/snap/bin/yq write - \
+  "services.grafana.volumes[0]" \
+  "/opt/graftorio/data/grafana:/var/lib/grafana" \
   < docker-compose.6.yml \
   > docker-compose.7.yml
 rm --force --verbose docker-compose.{1..6}.yml
