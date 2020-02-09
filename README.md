@@ -37,9 +37,10 @@ infrastructure-as-code.
 
 ### Bash scripts
 
-- [roll-vm.sh](scripts/roll-vm.sh) - the main point of execution; will run up a GCE VM in a default (or specific; see
-    `--help`) location, hosting Docker containers for the Factorio server itself, as well as Grafana and Prometheus to
-    tie into [Graftorio](https://github.com/afex/graftorio)
+- [roll-vm.sh](scripts/roll-vm.sh) - the main point of execution; will run up a GCE VM hosting Docker containers for
+    the Factorio server itself, as well as additional containers with Grafana and Prometheus that tie into [Graftorio]
+  - the location/region that the VM will deploy to follows a default based on the [`locations.json` file], and can be
+        overridden with a `--<location>` flag; see `roll-vm.sh --help` for more information
   - the [machine type] of the VM can be specified with the `--machine-type=...` flag
 - [delete-vm.sh](scripts/delete-vm.sh) - deletes any VMs currently running in the project, optionally filtering by name
 
@@ -82,7 +83,7 @@ The latest release of `gopukku` is installed in the Factorio server image by
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+Please make sure to update documentation and tests as appropriate.
 
 ## Show your support
 
@@ -97,10 +98,12 @@ This project is [The Unlicense](https://choosealicense.com/licenses/unlicense/) 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
 
+[`locations.json` file]: lib/locations.json
 [1]: https://choosealicense.com/licenses/unlicense/
 [2]: https://twitter.com/jlucktay
 [3]: https://wakatime.com/badge/github/jlucktay/factorio-workbench
-[preemptible VMs]: https://cloud.google.com/compute/docs/instances/preemptible
 [Factorio server VM image]: cloud-build/1-factorio-server/README.md
+[Graftorio]: https://github.com/afex/graftorio
 [machine type]: https://cloud.google.com/compute/docs/machine-types
 [Packer builder Docker image]: cloud-build/0-packer/README.md
+[preemptible VMs]: https://cloud.google.com/compute/docs/instances/preemptible
