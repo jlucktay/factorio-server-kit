@@ -1,5 +1,5 @@
-# Cloud Build - Packer
+# Packer builder Docker image
 
-This is our Cloud Build image that will run Packer, based on [this quickstart][1].
+Cloud Build will create a Docker image containing [Packer](https://packer.io).
 
-[1]: https://cloud.google.com/cloud-build/docs/quickstart-packer#create_a_packer_builder_image
+This Docker image will in turn be used to create the [Factorio server VM image](../1-factorio-server/README.md)
