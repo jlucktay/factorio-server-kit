@@ -11,10 +11,10 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Argument defaults
-zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key '$FACTORIO_LOCATION' not found in '$FACTORIO_ROOT/lib/locations.json'."}
-
 machine_type=
 open_logs=0
+zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key \
+'$FACTORIO_LOCATION' not found in '$FACTORIO_ROOT/lib/locations.json'."}
 
 ### Set up usage/help output
 function usage() {
@@ -120,16 +120,16 @@ template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
 
 # Look up latest instance template
 gcloud_args=(
-  "--format=value(name)"
+  --format "value(name)"
   compute
   instance-templates
   list
-  "--filter=name:$template_filter"
-  "--limit=1"
-  "--sort-by=~creationTimestamp"
+  --filter "name:$template_filter"
+  --limit 1
+  --sort-by ~creationTimestamp
 )
 
-echo "Running 'gcloud' with following arguments:"
+echo "Listing instance templates with following arguments:"
 echo "${gcloud_args[@]}"
 
 instance_template=$(gcloud "${gcloud_args[@]}")
@@ -140,7 +140,7 @@ fi
 
 # Create instance from template
 gcloud_args=(
-  "--format=json"
+  --format json
   compute
   instances
   create
@@ -151,12 +151,12 @@ if [ -n "$machine_type" ]; then
 fi
 
 gcloud_args+=(
-  "--source-instance-template=$instance_template"
-  "--subnet=default"
+  --source-instance-template "$instance_template"
+  --subnet default
   "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 
-echo "Running 'gcloud' with following arguments:"
+echo "Creating instance with following arguments:"
 echo "${gcloud_args[@]}"
 
 new_instance=$(gcloud "${gcloud_args[@]}")
