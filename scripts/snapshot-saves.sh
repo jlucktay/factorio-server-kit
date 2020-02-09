@@ -30,7 +30,7 @@ for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
     fi
   done
 
-  snapshot_timestamp=$(TZ=UTC factorio::run_date --date="@$mtime_high_score" "+%Y%m%d.%H%M%S%z")
+  snapshot_timestamp=$(TZ=UTC factorio::util::run_date --date="@$mtime_high_score" "+%Y%m%d.%H%M%S%z")
 
   gsutil -m \
     rsync -P -x ".*\.tmp\.zip" \

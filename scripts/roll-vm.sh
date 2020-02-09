@@ -82,7 +82,7 @@ for arg in "$@"; do
   esac
 done
 
-eval "$(factorio::set_env_location "${FACTORIO_SERVER_LOCATIONS[$location]}")"
+eval "$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$location]}")"
 
 if [ -n "$machine_type" ]; then
   echo -n "Validating machine type '$machine_type'..."

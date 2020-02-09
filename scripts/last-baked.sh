@@ -17,4 +17,4 @@ image_baked_timestamp=$(
     | jq --raw-output '.[].creationTimestamp'
 )
 
-factorio::run_date --date="$image_baked_timestamp"
+factorio::util::run_date --date="$image_baked_timestamp"

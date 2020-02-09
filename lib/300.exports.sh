@@ -2,7 +2,7 @@
 set -euo pipefail
 
 #shellcheck disable=SC2016
-function factorio::set_env_location() {
+function factorio::env::set_location() {
   echo 'export CLOUDSDK_COMPUTE_ZONE="'"${1:?}"'"'
   echo 'export CLOUDSDK_COMPUTE_REGION="${CLOUDSDK_COMPUTE_ZONE:0:-2}"'
   echo 'export CLOUDSDK_FUNCTIONS_REGION="$CLOUDSDK_COMPUTE_REGION"'
@@ -45,7 +45,7 @@ export FACTORIO_IMAGE_NAME
 
 # Ref: https://cloud.google.com/sdk/gcloud/reference/topic/startup
 declare -rx CLOUDSDK_CORE_PROJECT=jlucktay-factorio
-eval "$(factorio::set_env_location "${default_zone:?}")" # locations.json should have "default: true" on one location
+eval "$(factorio::env::set_location "${default_zone:?}")" # locations.json should have "default: true" on one location
 unset default_zone
 
 # Ref: https://www.packer.io/downloads.html

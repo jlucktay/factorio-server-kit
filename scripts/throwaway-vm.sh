@@ -13,7 +13,7 @@ done
 select_location=${1:-${FACTORIO_LOCATION:?}}
 name="ssh-ubuntu-$select_location"
 
-eval "$(factorio::set_env_location "${FACTORIO_SERVER_LOCATIONS[$select_location]:?}")"
+eval "$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$select_location]:?}")"
 
 gcloud_create_args=(
   compute

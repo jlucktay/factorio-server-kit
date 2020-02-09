@@ -11,7 +11,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Ref: https://cloud.google.com/community/tutorials/dnssec-cloud-dns-domains
-function checksigned() {
+function factorio::dns::check_signed() {
   ZONE=$(basename "$1" .).
   if [ "$ZONE" = .. ]; then
     ZONE=.
@@ -49,4 +49,4 @@ function checksigned() {
   }
 }
 
-checksigned "${1:?}"
+factorio::dns::check_signed "${1:?}"

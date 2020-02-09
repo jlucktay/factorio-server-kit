@@ -35,7 +35,7 @@ gcloud_args=(
   builds
   submit
   "--config=$script_dir/cloudbuild.yaml"
-  "--substitutions=$(factorio::join_by , "${substitutions[@]}")"
+  "--substitutions=$(factorio::util::join_by , "${substitutions[@]}")"
   "$script_dir"
 )
 
