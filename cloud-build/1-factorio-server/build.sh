@@ -26,9 +26,9 @@ gsutil "${gsutil_args[@]}"
 
 # Submit build and block (not async)
 substitutions=(
-  "_IMAGE_FAMILY=$FACTORIO_IMAGE_FAMILY"
-  "_IMAGE_NAME=$FACTORIO_IMAGE_NAME"
-  "_IMAGE_ZONE=$FACTORIO_IMAGE_ZONE"
+  "_IMAGE_FAMILY=${FACTORIO_IMAGE_FAMILY:?}"
+  "_IMAGE_NAME=${FACTORIO_IMAGE_NAME:?}"
+  "_IMAGE_ZONE=${CLOUDSDK_COMPUTE_ZONE:?}"
 )
 
 gcloud_args=(
