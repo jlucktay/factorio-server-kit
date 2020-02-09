@@ -9,9 +9,11 @@ project_id=$(curl --header "Metadata-Flavor: Google" --silent \
 
 logger "=== Get configs from Storage"
 locations=$(gsutil cat "gs://$project_id-storage/lib/locations.json")
-# gsutil -m cp gs://$project_id-storage/fluentd/* /etc/google-fluentd/config.d/ # currently empty
-gsutil -m cp "gs://$project_id-storage/config/*-settings.json" /opt/factorio/config/
-gsutil -m cp "gs://$project_id-storage/config/server-*list.json" /opt/factorio/config/
+
+# Configs may or may not exist in Storage
+gsutil -m cp "gs://$project_id-storage/fluentd/*" /etc/google-fluentd/config.d/ || true
+gsutil -m cp "gs://$project_id-storage/config/*-settings.json" /opt/factorio/config/ || true
+gsutil -m cp "gs://$project_id-storage/config/server-*list.json" /opt/factorio/config/ || true
 
 logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
