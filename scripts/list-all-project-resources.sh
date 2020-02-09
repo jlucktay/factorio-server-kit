@@ -21,16 +21,16 @@ gcloud alpha resources list \
 # https://github.com/mauve/vscode-terraform/issues/157
 #
 
-# https://www.terraform.io/docs/providers/google/r/cloudfunctions_function.html
-# -> gcloud --format=json functions describe cleanup-instances | jq
+# https://www.terraform.io/docs/providers/google/r/pubsub_topic.html
+# -> gcloud --format=json pubsub topics describe cleanup-instances | jq
 #
 # https://console.cloud.google.com/cloudscheduler?project=jlucktay-factorio
 # runs every 15 minutes to publish to Pub/Sub so that cleanup-instances Cloud Function is triggered
 # https://www.terraform.io/docs/providers/google/r/cloud_scheduler_job.html
 # -> gcloud --format=json scheduler jobs describe cleanup-instances | jq
 #
-# https://www.terraform.io/docs/providers/google/r/pubsub_topic.html
-# -> gcloud --format=json pubsub topics describe cleanup-instances | jq
+# https://www.terraform.io/docs/providers/google/r/cloudfunctions_function.html
+# -> gcloud --format=json functions describe cleanup-instances | jq
 #
 # https://www.terraform.io/docs/providers/google/r/storage_bucket.html
 # -> gsutil ls -p $CLOUDSDK_CORE_PROJECT
@@ -47,6 +47,5 @@ gcloud alpha resources list \
 # -> gcloud dns record-sets list --zone=factorio-server
 #
 # Google Cloud resource IP ranges, to e.g. whitelist incoming ssh traffic for the build pipeline
-#
 # https://www.terraform.io/docs/providers/google/d/datasource_google_netblock_ip_ranges.html
 # https://cloud.google.com/compute/docs/faq#find_ip_range

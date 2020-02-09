@@ -13,14 +13,24 @@ The scripts are based around the use of [preemptible VMs] which keeps running co
 
 ## Installation
 
-### Once-off (/infrequently recurring)
+### Initial setup
 
 1. Populate the configuration files with your settings
+1. Create the `<project>-tfstate` Terraform state bucket in Storage
+1. Run up the Terraform stack to provision infrastructure in GCP (implemented? -> ❌/✅)
+    1. Cloud Pub/Sub topic `cleanup-instances` ❌
+    1. Cloud Scheduler job `cleanup-instances` to publish to topic ❌
+    1. Cloud Function `cleanup-instances` to clean up terminated instances, triggered by topic ✅
+    1. Cloud Storage buckets
+        1. `<project>-backup-saves` ❌
+        1. `<project>-saves-<location>` ✅
+        1. `<project>-storage` ❌
+    1. Cloud DNS (optional)
+        1. Managed zone ❌
+        1. Record set ❌
 1. Run the Cloud Build pipelines in order
     1. [Packer builder Docker image]
     1. [Factorio server VM image]
-1. Run up the Terraform infra (buckets et al)
-    1. Deploy the Cloud Function to clean up terminated instances
 
 ### As desired
 
