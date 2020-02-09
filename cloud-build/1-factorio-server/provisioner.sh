@@ -152,16 +152,16 @@ EOF
 
 /usr/bin/google_instance_setup
 
+logger "=== Wait for Grafana to become available"
+while ! (echo > /dev/tcp/localhost/3000) &> /dev/null; do
+  sleep 1s
+done
+
 logger "=== Reset Grafana password"
 if ! grafana_password="$(jq --exit-status --raw-output ".password" <<< "$secrets")"; then
   echo >&2 "Error retrieving secrets."
   exit 1
 fi
-
-logger "--- Wait for Grafana to become available"
-while ! (echo > /dev/tcp/localhost/3000) &> /dev/null; do
-  sleep 1s
-done
 
 curl \
   --data '{
