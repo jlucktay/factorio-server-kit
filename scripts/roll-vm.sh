@@ -16,8 +16,6 @@ zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key '$FACTORIO
 machine_type=
 open_logs=0
 
-# TODO: Los Angeles DC doesn't have N2 machine type, but it does have E2
-
 ### Set up usage/help output
 function usage() {
   cat << HEREDOC
