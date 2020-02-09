@@ -19,7 +19,7 @@ gsutil_args=(
   -P
   "$FACTORIO_ROOT/lib/locations.json"
   "$FACTORIO_ROOT/lib/secrets.json"
-  "gs://${GCLOUDSDK_CORE_PROJECT:?}-storage/lib/"
+  "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/"
 )
 
 gsutil "${gsutil_args[@]}"
