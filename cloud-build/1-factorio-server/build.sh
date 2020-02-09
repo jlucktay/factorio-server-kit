@@ -22,6 +22,8 @@ gsutil_args=(
   "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/"
 )
 
+echo -n "Copying files to Cloud Storage with arguments: "
+echo "${gsutil_args[@]}"
 gsutil "${gsutil_args[@]}"
 
 # Submit build and block (not async)
@@ -39,9 +41,10 @@ gcloud_build_args=(
   "$script_dir"
 )
 
-echo "Submitting synchronous Cloud Build with arguments '${gcloud_build_args[*]}'..."
-# If the build fails, clean up any instances created
+echo -n "Submitting synchronous Cloud Build with arguments: "
+echo "${gcloud_build_args[@]}"
 if ! gcloud "${gcloud_build_args[@]}"; then
+  # If the build fails, clean up any instances created
   factorio::vm::delete_instances "packer-*"
   exit 1
 fi
@@ -56,7 +59,8 @@ gcloud_image_list_args=(
   --sort-by ~creationTimestamp
 )
 
-echo "Listing images with arguments '${gcloud_image_list_args[*]}'..."
+echo -n "Listing images with arguments: "
+echo "${gcloud_image_list_args[@]}"
 images=$(gcloud "${gcloud_image_list_args[@]}")
 for_loop_limit=$(jq length <<< "$images")
 
@@ -72,6 +76,7 @@ for ((i = 1; i < for_loop_limit; i += 1)); do
     "$image_name"
   )
 
-  echo "Pruning old image with arguments '${gcloud_image_delete_args[*]}'..."
+  echo -n "Pruning old image with arguments: "
+  echo "${gcloud_image_delete_args[@]}"
   gcloud "${gcloud_image_delete_args[@]}"
 done

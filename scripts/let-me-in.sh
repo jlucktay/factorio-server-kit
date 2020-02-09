@@ -15,7 +15,7 @@ curl_output=$(curl --silent http://httpbin.org/ip | jq --raw-output '.origin')
 my_ip=${BASH_REMATCH[0]}
 
 ### Build arguments list for gcloud
-gcloud_args=(
+gcloud_firewall_update_args=(
   compute
   firewall-rules
   update
@@ -24,31 +24,38 @@ gcloud_args=(
 )
 
 ### Show arguments and execute with them
-echo "Running 'gcloud' with following arguments:"
-echo "${gcloud_args[@]}"
-
-gcloud "${gcloud_args[@]}"
+echo -n "Updating firewall rules with arguments: "
+echo "${gcloud_firewall_update_args[@]}"
+gcloud "${gcloud_firewall_update_args[@]}"
 
 ### Get Factorio server instance and SSH into it
-instance=$(
-  gcloud \
-    --format=json \
-    compute \
-    instances \
-    list \
-    --filter="name:factorio-*" \
-    --limit=1
+gcloud_instance_list_args=(
+  --format json
+  compute
+  instances
+  list
+  --filter "name:factorio-*"
+  --limit 1
 )
 
+echo -n "Listing existing instances with arguments: "
+echo "${gcloud_instance_list_args[@]}"
+instance=$(gcloud "${gcloud_instance_list_args[@]}")
+
 if [ "$(jq length <<< "$instance")" == 0 ]; then
-  err "there are currently no instances running"
+  err "there are no instances currently running"
 fi
 
 name=$(jq --raw-output ".[0].name" <<< "$instance")
 zone=$(basename "$(jq --raw-output ".[0].zone" <<< "$instance")")
 
-gcloud \
-  compute \
-  ssh \
-  --zone="$zone" \
+gcloud_ssh_args=(
+  compute
+  ssh
+  --zone "$zone"
   "$name"
+)
+
+echo -n "SSHing into Factorio server instance with arguments: "
+echo "${gcloud_ssh_args[@]}"
+gcloud "${gcloud_ssh_args[@]}"

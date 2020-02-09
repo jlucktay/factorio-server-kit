@@ -27,9 +27,8 @@ gcloud_create_args=(
   "$name"
 )
 
-echo "Running 'gcloud' with following arguments:"
+echo -n "Creating instance with arguments: "
 echo "${gcloud_create_args[@]}"
-
 gcloud "${gcloud_create_args[@]}"
 
 echo "SSHing into '$name':"

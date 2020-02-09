@@ -18,26 +18,33 @@ substitutions=(
   "_PACKER_VERSION_SHA256SUM=$FACTORIO_PACKER_VERSION_SHA256SUM"
 )
 
-gcloud \
-  builds \
-  submit \
-  --config="$script_dir/cloudbuild.yaml" \
-  --substitutions="$(factorio::util::join_by , "${substitutions[@]}")" \
+gcloud_build_args=(
+  builds
+  submit
+  --config "$script_dir/cloudbuild.yaml"
+  --substitutions "$(factorio::util::join_by , "${substitutions[@]}")"
   "$script_dir"
+)
+
+echo -n "Submitting synchronous Cloud Build with arguments: "
+echo "${gcloud_build_args[@]}"
+gcloud "${gcloud_build_args[@]}"
 
 # Collect untagged digest(s)
 base_image=gcr.io/${CLOUDSDK_CORE_PROJECT:?}/packer
 
-gcloud_list_tags_args=(
-  "--format=json"
+gcloud_list_untagged_args=(
+  --format json
   container
   images
   list-tags
+  --filter "NOT tags:*"
   "$base_image"
-  "--filter=NOT tags:*"
 )
 
-digests=$(gcloud "${gcloud_list_tags_args[@]}")
+echo -n "Listing untagged digests with arguments: "
+echo "${gcloud_list_untagged_args[@]}"
+digests=$(gcloud "${gcloud_list_untagged_args[@]}")
 for_loop_limit=$(jq length <<< "$digests")
 
 # Prepare to delete untagged digest(s)
@@ -57,5 +64,7 @@ done
 
 # Only run the delete command if any arguments were added to the array
 if [ ${#gcloud_delete_args[@]} -gt "$pre_loop_count" ]; then
+  echo -n "Deleting untagged digests with arguments: "
+  echo "${gcloud_delete_args[@]}"
   gcloud "${gcloud_delete_args[@]}"
 fi

@@ -119,7 +119,7 @@ factorio::vm::delete_instances factorio-*
 template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
 
 # Look up latest instance template
-gcloud_args=(
+gcloud_template_list_args=(
   --format "value(name)"
   compute
   instance-templates
@@ -129,17 +129,16 @@ gcloud_args=(
   --sort-by ~creationTimestamp
 )
 
-echo "Listing instance templates with following arguments:"
-echo "${gcloud_args[@]}"
-
-instance_template=$(gcloud "${gcloud_args[@]}")
+echo -n "Listing instance templates with arguments: "
+echo "${gcloud_template_list_args[@]}"
+instance_template=$(gcloud "${gcloud_template_list_args[@]}")
 
 if [ -z "$instance_template" ]; then
   err "no instance templates named '$template_filter' were found"
 fi
 
 # Create instance from template
-gcloud_args=(
+gcloud_instance_create_args=(
   --format json
   compute
   instances
@@ -147,19 +146,18 @@ gcloud_args=(
 )
 
 if [ -n "$machine_type" ]; then
-  gcloud_args+=("--machine-type=$machine_type")
+  gcloud_instance_create_args+=("--machine-type=$machine_type")
 fi
 
-gcloud_args+=(
+gcloud_instance_create_args+=(
   --source-instance-template "$instance_template"
   --subnet default
   "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 
-echo "Creating instance with following arguments:"
-echo "${gcloud_args[@]}"
-
-new_instance=$(gcloud "${gcloud_args[@]}")
+echo -n "Creating instance with arguments: "
+echo "${gcloud_instance_create_args[@]}"
+new_instance=$(gcloud "${gcloud_instance_create_args[@]}")
 new_instance_id=$(jq --raw-output '.[0].id' <<< "$new_instance")
 new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].natIP' <<< "$new_instance")
 

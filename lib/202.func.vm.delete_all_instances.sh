@@ -14,9 +14,8 @@ function factorio::vm::delete_instances() {
     gcloud_list_args+=("--filter=name:$1")
   fi
 
-  echo "Running 'gcloud' with following arguments:"
+  echo -n "Listing instances with arguments: "
   echo "${gcloud_list_args[@]}"
-
   delete_instances=$(gcloud "${gcloud_list_args[@]}")
   for_loop_limit=$(jq length <<< "$delete_instances")
 
@@ -35,9 +34,8 @@ function factorio::vm::delete_instances() {
       "$name"
     )
 
-    echo "Running 'gcloud' with following arguments:"
+    echo -n "Deleting instance with arguments: "
     echo "${gcloud_delete_args[@]}"
-
     gcloud "${gcloud_delete_args[@]}"
   done
 }

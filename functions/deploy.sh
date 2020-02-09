@@ -35,8 +35,17 @@ for ((i = 0; i < ${#functions_list[@]}; i += 1)); do
 done
 
 for ((i = 0; i < ${#delete_region[@]}; i += 1)); do
-  echo "Cleaning up existing function in region '${delete_region[$i]}'..."
-  gcloud functions delete "$function_name" --region="${delete_region[$i]}" --quiet
+  gcloud_delete_args=(
+    functions
+    delete
+    "$function_name"
+    --region "${delete_region[$i]}"
+    --quiet
+  )
+
+  echo -n "Cleaning up existing function with arguments: "
+  echo "${gcloud_delete_args[@]}"
+  gcloud "${gcloud_delete_args[@]}"
 done
 
 gcloud_deploy_args=(
@@ -49,7 +58,6 @@ gcloud_deploy_args=(
   --trigger-topic "$topic_name"
 )
 
-echo "Deploying '$function_name' with the following arguments:"
+echo -n "Deploying '$function_name' with arguments: "
 echo "${gcloud_deploy_args[@]}"
-
 gcloud "${gcloud_deploy_args[@]}"
