@@ -12,7 +12,7 @@ done
 
 image_baked_timestamp=$(
   gcloud compute images list \
-    --filter="family:packtorio" \
+    --filter="family:${FACTORIO_IMAGE_FAMILY:?}" \
     --format=json \
     | jq --raw-output '.[].creationTimestamp'
 )

@@ -116,7 +116,7 @@ fi
 # Delete any old servers that may already be deployed within the project
 factorio::vm::delete_instances factorio-*
 
-template_filter="packtorio-*"
+template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
 
 # Look up latest instance template
 gcloud_args=(
