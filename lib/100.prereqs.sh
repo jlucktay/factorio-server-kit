@@ -40,7 +40,7 @@ if [ -z "${CLOUDSDK_CORE_PROJECT:-}" ]; then
 fi
 
 # Make sure it propagates in the environment from here onwards
-declare -rx CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
+declare -rx CLOUDSDK_CORE_PROJECT="$CLOUDSDK_CORE_PROJECT"
 
 # Tool - JQ
 if ! hash jq 2> /dev/null; then
