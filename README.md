@@ -6,7 +6,7 @@
 
 > Running your own Factorio server on Google Cloud
 
-Much like the game itself, this project aims to automate as much as possible, when it comes to running your own
+Much like [the game] itself, this project aims to automate as much as possible, when it comes to running your own
 Factorio server.
 
 The scripts are based around the use of [preemptible VMs] which keeps running costs low.
@@ -16,15 +16,14 @@ The scripts are based around the use of [preemptible VMs] which keeps running co
 ### Initial setup
 
 1. Make sure the following tools are installed, available in your `$PATH`, and (where necessary) authorised:
-    1. [Google Cloud SDK](https://cloud.google.com/sdk) - [quickstarts](https://cloud.google.com/sdk/docs/quickstarts)
-        1. [Installation](https://cloud.google.com/sdk/install)
-        1. [Authorisation](https://cloud.google.com/sdk/docs/authorizing)
-    1. [jq](http://stedolan.github.io/jq/)
-        1. [Installation](https://github.com/stedolan/jq/wiki/Installation)
-    1. [Terraform](https://www.terraform.io)
-        1. [Installation](https://learn.hashicorp.com/terraform/getting-started/install.html)
-1. Get started on the [GCP Free Tier](https://cloud.google.com/free/) and
-   [create a new Google Cloud project](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
+    1. [Google Cloud SDK] - [quickstarts][gc-quick]
+        1. [Installation][gc-inst]
+        1. [Authorisation][gc-auth]
+    1. [jq]
+        1. [Installation][jq-inst]
+    1. [Terraform]
+        1. [Installation][tf-inst]
+1. Get started on the [GCP Free Tier] and [create a new Google Cloud project][gc-project]
     - **Note: you are responsible for the running costs incurred by this project** beyond the limits of the Free Tier.
       Every effort has been made to optimise and minimise the costs of resource usage, and as of this writing running a
       server for ~50 hours a month cost less than £5 in total, but this is an isolated example from a sample size of 1.
@@ -60,12 +59,12 @@ infrastructure-as-code.
 
 ### Bash scripts
 
-- [roll-vm.sh](scripts/roll-vm.sh) - the main point of execution; will run up a GCE VM hosting Docker containers for
+- [roll-vm.sh] - the main point of execution; will run up a GCE VM hosting Docker containers for
     the Factorio server itself, as well as additional containers with Grafana and Prometheus that tie into [Graftorio]
   - the location/region that the VM will deploy to follows a default based on the [`locations.json` file], and can be
         overridden with a `--<location>` flag; see `roll-vm.sh --help` for more information
   - the [machine type] of the VM can be specified with the `--machine-type=...` flag
-- [delete-vm.sh](scripts/delete-vm.sh) - deletes any VMs currently running in the project, optionally filtering by name
+- [delete-vm.sh] - deletes any VMs currently running in the project, optionally filtering by name
 
 #### Library
 
@@ -76,8 +75,7 @@ Each of the above scripts taps into a common library of functionality under the 
 ### Map (re)generation settings
 
 The two settings files `map-settings.json` and `map-gen-settings.json` can be created from a map exchange string in the
-game as outlined
-[here](https://wiki.factorio.com/Command_line_parameters#Creating_the_JSON_files_from_a_map_exchange_string).
+game [as outlined here][map-settings].
 
 ## Upstream issues outstanding
 
@@ -85,22 +83,22 @@ game as outlined
 
 ## Related projects
 
-### `gopukku`
+### gopukku
 
-[`gopukku`](https://github.com/jlucktay/gopukku) is a small Go binary/service I built to have a server shut itself down
+[`gopukku`] is a small Go binary/service I built to have a server shut itself down
 if the player count stays at zero for fifteen consecutive minutes.
 
 The latest release of `gopukku` is installed in the Factorio server image by
-[Packer's provisioner script](cloud-build/1-factorio-server/provisioner.sh).
+[Packer's provisioner script].
 
 ## Author
 
 👤 **James Lucktaylor**
 
 - Website: jameslucktaylor.info
-- GitHub: [@jlucktay](https://github.com/jlucktay)
+- GitHub: [@jlucktay][4]
 - Twitter: [@jlucktay][2]
-- LinkedIn: [@jlucktay](https://linkedin.com/in/jlucktay)
+- LinkedIn: [@jlucktay][linkedin]
 
 ## Contributing
 
@@ -114,19 +112,38 @@ Give a ⭐️ if this project helped you!
 
 ## 📝 License
 
-Copyright © 2020 [James Lucktaylor](https://github.com/jlucktay).
+Copyright © 2020 [James Lucktaylor][4].
 
-This project is licensed with [the Unlicense](https://unlicense.org).
+This project is licensed with [the Unlicense].
 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
 
+[`gopukku`]: https://github.com/jlucktay/gopukku
 [`locations.json` file]: lib/locations.json
 [1]: https://choosealicense.com/licenses/unlicense/
 [2]: https://twitter.com/jlucktay
 [3]: https://wakatime.com/badge/github/jlucktay/factorio-workbench
+[4]: https://github.com/jlucktay
+[delete-vm.sh]: scripts/delete-vm.sh
 [Factorio server VM image]: cloud-build/1-factorio-server/README.md
+[gc-auth]: https://cloud.google.com/sdk/docs/authorizing
+[gc-inst]: https://cloud.google.com/sdk/install
+[gc-project]: https://cloud.google.com/resource-manager/docs/creating-managing-projects
+[gc-quick]: https://cloud.google.com/sdk/docs/quickstarts
+[GCP Free Tier]: https://cloud.google.com/free/
+[Google Cloud SDK]: https://cloud.google.com/sdk
 [Graftorio]: https://github.com/afex/graftorio
+[jq-inst]: https://github.com/stedolan/jq/wiki/Installation
+[jq]: http://stedolan.github.io/jq/
+[linkedin]: https://linkedin.com/in/jlucktay
 [machine type]: https://cloud.google.com/compute/docs/machine-types
+[map-settings]: https://wiki.factorio.com/Command_line_parameters#Creating_the_JSON_files_from_a_map_exchange_string
 [Packer builder Docker image]: cloud-build/0-packer/README.md
+[Packer's provisioner script]: cloud-build/1-factorio-server/provisioner.sh
 [preemptible VMs]: https://cloud.google.com/compute/docs/instances/preemptible
+[roll-vm.sh]: scripts/roll-vm.sh
+[Terraform]: https://www.terraform.io
+[tf-inst]: https://learn.hashicorp.com/terraform/getting-started/install.html
+[the game]: https://factorio.com
+[the Unlicense]: https://unlicense.org
