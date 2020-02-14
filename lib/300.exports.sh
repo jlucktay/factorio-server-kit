@@ -48,5 +48,6 @@ eval "$(factorio::env::set_location "${default_zone:?}")" # locations.json shoul
 unset default_zone
 
 # Ref: https://www.packer.io/downloads.html
-declare -rx FACTORIO_PACKER_VERSION=1.5.1
-declare -rx FACTORIO_PACKER_VERSION_SHA256SUM=3305ede8886bc3fd83ec0640fb87418cc2a702b2cb1567b48c8cb9315e80047d
+# Look for the 'packer_<version>_linux_amd64.zip' checksum, which is what our Docker image uses
+declare -rx FACTORIO_PACKER_VERSION=1.5.2
+declare -rx FACTORIO_PACKER_VERSION_SHA256SUM=22ef75c1f5a8878acb9aed4cb4ba71a147fc4f6be4110577e0a457e359af04ea
