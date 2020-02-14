@@ -103,7 +103,7 @@ Give a ⭐️ if this project helped you!
 
 Copyright © 2020 [James Lucktaylor](https://github.com/jlucktay).
 
-This project is [The Unlicense](https://choosealicense.com/licenses/unlicense/) licensed.
+This project is licensed with [the Unlicense](https://unlicense.org).
 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
