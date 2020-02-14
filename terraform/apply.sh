@@ -10,7 +10,10 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
+script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
+
 # shellcheck disable=SC2154
 export TF_VAR_project_id="$CLOUDSDK_CORE_PROJECT"
 
+cd "$script_dir"
 terraform apply
