@@ -1,5 +1,7 @@
 # TODO
 
+## Finish documenting/testing/implementing the _New Project Bootstrap_ journey
+
 ## Add `htop` config to baked image
 
 - `.config/htop/htoprc`
