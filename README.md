@@ -1,4 +1,4 @@
-# Welcome to Factorio Workbench 👋
+# Welcome to the Factorio Server Kit 👋
 
 [![License: The Unlicense](https://img.shields.io/badge/License-The%20Unlicense-yellow.svg)][1]
 [![Twitter: jlucktay](https://img.shields.io/twitter/follow/jlucktay.svg?style=social)][2]
@@ -15,8 +15,21 @@ The scripts are based around the use of [preemptible VMs] which keeps running co
 
 ### Initial setup
 
-1. Populate the configuration files with your settings
-1. Create the `<project>-tfstate` Terraform state bucket in Storage
+1. Make sure the following tools are installed, available in your `$PATH`, and (where necessary) authorised:
+    1. [Google Cloud SDK](https://cloud.google.com/sdk) - [quickstarts](https://cloud.google.com/sdk/docs/quickstarts)
+        1. [Installation](https://cloud.google.com/sdk/install)
+        1. [Authorisation](https://cloud.google.com/sdk/docs/authorizing)
+    1. [jq](http://stedolan.github.io/jq/)
+        1. [Installation](https://github.com/stedolan/jq/wiki/Installation)
+    1. [Terraform](https://www.terraform.io)
+        1. [Installation](https://learn.hashicorp.com/terraform/getting-started/install.html)
+1. Get started on the [GCP Free Tier](https://cloud.google.com/free/) and
+   [create a new Google Cloud project](https://cloud.google.com/resource-manager/docs/creating-managing-projects)
+    - **Note: you are responsible for the running costs incurred by this project** beyond the limits of the Free Tier.
+      Every effort has been made to optimise and minimise the costs of resource usage, and as of this writing running a
+      server for ~50 hours a month cost less than £5 in total, but this is an isolated example from a sample size of 1.
+1. Set the `CLOUDSDK_CORE_PROJECT` environment variable to the Google Cloud project ID
+    1. For example: `export CLOUDSDK_CORE_PROJECT=my-factorio-server-kit`
 1. Run up the Terraform stack to provision infrastructure in GCP (implemented? -> ❌/✅)
     1. Cloud Pub/Sub topic `cleanup-instances` ❌
     1. Cloud Scheduler job `cleanup-instances` to publish to topic ❌
