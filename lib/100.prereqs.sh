@@ -26,6 +26,22 @@ if ! hash gsutil 2> /dev/null; then
 - https://cloud.google.com/sdk/install"
 fi
 
+# Variable - Google Cloud SDK default project ID
+if [ -z "${CLOUDSDK_CORE_PROJECT:-}" ]; then
+  if [ -n "${GOOGLE_CLOUD_PROJECT:-}" ]; then
+    # Provided by Google Cloud Shell
+    CLOUDSDK_CORE_PROJECT=$GOOGLE_CLOUD_PROJECT
+  else
+    err "The 'CLOUDSDK_CORE_PROJECT' environment variable needs to be exported with your Google Cloud project ID." \
+      "See also:" \
+      "https://cloud.google.com/sdk/gcloud/reference/topic/startup" \
+      "https://cloud.google.com/sdk/gcloud/reference/topic/configurations"
+  fi
+fi
+
+# Make sure it propagates in the environment from here onwards
+declare -rx CLOUDSDK_CORE_PROJECT=$CLOUDSDK_CORE_PROJECT
+
 # Tool - JQ
 if ! hash jq 2> /dev/null; then
   err "'jq' required but not found:

@@ -30,7 +30,7 @@ for ((i = 0; i < for_loop_limit; i += 1)); do
   fi
 done
 
-unset tmp_script_dir tmp_locations_json
+unset tmp_locations_json tmp_script_dir
 
 # Associative array with valid locations/zones
 export FACTORIO_SERVER_LOCATIONS
@@ -40,11 +40,10 @@ declare -rx FACTORIO_IMAGE_FAMILY=packtorio
 declare -rx FACTORIO_LOCATION="${default_location:?}" # locations.json should have "default: true" on one location
 unset default_location
 
+# Define this once per script invocation, so that it can be used consistently across builds, deployments, etc
 readonly FACTORIO_IMAGE_NAME="$FACTORIO_IMAGE_FAMILY-$(TZ=UTC date +%Y%m%d-%H%M%S)"
 export FACTORIO_IMAGE_NAME
 
-# Ref: https://cloud.google.com/sdk/gcloud/reference/topic/startup
-declare -rx CLOUDSDK_CORE_PROJECT=jlucktay-factorio
 eval "$(factorio::env::set_location "${default_zone:?}")" # locations.json should have "default: true" on one location
 unset default_zone
 
