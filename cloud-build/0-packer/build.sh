@@ -38,7 +38,7 @@ gcloud_list_untagged_args=(
   container
   images
   list-tags
-  --filter "NOT tags:*"
+  --filter "NOT tags:* OR NOT tags:$FACTORIO_PACKER_VERSION"
   "$base_image"
 )
 
@@ -52,6 +52,7 @@ gcloud_delete_args=(
   container
   images
   delete
+  --force-delete-tags
   --quiet
 )
 
