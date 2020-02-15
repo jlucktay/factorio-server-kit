@@ -49,5 +49,5 @@ unset default_zone
 
 # Ref: https://www.packer.io/downloads.html
 # Look for the 'packer_<version>_linux_amd64.zip' checksum, which is what our Docker image uses
-declare -rx FACTORIO_PACKER_VERSION=1.5.2
-declare -rx FACTORIO_PACKER_VERSION_SHA256SUM=22ef75c1f5a8878acb9aed4cb4ba71a147fc4f6be4110577e0a457e359af04ea
+declare -rx FACTORIO_PACKER_VERSION=1.5.4
+declare -rx FACTORIO_PACKER_VERSION_SHA256SUM=c7277f64d217c7d9ccfd936373fe352ea935454837363293f8668f9e42d8d99d
