@@ -11,6 +11,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Argument defaults
+location=${FACTORIO_LOCATION:?}
 machine_type=
 open_logs=0
 zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key \
