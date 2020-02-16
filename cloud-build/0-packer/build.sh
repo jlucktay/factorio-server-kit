@@ -26,7 +26,7 @@ gcloud_build_args=(
   "$script_dir"
 )
 
-echo -n "Submitting synchronous Cloud Build with arguments: "
+echo -n "Submitting synchronous Cloud Build: gcloud "
 echo "${gcloud_build_args[@]}"
 gcloud "${gcloud_build_args[@]}"
 
@@ -42,7 +42,7 @@ gcloud_list_untagged_args=(
   "$base_image"
 )
 
-echo -n "Listing untagged digests with arguments: "
+echo -n "Listing untagged digests: gcloud "
 echo "${gcloud_list_untagged_args[@]}"
 digests=$(gcloud "${gcloud_list_untagged_args[@]}")
 for_loop_limit=$(jq length <<< "$digests")
@@ -65,7 +65,7 @@ done
 
 # Only run the delete command if any arguments were added to the array
 if [ ${#gcloud_delete_args[@]} -gt "$pre_loop_count" ]; then
-  echo -n "Deleting untagged digests with arguments: "
+  echo -n "Deleting untagged digests: gcloud "
   echo "${gcloud_delete_args[@]}"
   gcloud "${gcloud_delete_args[@]}"
 fi

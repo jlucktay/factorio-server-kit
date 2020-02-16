@@ -24,7 +24,7 @@ gcloud_firewall_update_args=(
 )
 
 ### Show arguments and execute with them
-echo -n "Updating firewall rules with arguments: "
+echo -n "Updating firewall rules: gcloud "
 echo "${gcloud_firewall_update_args[@]}"
 gcloud "${gcloud_firewall_update_args[@]}"
 
@@ -38,7 +38,7 @@ gcloud_instance_list_args=(
   --limit 1
 )
 
-echo -n "Listing existing instances with arguments: "
+echo -n "Listing existing instances: gcloud "
 echo "${gcloud_instance_list_args[@]}"
 instance=$(gcloud "${gcloud_instance_list_args[@]}")
 
@@ -56,6 +56,6 @@ gcloud_ssh_args=(
   "$name"
 )
 
-echo -n "SSHing into Factorio server instance with arguments: "
+echo -n "SSHing into Factorio server instance: gcloud "
 echo "${gcloud_ssh_args[@]}"
 gcloud "${gcloud_ssh_args[@]}"

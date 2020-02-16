@@ -130,7 +130,7 @@ gcloud_template_list_args=(
   --sort-by ~creationTimestamp
 )
 
-echo -n "Listing instance templates with arguments: "
+echo -n "Listing instance templates: gcloud "
 echo "${gcloud_template_list_args[@]}"
 instance_template=$(gcloud "${gcloud_template_list_args[@]}")
 
@@ -156,7 +156,7 @@ gcloud_instance_create_args+=(
   "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 
-echo -n "Creating instance with arguments: "
+echo -n "Creating instance: gcloud "
 echo "${gcloud_instance_create_args[@]}"
 new_instance=$(gcloud "${gcloud_instance_create_args[@]}")
 new_instance_id=$(jq --raw-output '.[0].id' <<< "$new_instance")

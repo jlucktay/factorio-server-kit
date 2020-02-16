@@ -23,7 +23,7 @@ gsutil_args=(
   "$bucket_name"
 )
 
-echo -n "Making sure Cloud Storage bucket '$bucket_name' for Terraform state exists, with arguments: "
+echo -n "Making sure Cloud Storage bucket '$bucket_name' for Terraform state exists: gsutil "
 echo "${gsutil_args[@]}"
 gsutil "${gsutil_args[@]}" &> /dev/null || true
 

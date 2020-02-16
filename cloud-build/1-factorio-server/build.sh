@@ -22,7 +22,7 @@ gsutil_args=(
   "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/"
 )
 
-echo -n "Copying files to Cloud Storage with arguments: "
+echo -n "Copying files to Cloud Storage: gsutil "
 echo "${gsutil_args[@]}"
 gsutil "${gsutil_args[@]}"
 
@@ -41,7 +41,7 @@ gcloud_build_args=(
   "$script_dir"
 )
 
-echo -n "Submitting synchronous Cloud Build with arguments: "
+echo -n "Submitting synchronous Cloud Build: gcloud "
 echo "${gcloud_build_args[@]}"
 if ! gcloud "${gcloud_build_args[@]}"; then
   # If the build fails, clean up any instances created
@@ -59,7 +59,7 @@ gcloud_image_list_args=(
   --sort-by ~creationTimestamp
 )
 
-echo -n "Listing images with arguments: "
+echo -n "Listing images: gcloud "
 echo "${gcloud_image_list_args[@]}"
 images=$(gcloud "${gcloud_image_list_args[@]}")
 for_loop_limit=$(jq length <<< "$images")
@@ -76,7 +76,7 @@ for ((i = 1; i < for_loop_limit; i += 1)); do
     "$image_name"
   )
 
-  echo -n "Pruning old image with arguments: "
+  echo -n "Pruning old image: gcloud "
   echo "${gcloud_image_delete_args[@]}"
   gcloud "${gcloud_image_delete_args[@]}"
 done

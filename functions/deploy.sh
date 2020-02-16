@@ -43,7 +43,7 @@ for ((i = 0; i < ${#delete_region[@]}; i += 1)); do
     --quiet
   )
 
-  echo -n "Cleaning up existing function with arguments: "
+  echo -n "Cleaning up existing function: gcloud "
   echo "${gcloud_delete_args[@]}"
   gcloud "${gcloud_delete_args[@]}"
 done

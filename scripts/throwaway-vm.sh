@@ -31,7 +31,7 @@ gcloud_create_args=(
   "$name"
 )
 
-echo -n "Creating instance with arguments: "
+echo -n "Creating instance: gcloud "
 echo "${gcloud_create_args[@]}"
 gcloud "${gcloud_create_args[@]}"
 
