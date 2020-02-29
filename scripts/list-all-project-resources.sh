@@ -16,14 +16,6 @@ gcloud alpha resources list \
   | grep --extended-regexp --invert-match "\/subnetworks\/default$" \
   | sort --ignore-case
 
-#
-# VSCode support for Terraform 0.12 is available and experimental:
-# https://github.com/mauve/vscode-terraform/issues/157
-#
-
-# https://www.terraform.io/docs/providers/google/r/pubsub_topic.html
-# -> gcloud --format=json pubsub topics describe cleanup-instances | jq
-#
 # https://console.cloud.google.com/cloudscheduler?project=jlucktay-factorio
 # runs every 15 minutes to publish to Pub/Sub so that cleanup-instances Cloud Function is triggered
 # https://www.terraform.io/docs/providers/google/r/cloud_scheduler_job.html

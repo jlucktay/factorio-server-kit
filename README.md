@@ -30,7 +30,7 @@ The scripts are based around the use of [preemptible VMs] which keeps running co
 1. Set the `CLOUDSDK_CORE_PROJECT` environment variable to the Google Cloud project ID
     1. For example: `export CLOUDSDK_CORE_PROJECT=my-factorio-server-kit`
 1. Run up the Terraform stack to provision infrastructure in GCP (implemented? -> ❌/✅)
-    1. Cloud Pub/Sub topic `cleanup-instances` ❌
+    1. Cloud Pub/Sub topic `cleanup-instances` ✅
     1. Cloud Scheduler job `cleanup-instances` to publish to topic ❌
     1. Cloud Function `cleanup-instances` to clean up terminated instances, triggered by topic ✅
     1. Cloud Storage buckets
