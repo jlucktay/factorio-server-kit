@@ -11,9 +11,9 @@
       "size": 1
     },
     "crude-oil": {
-      "frequency": 1,
+      "frequency": 2,
       "richness": 6,
-      "size": 1
+      "size": 2
     },
     "enemy-base": {
       "frequency": 1,
@@ -26,9 +26,9 @@
       "size": 1
     },
     "stone": {
-      "frequency": 1,
+      "frequency": 2,
       "richness": 6,
-      "size": 1
+      "size": 2
     },
     "trees": {
       "frequency": 1,
@@ -44,16 +44,17 @@
   "autoplace_settings": {},
   "cliff_settings": {
     "cliff_elevation_0": 10,
-    "cliff_elevation_interval": 40,
+    "cliff_elevation_interval": 160,
     "name": "cliff",
-    "richness": 1
+    "richness": 0.25
   },
   "height": 2000000,
   "peaceful_mode": false,
   "property_expression_names": {
-    "elevation": "0_17-island"
+    "control-setting:moisture:bias": "0.500000",
+    "control-setting:moisture:frequency:multiplier": "0.166667"
   },
-  "seed": 2243136635,
+  "seed": 3796274395,
   "starting_area": 1,
   "starting_points": [
     {
@@ -61,7 +62,7 @@
       "y": 0
     }
   ],
-  "terrain_segmentation": 1,
-  "water": 1,
+  "terrain_segmentation": 2,
+  "water": 6,
   "width": 2000000
 }
