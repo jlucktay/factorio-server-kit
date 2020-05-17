@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euxo pipefail
-shopt -s globstar nullglob
 IFS=$'\n\t'
 
 docker rm factorio || true

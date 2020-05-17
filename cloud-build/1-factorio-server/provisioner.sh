@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euxo pipefail
-shopt -s globstar nullglob
 IFS=$'\n\t'
 
 ### Helper functions
@@ -30,15 +29,15 @@ logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
 
 logger "=== Patch up the system and install Docker, GCP SDK, JQ, etc etc"
-apt update
-apt install --assume-yes --no-install-recommends \
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends \
   docker-compose \
   docker.io \
   google-cloud-sdk \
   jq \
   libarchive-tools
-apt upgrade --assume-yes
-apt autoremove --assume-yes
+apt-get upgrade --assume-yes
+apt-get autoremove --assume-yes
 
 logger "=== Set up 'factorio' user and group"
 groupadd --gid 845 factorio

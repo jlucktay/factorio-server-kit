@@ -19,7 +19,7 @@ steps:
       - --boot-disk-device-name=${_IMAGE_FAMILY}-1
       - --boot-disk-size=10GB
       - --boot-disk-type=pd-standard
-      - --description=https://github.com/jlucktay/factorio-workbench
+      - --description=https://github.com/jlucktay/factorio-server-kit
       - --image=$_IMAGE_NAME
       - --machine-type=n2-standard-2
       - --maintenance-policy=TERMINATE
