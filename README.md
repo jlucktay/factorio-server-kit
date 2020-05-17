@@ -2,7 +2,7 @@
 
 [![License: The Unlicense](https://img.shields.io/badge/License-The%20Unlicense-yellow.svg)][1]
 [![Twitter: jlucktay](https://img.shields.io/twitter/follow/jlucktay.svg?style=social)][2]
-[![Wakatime tracker](https://wakatime.com/badge/github/jlucktay/factorio-workbench.svg)][3]
+[![Wakatime tracker](https://wakatime.com/badge/github/jlucktay/factorio-server-kit.svg)][3]
 
 > Running your own Factorio server on Google Cloud
 
@@ -123,7 +123,7 @@ _This README was generated with ❤️ by [readme-md-generator](https://github.c
 [`locations.json` file]: lib/locations.json
 [1]: https://choosealicense.com/licenses/unlicense/
 [2]: https://twitter.com/jlucktay
-[3]: https://wakatime.com/badge/github/jlucktay/factorio-workbench
+[3]: https://wakatime.com/badge/github/jlucktay/factorio-server-kit
 [4]: https://github.com/jlucktay
 [delete-vm.sh]: scripts/delete-vm.sh
 [Factorio server VM image]: cloud-build/1-factorio-server/README.md

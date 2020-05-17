@@ -1,4 +1,4 @@
-module github.com/jlucktay/factorio-workbench/functions
+module github.com/jlucktay/factorio-server-kit/functions
 
 go 1.13
 
