@@ -1,0 +1,42 @@
+{
+  "description": "https://github.com/jlucktay/factorio-server-kit - Minecraft",
+  "variables": {
+    "image_family": "",
+    "image_name": "",
+    "image_zone": "",
+    "project_id": ""
+  },
+  "builders": [
+    {
+      "image_description": "https://github.com/jlucktay/factorio-server-kit - baked with Packer {{ packer_version }}",
+      "image_family": "{{ user `image_family` }}",
+      "image_name": "{{ user `image_name` }}",
+      "machine_type": "n1-standard-1",
+      "preemptible": false,
+      "project_id": "{{ user `project_id`}}",
+      "source_image_family": "ubuntu-1804-lts",
+      "ssh_username": "packer",
+      "tags": [
+        "ssh-from-world"
+      ],
+      "type": "googlecompute",
+      "zone": "{{ user `image_zone` }}"
+    }
+  ],
+  "provisioners": [
+    {
+      "destination": "/tmp/docker-run-minecraft.sh",
+      "direction": "upload",
+      "source": "{{ template_dir }}/docker-run-minecraft.sh",
+      "type": "file"
+    },
+    {
+      "environment_vars": [
+        "CLOUDSDK_CORE_PROJECT={{ user `project_id`}}"
+      ],
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "script": "{{ template_dir }}/provisioner.sh",
+      "type": "shell"
+    }
+  ]
+}
