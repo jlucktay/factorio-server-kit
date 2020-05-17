@@ -13,6 +13,8 @@ done
 location=${FACTORIO_LOCATION:?}
 machine_type=
 open_logs=0
+server_type=factorio
+template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
 zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key \
 '$FACTORIO_LOCATION' not found in '$FACTORIO_ROOT/lib/locations.json'."}
 
@@ -27,6 +29,10 @@ function usage() {
     -l, --logs             open the Stackdriver Logging page after creating the server
     -m, --machine-type     provision the server VM with this machine-type hardware spec
                            see 'gcloud compute machine-types list' for valid values
+
+  Optional arguments for server type:
+        --factorio         Factorio server using the 'factoriotools/factorio' image (default type)
+        --minecraft        Minecraft (Bedrock) server using the 'itzg/minecraft-bedrock-server' image
 
   Optional arguments for server location:
 HEREDOC
@@ -68,6 +74,16 @@ for arg in "$@"; do
       ;;
     -m=* | --machine-type=*)
       machine_type=${arg#*=}
+      shift
+      ;;
+    --factorio)
+      server_type=factorio
+      template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
+      shift
+      ;;
+    --minecraft)
+      server_type=minecraft
+      template_filter="${MINECRAFT_IMAGE_FAMILY:?}-*"
       shift
       ;;
     *)
@@ -114,9 +130,7 @@ if [ -n "$machine_type" ]; then
 fi
 
 # Delete any old servers that may already be deployed within the project
-factorio::vm::delete_instances factorio-*
-
-template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
+factorio::vm::delete_instances "$server_type"-*
 
 # Look up latest instance template
 gcloud_template_list_args=(
@@ -152,7 +166,7 @@ fi
 gcloud_instance_create_args+=(
   --source-instance-template "$instance_template"
   --subnet default
-  "factorio-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
+  "$server_type-$location-$(TZ=UTC date '+%Y%m%d-%H%M%S')"
 )
 
 echo -n "Creating instance: gcloud "
@@ -161,7 +175,7 @@ new_instance=$(gcloud "${gcloud_instance_create_args[@]}")
 new_instance_id=$(jq --raw-output '.[0].id' <<< "$new_instance")
 new_instance_ip=$(jq --raw-output '.[0].networkInterfaces[0].accessConfigs[0].natIP' <<< "$new_instance")
 
-factorio::dns::update "${FACTORIO_DNS_NAME:?}" "$new_instance_ip"
+factorio::dns::update "$server_type" "$new_instance_ip"
 
 if ((open_logs == 1)); then
   logs_link="https://console.cloud.google.com/logs/viewer?project=${CLOUDSDK_CORE_PROJECT:?}"
