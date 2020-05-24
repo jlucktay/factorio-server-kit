@@ -40,6 +40,7 @@ for location in "${arr_locations[@]}"; do
 done
 
 if [ -n "$most_recent_saves_location" ]; then
+  mkdir --parents --verbose /opt/minecraft/worlds
   gsutil -m cp -r -P "gs://$project_id-saves-$most_recent_saves_location/*" /opt/minecraft/worlds
 fi
 
