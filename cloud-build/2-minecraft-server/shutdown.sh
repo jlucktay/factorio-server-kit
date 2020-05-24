@@ -4,14 +4,8 @@ IFS=$'\n\t'
 
 logger "=== Called 'shutdown-script'!"
 
-exit 0
-
-#
-# TODO vvv
-#
-
-logger "=== Waiting for Factorio container to stop..."
-while docker top factorio &> /dev/null; do
+logger "=== Waiting for Minecraft container to stop..."
+while docker top minecraft &> /dev/null; do
   sleep 1s
 done
 
@@ -30,7 +24,7 @@ push_saves_to=$(
     <<< "$locations"
 )
 
-logger "=== Pushing Factorio saves to Storage..."
-gsutil -m rsync -P -x ".*\.tmp\.zip" /opt/factorio/saves "gs://$project_id-saves-$push_saves_to" |& logger
+logger "=== Pushing Minecraft saves to Storage..."
+gsutil -m rsync -P /opt/minecraft/worlds "gs://$project_id-saves-$push_saves_to" |& logger
 
 logger "=== Done!"

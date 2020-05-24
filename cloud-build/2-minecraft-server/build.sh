@@ -13,6 +13,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
 
 #
 
+# TODO: Terraform this service account
 # https://console.cloud.google.com/cloud-build/settings/service-account
 # https://console.cloud.google.com/iam-admin/iam
 

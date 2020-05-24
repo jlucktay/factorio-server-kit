@@ -95,12 +95,19 @@ mv --verbose gopukku /usr/bin/
 
 # TODO ^^^
 
-logger "=== Check that the Factorio server container came up OK"
+logger "=== Check that the Minecraft server container came up OK"
+while true; do
+  dps_status=$(docker ps --format "{{ .Status }}")
+
+  if [[ $(grep --count "healthy" <<< "$dps_status") -gt 0 ]]; then
+    break
+  fi
+
+  sleep 1s
+done
+
 docker top minecraft
 
 logger "=== Tidy up and get ready to shut down"
 docker stop minecraft
-
-# TODO vvv - necessary?
-rm --force --verbose /opt/minecraft/saves/*.zip
-# TODO ^^^
+rm --force --recursive --verbose /opt/minecraft/worlds
