@@ -18,13 +18,11 @@ logger "=== Get instance's zone from metadata, to back up saves to the local buc
 instance_zone=$(curl --header "Metadata-Flavor: Google" --silent \
   metadata.google.internal/computeMetadata/v1/instance/zone)
 
-push_saves_to=$(
-  jq --raw-output \
-    '.[] | select(.zone == "'"$(basename "$instance_zone")"'") | .location' \
-    <<< "$locations"
-)
+push_saves_to=$(jq --exit-status --raw-output \
+  '.[] | select(.zone == "'"$(basename "$instance_zone")"'") | .location' \
+  <<< "$locations")
 
 logger "=== Pushing Minecraft saves to Storage..."
-gsutil -m rsync -P /opt/minecraft/worlds "gs://$project_id-saves-$push_saves_to" |& logger
+gsutil -m rsync -P -r /opt/minecraft/worlds "gs://$project_id-saves-$push_saves_to" |& logger
 
 logger "=== Done!"
