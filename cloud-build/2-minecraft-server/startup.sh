@@ -59,8 +59,8 @@ push_saves_to=$(
 )
 
 logger "=== Schedule a cron job (if not already present) to push the saves back to Storage"
-cron_job="* * * * * root"                          # Schedule, and user to run as
-cron_job+=' gsutil -m rsync -P'                    # -m parallel, -P preserve timestamps
+cron_job='* * * * * root'                          # Schedule, and user to run as
+cron_job+=' gsutil -m rsync -P -r '                # -m parallel, -P preserve timestamps, -r recursive
 cron_job+=' /opt/minecraft/worlds'                 # Source path
 cron_job+=" gs://$project_id-saves-$push_saves_to" # Destination bucket (co-located with instance)
 cron_job+=' |& logger'                             # Send everything to Stackdriver
