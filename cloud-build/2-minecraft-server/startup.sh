@@ -20,8 +20,8 @@ most_recent_saves_location=
 mapfile -t arr_locations < <(jq --raw-output ".[].location" <<< "$locations")
 
 for location in "${arr_locations[@]}"; do
-  if ! stat=$(gsutil -m ls -r "gs://$project_id-saves-$location" 2> /dev/null \
-    | grep -Ev --null "(:$|^$)" | xargs -0 -n 1 gsutil -m stat); then
+  if ! stat="$(gsutil -m ls -r "gs://$project_id-saves-$location" 2> /dev/null \
+    | grep -Ev --null "(:$|^$)" | xargs -0 -n 1 gsutil -m stat)"; then
     :
   fi
 

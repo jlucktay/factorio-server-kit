@@ -1,5 +1,9 @@
 # Minecraft server VM image
 
+## Remaining high-level TODO(s)
+
+- auto-shutdown with `gopukku`
+
 ## Whitelist
 
 Example whitelist.json file:

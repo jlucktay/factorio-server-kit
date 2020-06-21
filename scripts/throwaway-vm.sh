@@ -23,7 +23,7 @@ gcloud_create_args=(
   compute
   instances
   create
-  --image-family ubuntu-1804-lts
+  --image-family ubuntu-2004-lts
   --image-project ubuntu-os-cloud
   --machine-type f1-micro
   --scopes https://www.googleapis.com/auth/cloud-platform
