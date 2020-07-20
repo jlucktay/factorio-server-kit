@@ -83,12 +83,12 @@ game [as outlined here][map-settings].
 
 ## Related projects
 
-### gopukku
+### goppuku
 
-[`gopukku`] is a small Go binary/service I built to have a server shut itself down
+[`goppuku`] is a small Go binary/service I built to have a server shut itself down
 if the player count stays at zero for fifteen consecutive minutes.
 
-The latest release of `gopukku` is installed in the Factorio server image by
+The latest release of `goppuku` is installed in the Factorio server image by
 [Packer's provisioner script].
 
 ## Author
@@ -119,7 +119,7 @@ This project is licensed with [the Unlicense].
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
 
-[`gopukku`]: https://github.com/jlucktay/gopukku
+[`goppuku`]: https://github.com/jlucktay/goppuku
 [`locations.json` file]: lib/locations.json
 [1]: https://choosealicense.com/licenses/unlicense/
 [2]: https://twitter.com/jlucktay

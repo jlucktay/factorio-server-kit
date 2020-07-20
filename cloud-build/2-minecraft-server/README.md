@@ -2,7 +2,7 @@
 
 ## Remaining high-level TODO(s)
 
-- auto-shutdown with `gopukku`
+- auto-shutdown with `goppuku`
 
 ## Whitelist
 

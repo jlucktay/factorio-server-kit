@@ -175,12 +175,12 @@ curl \
   "http://admin:admin@localhost:3000/api/user/password"
 
 logger "=== Install our server seppuku binary"
-mkdir --parents --verbose /tmp/gopukku /var/log/gopukku
-cd /tmp/gopukku
-get_download_url jlucktay gopukku linux_amd64 \
+mkdir --parents --verbose /tmp/goppuku /var/log/goppuku
+cd /tmp/goppuku
+get_download_url jlucktay goppuku linux_amd64 \
   | wget --input-file=- --progress=dot:giga
-tar -zxvf gopukku*.tar.gz
-mv --verbose gopukku /usr/bin/
+tar -zxvf goppuku*.tar.gz
+mv --verbose goppuku /usr/bin/
 
 logger "=== Check that the Factorio server container came up OK"
 docker top factorio

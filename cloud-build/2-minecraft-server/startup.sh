@@ -83,4 +83,4 @@ exit 0
 
 # TODO
 logger "=== Start up our server seppuku binary"
-gopukku &> "/var/log/gopukku/gopukku.$(TZ=UTC date +%Y%m%d.%H%M%S).log" &
+goppuku &> "/var/log/goppuku/goppuku.$(TZ=UTC date +%Y%m%d.%H%M%S).log" &

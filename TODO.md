@@ -8,7 +8,7 @@
 - Look at [GCE account service/daemon](https://github.com/GoogleCloudPlatform/compute-image-packages)
   - See if there is a default `/etc/something/` directory that serves as a template for new home directories
 
-## Ship GCE `gopukku` log out to BigQuery/Spanner/whatever
+## Ship GCE `goppuku` log out to BigQuery/Spanner/whatever
 
 Run some basic analysis of /played.
 
@@ -27,7 +27,7 @@ Factorio leans quite heavily on a single thread.
 _Some_ calculations can be handled on a second thread, but single-highest core speed is key, and Google Cloud instances
 top out at around 3.2~3.6 GHz.
 
-## Write a proper service definition for `gopukku`
+## Write a proper service definition for `goppuku`
 
 - [systemd Services](https://wiki.debian.org/systemd/Services)
 - [Writing a systemd Service in Python](https://github.com/torfsen/python-systemd-tutorial)

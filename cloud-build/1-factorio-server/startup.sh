@@ -85,4 +85,4 @@ logger "=== Upgrade and (re)start the Factorio server"
 /usr/bin/docker-run-factorio.sh
 
 logger "=== Start up our server seppuku binary"
-gopukku &> "/var/log/gopukku/gopukku.$(TZ=UTC date +%Y%m%d.%H%M%S).log" &
+goppuku &> "/var/log/goppuku/goppuku.$(TZ=UTC date +%Y%m%d.%H%M%S).log" &
