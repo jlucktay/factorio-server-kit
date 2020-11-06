@@ -172,6 +172,9 @@ curl \
   --header "Content-Type: application/json" \
   --include \
   --request PUT \
+  --retry 3 \
+  --retry-all-errors \
+  --verbose \
   "http://admin:admin@localhost:3000/api/user/password"
 
 logger "=== Install our server seppuku binary"
