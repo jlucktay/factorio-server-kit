@@ -3,8 +3,12 @@ set -euxo pipefail
 IFS=$'\n\t'
 
 logger "=== Get project ID from metadata"
-project_id=$(curl --header "Metadata-Flavor: Google" --silent \
-  metadata.google.internal/computeMetadata/v1/project/project-id)
+project_id=$(
+  curl \
+    --header "Metadata-Flavor: Google" \
+    --silent \
+    metadata.google.internal/computeMetadata/v1/project/project-id
+)
 
 logger "=== Get configs from Storage"
 locations=$(gsutil cat "gs://$project_id-storage/lib/locations.json")

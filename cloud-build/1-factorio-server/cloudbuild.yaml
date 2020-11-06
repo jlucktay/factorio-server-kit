@@ -11,7 +11,8 @@ steps:
       - -var=project_id=$PROJECT_ID
       - factorio-server.json
 
-  - name: gcr.io/cloud-builders/gcloud
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+    entrypoint: gcloud
     args:
       - compute
       - instance-templates
