@@ -1,11 +1,10 @@
-FROM alpine:3 as checksum
+FROM alpine:3 AS checksum
 
 ARG PACKER_VERSION
 ARG PACKER_VERSION_SHA256SUM
 
 COPY packer_${PACKER_VERSION}_linux_amd64.zip .
-RUN echo "${PACKER_VERSION_SHA256SUM}  packer_${PACKER_VERSION}_linux_amd64.zip" > checksum \
-  && sha256sum -c checksum \
+RUN sha256sum -c <<< "${PACKER_VERSION_SHA256SUM}  packer_${PACKER_VERSION}_linux_amd64.zip" \
   && /usr/bin/unzip packer_${PACKER_VERSION}_linux_amd64.zip
 
 FROM gcr.io/cloud-builders/gcloud-slim
@@ -18,4 +17,4 @@ RUN apt-get update \
   nmap \
   && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/usr/bin/packer"]
+ENTRYPOINT [ "/usr/bin/packer" ]
