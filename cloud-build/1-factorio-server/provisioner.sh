@@ -173,7 +173,6 @@ curl \
   --include \
   --request PUT \
   --retry 3 \
-  --retry-all-errors \
   --verbose \
   "http://admin:admin@localhost:3000/api/user/password"
 

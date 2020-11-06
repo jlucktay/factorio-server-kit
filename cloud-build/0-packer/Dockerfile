@@ -13,9 +13,6 @@ FROM gcr.io/cloud-builders/gcloud-slim
 COPY --from=checksum packer /usr/bin/packer
 
 RUN apt-get update \
-  && apt-get --assume-yes --no-install-recommends install \
-  jq \
-  nmap \
   && rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT [ "/usr/bin/packer" ]
