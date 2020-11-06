@@ -8,8 +8,8 @@
   "enemy_evolution": {
     "destroy_factor": 0.002,
     "enabled": true,
-    "pollution_factor": 9e-7,
-    "time_factor": 0.000004
+    "pollution_factor": 9e-07,
+    "time_factor": 4e-06
   },
   "enemy_expansion": {
     "building_coefficient": 0.1,
@@ -72,7 +72,7 @@
   "pollution": {
     "ageing": 1,
     "diffusion_ratio": 0.02,
-    "enabled": false,
+    "enabled": true,
     "enemy_attack_pollution_consumption_modifier": 1,
     "expected_max_per_chunk": 150,
     "max_pollution_to_restore_trees": 20,

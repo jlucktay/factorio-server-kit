@@ -45,7 +45,7 @@
   "allow_commands": "admins-only",
 
   "_comment_autosave_interval": "Autosave interval in minutes",
-  "autosave_interval": 30,
+  "autosave_interval": 10,
 
   "_comment_autosave_slots": "server autosave slots, it is cycled through when the server autosaves.",
   "autosave_slots": 5,
