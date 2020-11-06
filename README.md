@@ -85,11 +85,10 @@ game [as outlined here][map-settings].
 
 ### goppuku
 
-[`goppuku`] is a small Go binary/service I built to have a server shut itself down
-if the player count stays at zero for fifteen consecutive minutes.
+[`goppuku`] is a small Go binary/service I built to have a server shut itself down if the player count stays at zero
+for fifteen consecutive minutes.
 
-The latest release of `goppuku` is installed in the Factorio server image by
-[Packer's provisioner script].
+The latest release of `goppuku` is installed in the Factorio server image by [Packer's provisioner script].
 
 ## Author
 

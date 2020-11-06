@@ -1,5 +1,12 @@
 # TODO
 
+## 2020-11-05
+
+- see about turning off unattended-upgrade when preemptible server runs up
+- do the necessary in `goppuku` to redial instead of spewing errors forever
+  - maybe also tee errors to stdout/log file as well as the GCP logger
+- bin Ubuntu for Debian
+
 ## Finish documenting/testing/implementing the _New Project Bootstrap_ journey
 
 ## Add `htop` config to baked image
@@ -33,6 +40,10 @@ top out at around 3.2~3.6 GHz.
 - [Writing a systemd Service in Python](https://github.com/torfsen/python-systemd-tutorial)
 - [Use systemd to Start a Linux Service at Boot](https://www.linode.com/docs/quick-answers/linux/start-service-at-boot/)
 - [How to configure systemd to start a service automatically after a crash in Linux](https://www.2daygeek.com/linux-systemd-auto-restart-services-when-down/)
+
+### `systemctl`/`systemd` is preferred over `init`/`init.d` and `SysVInit`
+
+- <https://askubuntu.com/questions/911525/difference-between-systemctl-init-d-and-service>
 
 ## Wire all of the logs up to Stackdriver [including Docker][1]
 
