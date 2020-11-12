@@ -1,10 +1,14 @@
 # TODO
 
+## 2020-11-12
+
+- look into `tcp_syncookies`/possible SYN flooding log message
+  - <https://stackoverflow.com/questions/4174688/what-does-possible-syn-flooding-on-port-8009-sending-cookies-mean-in-var-log>
+- tee errors to stdout/log file as well as the GCP logger
+
 ## 2020-11-05
 
 - see about turning off unattended-upgrade when preemptible server runs up
-- do the necessary in `goppuku` to redial instead of spewing errors forever
-  - maybe also tee errors to stdout/log file as well as the GCP logger
 - bin Ubuntu for Debian
 
 ## Finish documenting/testing/implementing the _New Project Bootstrap_ journey
