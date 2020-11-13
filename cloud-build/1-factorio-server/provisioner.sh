@@ -171,8 +171,12 @@ curl \
   --header "Accept: application/json" \
   --header "Content-Type: application/json" \
   --include \
+  --max-time 5 \
   --request PUT \
-  --retry 3 \
+  --retry 10 \
+  --retry-connrefused \
+  --retry-delay 1 \
+  --retry-max-time 60 \
   --verbose \
   "http://admin:admin@localhost:3000/api/user/password"
 
