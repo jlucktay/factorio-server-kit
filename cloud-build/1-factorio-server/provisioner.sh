@@ -34,7 +34,7 @@ DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recomme
   google-cloud-sdk \
   jq \
   libarchive-tools
-apt-get upgrade --assume-yes
+DEBIAN_FRONTEND=noninteractive apt-get upgrade --assume-yes
 apt-get autoremove --assume-yes
 
 logger "=== Set up 'factorio' user and group"
