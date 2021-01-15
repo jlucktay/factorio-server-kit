@@ -55,7 +55,7 @@ mkdir --parents --verbose /opt/factorio/mods/graftorio/data/prometheus
 
 logger "=== Install yq"
 get_download_url mikefarah yq linux_amd64.tar.gz | wget --input-file=- --progress=dot:giga -O - | tar vxz
-mv -iv ./yq_linux_amd64 /usr/bin/yq
+mv --verbose ./yq_linux_amd64 /usr/bin/yq
 
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 yq_expression='(.services.*.restart = "always") | '
@@ -64,7 +64,8 @@ yq_expression+='(.services.grafana.user = "nobody") | '
 yq_expression+='(.services.grafana.volumes[0] = "/opt/factorio/mods/graftorio/data/grafana:/var/lib/grafana") | '
 yq_expression+='(.services.prometheus.user = "nobody") | '
 yq_expression+='(.services.prometheus.volumes[0] = "/opt/factorio/mods/graftorio/data/prometheus:/prometheus") | '
-yq_expression+='(.services.prometheus.volumes[1] = "/opt/factorio/mods/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml")'
+yq_expression+='(.services.prometheus.volumes[1] = '
+yq_expression+='"/opt/factorio/mods/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml")'
 
 yq eval --inplace "$yq_expression" /opt/factorio/mods/graftorio/docker-compose.yml
 
@@ -85,10 +86,10 @@ export TOKEN
 
 logger "=== Set up Docker start script, and run everything up with Docker and Compose"
 systemctl enable docker
-mv -v /tmp/docker-run-factorio.sh /usr/bin/docker-run-factorio.sh
+mv --verbose /tmp/docker-run-factorio.sh /usr/bin/
 chown --changes root:root /usr/bin/docker-run-factorio.sh
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
-/usr/bin/docker-run-factorio.sh
+docker-run-factorio.sh
 
 docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml up -d
 
@@ -117,7 +118,7 @@ cat << EOF > /etc/default/instance_configs.cfg.template
 $gce_groups
 EOF
 
-/usr/bin/google_instance_setup
+google_instance_setup
 
 logger "=== Wait for Grafana to become available"
 while ! (echo > /dev/tcp/localhost/3000) &> /dev/null; do
@@ -151,9 +152,7 @@ curl \
 logger "=== Install our server seppuku binary"
 mkdir --parents --verbose /tmp/goppuku /var/log/goppuku
 cd /tmp/goppuku
-get_download_url jlucktay goppuku linux_amd64 \
-  | wget --input-file=- --progress=dot:giga
-tar -zxvf goppuku*.tar.gz
+get_download_url jlucktay goppuku linux_amd64 | wget --input-file=- --progress=dot:giga -O - | tar vxz
 mv --verbose goppuku /usr/bin/
 
 logger "=== Check that the Factorio server container came up OK"
