@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euxo pipefail
-IFS=$'\n\t'
 
 container_name="factorio"
 image_name="factoriotools/factorio"

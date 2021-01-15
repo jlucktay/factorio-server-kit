@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euxo pipefail
-IFS=$'\n\t'
 
 logger "=== Get project ID from metadata"
 project_id=$(

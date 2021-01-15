@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euxo pipefail
-IFS=$'\n\t'
 
 ### Helper functions
 function get_download_url() {

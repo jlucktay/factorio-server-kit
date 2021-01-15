@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euxo pipefail
-IFS=$'\n\t'
 
 container_name="minecraft"
 image_name="itzg/minecraft-bedrock-server"
