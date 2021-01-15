@@ -5,9 +5,8 @@ IFS=$'\n\t'
 ### Helper functions
 function get_download_url() {
   curl --silent "https://api.github.com/repos/$1/$2/releases/latest" 2> /dev/null \
-    | jq --raw-output ".assets[]
-      | select(.browser_download_url | contains(\"$3\"))
-      | .browser_download_url"
+    | jq --arg contains "$3" --exit-status --raw-output \
+      '.assets[] | select(.browser_download_url | contains($contains)) | .browser_download_url'
 }
 # Usage:   get_download_url <author> <repo> <release pattern>
 # Example: get_download_url 99designs aws-vault linux_amd64
@@ -28,7 +27,7 @@ sed --expression "s,^SHELL=/bin/sh$,SHELL=/bin/bash,g" --in-place /etc/crontab
 logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
 
-logger "=== Patch up the system and install Docker, GCP SDK, JQ, etc etc"
+logger "=== Patch up the system and install Docker, GCP SDK, jq, etc etc"
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends \
   docker-compose \
@@ -50,58 +49,28 @@ mkdir --parents --verbose /opt/factorio/saves
 logger "=== Fix up Factorio permissions"
 chown --changes --recursive factorio:factorio /opt/factorio
 
-logger "=== Get latest Graftorio release and extract to set up local database against"
-mkdir --parents --verbose /opt/factorio/mods
-cd /opt/factorio/mods
-get_download_url afex graftorio graftorio \
-  | wget --input-file=- --progress=dot:giga
-mkdir --parents --verbose /opt/graftorio/data/grafana
-mkdir --parents --verbose /opt/graftorio/data/prometheus
-bsdtar --strip-components=1 -xvf /opt/factorio/mods/graftorio*.zip --directory /opt/graftorio
+logger "=== Pull latest Graftorio and set up"
+git clone --depth 1 -- https://github.com/TheVirtualCrew/graftorio /opt/factorio/mods/graftorio
+mkdir --parents --verbose /opt/factorio/mods/graftorio/data/grafana
+mkdir --parents --verbose /opt/factorio/mods/graftorio/data/prometheus
+
+logger "=== Install yq"
+get_download_url mikefarah yq linux_amd64.tar.gz | wget --input-file=- --progress=dot:giga -O - | tar vxz
+mv -iv ./yq_linux_amd64 /usr/bin/yq
 
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
-cd /opt/graftorio
-snap install yq
-/snap/bin/yq write - \
-  "services.exporter.volumes[0]" \
-  "/opt/factorio/script-output/graftorio:/textfiles" \
-  < docker-compose.yml \
-  > docker-compose.1.yml
-/snap/bin/yq write - \
-  "services.*.restart" \
-  "always" \
-  < docker-compose.1.yml \
-  > docker-compose.2.yml
-/snap/bin/yq write - \
-  "services.prometheus.user" \
-  "nobody" \
-  < docker-compose.2.yml \
-  > docker-compose.3.yml
-/snap/bin/yq write - \
-  "services.grafana.user" \
-  "nobody" \
-  < docker-compose.3.yml \
-  > docker-compose.4.yml
-/snap/bin/yq write - \
-  "services.prometheus.volumes[0]" \
-  "/opt/graftorio/data/prometheus:/prometheus" \
-  < docker-compose.4.yml \
-  > docker-compose.5.yml
-/snap/bin/yq write - \
-  "services.prometheus.volumes[1]" \
-  "/opt/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml" \
-  < docker-compose.5.yml \
-  > docker-compose.6.yml
-/snap/bin/yq write - \
-  "services.grafana.volumes[0]" \
-  "/opt/graftorio/data/grafana:/var/lib/grafana" \
-  < docker-compose.6.yml \
-  > docker-compose.7.yml
-rm --force --verbose docker-compose.{1..6}.yml
-mv --force --verbose docker-compose.7.yml docker-compose.yml
+yq_expression='(.services.*.restart = "always") | '
+yq_expression+='(.services.exporter.volumes[0] = "/opt/factorio/script-output/graftorio:/textfiles") | '
+yq_expression+='(.services.grafana.user = "nobody") | '
+yq_expression+='(.services.grafana.volumes[0] = "/opt/factorio/mods/graftorio/data/grafana:/var/lib/grafana") | '
+yq_expression+='(.services.prometheus.user = "nobody") | '
+yq_expression+='(.services.prometheus.volumes[0] = "/opt/factorio/mods/graftorio/data/prometheus:/prometheus") | '
+yq_expression+='(.services.prometheus.volumes[1] = "/opt/factorio/mods/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml")'
+
+yq eval --inplace "$yq_expression" /opt/factorio/mods/graftorio/docker-compose.yml
 
 logger "=== Fix up Graftorio permissions"
-chown --changes --recursive nobody /opt/graftorio
+chown --changes --recursive nobody /opt/factorio/mods/graftorio
 
 logger "=== Add factorio.com secrets to environment"
 if ! secrets="$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/secrets.json")" \
@@ -122,7 +91,7 @@ chown --changes root:root /usr/bin/docker-run-factorio.sh
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
 /usr/bin/docker-run-factorio.sh
 
-docker-compose --file=/opt/graftorio/docker-compose.yml up -d
+docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml up -d
 
 logger "=== Manage Docker as non-root users"
 logger "+++ Users already present"

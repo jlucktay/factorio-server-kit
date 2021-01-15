@@ -66,6 +66,8 @@ Not every user will have purchased a domain to use in such a way.
 Currently hard-coded to Graftorio and that's about it.
 [This](https://github.com/mroote/factorio-server-manager) looks pretty good!
 
+- Move from `afex/graftorio` to <https://github.com/TheVirtualCrew/graftorio>
+
 ## Define VM service account with Terraform
 
 `factorio-server@${PROJECT_ID}.iam.gserviceaccount.com` won't exist by default in a new GCP project.
