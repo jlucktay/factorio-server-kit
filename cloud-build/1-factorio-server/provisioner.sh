@@ -119,7 +119,7 @@ until docker top factorio; do
 done
 
 logger "=== Tidy up Factorio and get ready to shut down"
-docker stop factorio
+docker rm --force factorio
 rm --force --verbose /opt/factorio/saves/*.zip
 
 logger "=== Bail out here if we're not adding Graftorio"
