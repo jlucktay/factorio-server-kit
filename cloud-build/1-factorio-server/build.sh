@@ -50,6 +50,7 @@ gsutil_args=(
   -m
   cp
   -P
+  -o "GSUtil:parallel_process_count=1"
   "$FACTORIO_ROOT/lib/locations.json"
   "$FACTORIO_ROOT/lib/secrets.json"
   "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/"
