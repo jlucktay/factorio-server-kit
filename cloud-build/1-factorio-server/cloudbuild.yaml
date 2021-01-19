@@ -5,6 +5,7 @@ steps:
     args:
       - build
       - -timestamp-ui
+      - -var=graftorio_addon=$_GRAFTORIO_ADDON
       - -var=image_family=$_IMAGE_FAMILY
       - -var=image_name=$_IMAGE_NAME
       - -var=image_zone=$_IMAGE_ZONE

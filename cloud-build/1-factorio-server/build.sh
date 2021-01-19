@@ -10,6 +10,41 @@ done
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)"
 
+### Argument defaults
+GRAFTORIO_ADDON=0
+
+### Set up usage/help output
+function usage() {
+  cat << HEREDOC
+
+  Usage: ${script_name:?} [ --help | --graftorio ]
+
+  Optional arguments:
+    -h, --help             show this help message and exit
+
+  Optional arguments for server type:
+    -g  --graftorio        add the Graftorio mod into the server build
+HEREDOC
+}
+
+### Parse given arguments
+for arg in "$@"; do
+  case $arg in
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    -g | --graftorio)
+      GRAFTORIO_ADDON=1
+      shift
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
+done
+
 # Push lib JSON to Storage
 gsutil_args=(
   -m
@@ -29,6 +64,7 @@ substitutions=(
   "_IMAGE_FAMILY=${FACTORIO_IMAGE_FAMILY:?}"
   "_IMAGE_NAME=${FACTORIO_IMAGE_NAME:?}"
   "_IMAGE_ZONE=${CLOUDSDK_COMPUTE_ZONE:?}"
+  "_GRAFTORIO_ADDON=${GRAFTORIO_ADDON:?}"
 )
 
 gcloud_build_args=(

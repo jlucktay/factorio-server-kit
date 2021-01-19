@@ -20,5 +20,3 @@ docker run \
   --restart=on-failure \
   --volume=/opt/"$container_name":/"$container_name" \
   "$image"
-
-docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml up -d
