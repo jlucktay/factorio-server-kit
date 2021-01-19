@@ -122,7 +122,7 @@ logger "=== Tidy up Factorio and get ready to shut down"
 docker stop factorio
 rm --force --verbose /opt/factorio/saves/*.zip
 
-# Bail out here if we're not adding Graftorio
+logger "=== Bail out here if we're not adding Graftorio"
 if [ "${GRAFTORIO_ADDON:?}" -ne 1 ]; then
   exit 0
 fi
