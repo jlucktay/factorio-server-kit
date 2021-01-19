@@ -31,15 +31,18 @@ apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends \
   docker-compose \
   docker.io \
-  google-cloud-sdk \
+  git \
   jq \
-  libarchive-tools
+  libarchive-tools \
+  wget
 DEBIAN_FRONTEND=noninteractive apt-get upgrade --assume-yes
 apt-get autoremove --assume-yes
 
-logger "=== Set up 'factorio' user and group"
+logger "=== Set up 'factorio' and 'grafana' users/groups"
 groupadd --gid 845 factorio
 useradd --gid 845 --uid 845 factorio
+groupadd --gid 472 grafana
+useradd --gid 472 --uid 472 grafana
 
 logger "=== Create the necessary folder structure"
 mkdir --parents --verbose /opt/factorio/config
@@ -58,19 +61,25 @@ get_download_url mikefarah yq linux_amd64.tar.gz | wget --input-file=- --progres
 mv --verbose ./yq_linux_amd64 /usr/bin/yq
 
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
-yq_expression='(.services.*.restart = "always") | '
-yq_expression+='(.services.exporter.volumes[0] = "/opt/factorio/script-output/graftorio:/textfiles") | '
-yq_expression+='(.services.grafana.user = "nobody") | '
-yq_expression+='(.services.grafana.volumes[0] = "/opt/factorio/mods/graftorio/data/grafana:/var/lib/grafana") | '
-yq_expression+='(.services.prometheus.user = "nobody") | '
-yq_expression+='(.services.prometheus.volumes[0] = "/opt/factorio/mods/graftorio/data/prometheus:/prometheus") | '
-yq_expression+='(.services.prometheus.volumes[1] = '
-yq_expression+='"/opt/factorio/mods/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml")'
+yq_expression='( .services.*.restart = "always" ) | '
+
+yq_expression+='( .services.exporter.volumes = [ "/opt/factorio/script-output/graftorio:/textfiles:ro" ] ) | '
+
+yq_expression+='( .services.grafana.user = "grafana" ) | '
+yq_expression+='( .services.grafana.volumes = [ "grafana-storage:/var/lib/grafana" ] ) | '
+
+yq_expression+='( .services.prometheus.user = "nobody" ) | '
+yq_expression+='( .services.prometheus.volumes = [ '
+yq_expression+='"/opt/factorio/mods/graftorio/data/prometheus:/prometheus", '
+yq_expression+='"/opt/factorio/mods/graftorio/data/prometheus.yml:/etc/prometheus/prometheus.yml:ro" ] ) | '
+
+yq_expression+='( .volumes = { "grafana-storage": {} } )'
 
 yq eval --inplace "$yq_expression" /opt/factorio/mods/graftorio/docker-compose.yml
 
-logger "=== Fix up Graftorio permissions"
+logger "=== Fix up Graftorio permissions cf. https://github.com/TheVirtualCrew/graftorio#installation"
 chown --changes --recursive nobody /opt/factorio/mods/graftorio
+chown --changes --recursive grafana:grafana /opt/factorio/mods/graftorio/data/grafana
 
 logger "=== Add factorio.com secrets to environment"
 if ! secrets="$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/secrets.json")" \
@@ -91,7 +100,10 @@ chown --changes root:root /usr/bin/docker-run-factorio.sh
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
 docker-run-factorio.sh
 
-docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml up -d
+logger "=== Wait for Grafana to become available"
+until (echo > /dev/tcp/localhost/3000) &> /dev/null; do
+  sleep 10s
+done
 
 logger "=== Manage Docker as non-root users"
 logger "+++ Users already present"
@@ -108,8 +120,8 @@ logger "+++ Users added via conventional adduser"
 echo 'EXTRA_GROUPS="docker"' | tee --append /etc/adduser.conf
 echo 'ADD_EXTRA_GROUPS=1' | tee --append /etc/adduser.conf
 
-logger "+++ Users added via GCE bootstrap (ref: \
-https://github.com/GoogleCloudPlatform/compute-image-packages/tree/master/packages/python-google-compute-engine)"
+logger "+++ Users added via GCE bootstrap cf. \
+https://github.com/GoogleCloudPlatform/compute-image-packages/tree/master/packages/python-google-compute-engine"
 gce_groups=$(grep "^groups = " /etc/default/instance_configs.cfg)
 gce_groups+=",docker"
 
@@ -120,34 +132,35 @@ EOF
 
 google_instance_setup
 
-logger "=== Wait for Grafana to become available"
-while ! (echo > /dev/tcp/localhost/3000) &> /dev/null; do
-  sleep 1s
-done
-
-logger "=== Reset Grafana password"
+logger "=== Get Grafana password from secrets"
 if ! grafana_password="$(jq --exit-status --raw-output ".password" <<< "$secrets")"; then
   echo >&2 "Error retrieving secrets."
   exit 1
 fi
 
-curl \
-  --data '{
-    "confirmNew": "'"$grafana_password"'",
-    "newPassword": "'"$grafana_password"'",
-    "oldPassword": "admin"
-  }' \
-  --header "Accept: application/json" \
-  --header "Content-Type: application/json" \
-  --include \
-  --max-time 5 \
-  --request PUT \
-  --retry 10 \
-  --retry-connrefused \
-  --retry-delay 1 \
-  --retry-max-time 60 \
-  --verbose \
-  "http://admin:admin@localhost:3000/api/user/password"
+logger "=== Poll Grafana API with password change request until it succeeds"
+data_string='{ '
+data_string+='"confirmNew": "'"$grafana_password"'", '
+data_string+='"newPassword": "'"$grafana_password"'", '
+data_string+='"oldPassword": "admin" '
+data_string+='}'
+
+until curl --request GET --silent "http://admin:$grafana_password@localhost:3000/api/user" \
+  | jq --exit-status '.isGrafanaAdmin'; do
+  curl \
+    --data "$data_string" \
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --include \
+    --max-time 10 \
+    --request PUT \
+    --verbose \
+    "http://admin:admin@localhost:3000/api/user/password" || true
+
+  docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml logs --tail=5 grafana
+
+  sleep 10s
+done
 
 logger "=== Install our server seppuku binary"
 mkdir --parents --verbose /tmp/goppuku /var/log/goppuku
@@ -155,9 +168,11 @@ cd /tmp/goppuku
 get_download_url jlucktay goppuku linux_amd64 | wget --input-file=- --progress=dot:giga -O - | tar vxz
 mv --verbose goppuku /usr/bin/
 
-logger "=== Check that the Factorio server container came up OK"
+logger "=== Check that the containers all came up OK"
 docker top factorio
+docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml top exporter grafana prometheus
 
 logger "=== Tidy up and get ready to shut down"
 docker stop factorio
+docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml stop
 rm --force --verbose /opt/factorio/saves/*.zip

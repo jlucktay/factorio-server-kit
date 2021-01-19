@@ -85,7 +85,7 @@ export TOKEN
 # export UPDATE_MODS_ON_START=true # TODO(jlucktay): re-enable once Graftorio is OK with Factorio v0.18
 
 logger "=== Upgrade and (re)start the Factorio server"
-/usr/bin/docker-run-factorio.sh
+docker-run-factorio.sh
 
 logger "=== Start up our server seppuku binary"
 goppuku &> "/var/log/goppuku/goppuku.$(TZ=UTC date +%Y%m%d.%H%M%S).log" &
