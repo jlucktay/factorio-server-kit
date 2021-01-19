@@ -41,7 +41,7 @@ for location in "${arr_locations[@]}"; do
 done
 
 if [ -n "$most_recent_saves_location" ]; then
-  gsutil -m cp -P "gs://$project_id-saves-$most_recent_saves_location/*" /opt/factorio/saves/
+  gsutil -m rsync "gs://$project_id-saves-$most_recent_saves_location" /opt/factorio/saves |& logger
 fi
 
 logger "=== Fix up Factorio permissions"
