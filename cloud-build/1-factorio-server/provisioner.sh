@@ -26,14 +26,25 @@ sed --expression "s,^SHELL=/bin/sh$,SHELL=/bin/bash,g" --in-place /etc/crontab
 logger "=== Fix root's PS1"
 sed --expression "s/#force_color_prompt=yes/force_color_prompt=yes/g" --in-place /root/.bashrc
 
+logger "=== Prepare for GCP SDK install"
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" \
+  | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+apt-get install --assume-yes --no-install-recommends apt-transport-https ca-certificates gnupg
+
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg \
+  | apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
+
 logger "=== Patch up the system and install Docker, GCP SDK, jq, etc etc"
 apt-get update
 DEBIAN_FRONTEND=noninteractive apt-get install --assume-yes --no-install-recommends \
   docker-compose \
   docker.io \
   git \
+  google-cloud-sdk \
   jq \
   libarchive-tools \
+  python3-crcmod \
   wget
 DEBIAN_FRONTEND=noninteractive apt-get upgrade --assume-yes
 apt-get autoremove --assume-yes
