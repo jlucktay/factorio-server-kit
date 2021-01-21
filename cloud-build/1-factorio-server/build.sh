@@ -48,15 +48,15 @@ done
 # Push lib JSON to Storage
 gsutil_args=(
   -m
-  cp
-  -P
   -o "GSUtil:parallel_process_count=1"
-  "$FACTORIO_ROOT/lib/locations.json"
-  "$FACTORIO_ROOT/lib/secrets.json"
+  rsync
+  -P
+  -x "^.*\.sh$|^\.gitignore$"
+  "$FACTORIO_ROOT/lib/"
   "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/"
 )
 
-echo -n "Copying files to Cloud Storage: gsutil "
+echo -n "Syncing files to Cloud Storage: gsutil "
 echo "${gsutil_args[@]}"
 gsutil "${gsutil_args[@]}"
 
