@@ -13,12 +13,6 @@
 
 ## Finish documenting/testing/implementing the _New Project Bootstrap_ journey
 
-## Add `htop` config to baked image
-
-- `.config/htop/htoprc`
-- Look at [GCE account service/daemon](https://github.com/GoogleCloudPlatform/compute-image-packages)
-  - See if there is a default `/etc/something/` directory that serves as a template for new home directories
-
 ## Ship GCE `goppuku` log out to BigQuery/Spanner/whatever
 
 Run some basic analysis of /played.
