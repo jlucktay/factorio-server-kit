@@ -19,5 +19,9 @@
     "default": true,
     "location": "southcarolina",
     "zone": "us-east1-d"
+  },
+  {
+    "location": "belgium",
+    "zone": "europe-west1-b"
   }
 ]
