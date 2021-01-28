@@ -1,6 +1,6 @@
-module github.com/jlucktay/factorio-server-kit/functions
+module go.jlucktay.dev/factorio-server-kit/functions
 
-go 1.13
+go 1.15
 
 require (
 	cloud.google.com/go v0.51.0
