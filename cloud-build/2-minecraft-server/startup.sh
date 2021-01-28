@@ -72,7 +72,7 @@ if ! grep -F "$cron_job" /etc/crontab &> /dev/null; then
 fi
 
 logger "=== Upgrade and (re)start the Minecraft server"
-/usr/bin/docker-run-minecraft.sh
+docker-run-minecraft.sh
 
 exit 0
 

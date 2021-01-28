@@ -53,7 +53,7 @@ systemctl enable docker
 mv -v /tmp/docker-run-minecraft.sh /usr/bin/docker-run-minecraft.sh
 chown --changes root:root /usr/bin/docker-run-minecraft.sh
 chmod --changes u+x /usr/bin/docker-run-minecraft.sh
-/usr/bin/docker-run-minecraft.sh
+docker-run-minecraft.sh
 
 logger "=== Manage Docker as non-root users"
 logger "+++ Users already present"
@@ -80,7 +80,7 @@ cat << EOF > /etc/default/instance_configs.cfg.template
 $gce_groups
 EOF
 
-/usr/bin/google_instance_setup
+google_instance_setup
 
 # TODO vvv - need to set some config for goppuku, most likely; rcon details
 
