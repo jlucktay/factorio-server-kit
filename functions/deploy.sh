@@ -8,7 +8,7 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   source "$lib"
 done
 
-function_name=cleanup-instances
+function_name="cleanup-instances"
 topic_name=$function_name
 
 gcloud_list_args=(
@@ -41,8 +41,7 @@ for ((i = 0; i < ${#delete_region[@]}; i += 1)); do
     --quiet
   )
 
-  echo -n "Cleaning up existing function: gcloud "
-  echo "${gcloud_delete_args[@]}"
+  echo "Cleaning up existing function: gcloud ${gcloud_delete_args[*]}"
   gcloud "${gcloud_delete_args[@]}"
 done
 
@@ -56,6 +55,5 @@ gcloud_deploy_args=(
   --trigger-topic "$topic_name"
 )
 
-echo -n "Deploying '$function_name' with arguments: "
-echo "${gcloud_deploy_args[@]}"
+echo "Deploying '$function_name': gcloud ${gcloud_deploy_args[*]}"
 gcloud "${gcloud_deploy_args[@]}"
