@@ -1,3 +1,4 @@
+// Package cleanup holds a func to remove terminated instances and is executed on a regular basis.
 package cleanup
 
 import (
@@ -33,8 +34,8 @@ type location struct {
 }
 
 // Instances iterates across all zones listed in gs://<project>-storage/lib/locations.json file deleting all VMs which:
-// (1) are named using the same pattern that /scripts/roll-vm.sh uses to create instances
-// (2) have a status of TERMINATED
+// (1) are named using the same pattern that /scripts/roll-vm.sh uses to create instances.
+// (2) have a status of TERMINATED.
 func Instances(ctx context.Context, _ PubSubMessage) error {
 	projectID, err := metadata.ProjectID()
 	if err != nil {
@@ -54,13 +55,13 @@ func Instances(ctx context.Context, _ PubSubMessage) error {
 	if err != nil {
 		return fmt.Errorf("error reading JSON object: %w", err)
 	}
-	defer r.Close()
+	defer r.Close() //nolint:errcheck // Don't let the door hit you on the way out
 
 	var locs []location
 
 	dec := json.NewDecoder(r)
-	if err := dec.Decode(&locs); err != nil {
-		return fmt.Errorf("error decoding locations JSON: %w", err)
+	if errDecode := dec.Decode(&locs); errDecode != nil {
+		return fmt.Errorf("error decoding locations JSON: %w", errDecode)
 	}
 
 	computeService, err := compute.NewService(ctx)
