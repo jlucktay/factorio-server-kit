@@ -162,8 +162,6 @@ yq_expression+='"/opt/factorio/mods/graftorio/data/prometheus.yml:/etc/prometheu
 
 yq_expression+='( .volumes = { "grafana-storage": {} } )'
 
-# $ yq eval --inplace '(.services.*.restart = "no") | (.services.*.restart style="double")' ./docker-compose.yml
-
 yq eval --inplace "$yq_expression" /opt/factorio/mods/graftorio/docker-compose.yml
 
 logger "=== Fix up Graftorio permissions cf. https://github.com/TheVirtualCrew/graftorio#installation"
