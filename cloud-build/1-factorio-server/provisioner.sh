@@ -150,11 +150,14 @@ mv --verbose ./yq_linux_amd64 /usr/bin/yq
 logger "=== Fix up some settings in Graftorio Docker Compose YAML"
 yq_expression='( .services.*.restart = "always" ) | '
 
+yq_expression+='( .services.exporter.image = "prom/node-exporter:v1.0.1" ) | '
 yq_expression+='( .services.exporter.volumes = [ "/opt/factorio/script-output/graftorio:/textfiles:ro" ] ) | '
 
+yq_expression+='( .services.grafana.image = "grafana/grafana:7.3.7" ) | '
 yq_expression+='( .services.grafana.user = "grafana" ) | '
 yq_expression+='( .services.grafana.volumes = [ "grafana-storage:/var/lib/grafana" ] ) | '
 
+yq_expression+='( .services.prometheus.image = "prom/prometheus:v2.24.1" ) | '
 yq_expression+='( .services.prometheus.user = "nobody" ) | '
 yq_expression+='( .services.prometheus.volumes = [ '
 yq_expression+='"/opt/factorio/mods/graftorio/data/prometheus:/prometheus", '
@@ -183,28 +186,27 @@ if ! grafana_password="$(jq --exit-status --raw-output ".password" <<< "$secrets
 fi
 
 logger "=== Poll Grafana API with password change request until it succeeds"
-{
-  data_string='{ '
-  data_string+='"confirmNew": "'"$grafana_password"'", '
-  data_string+='"newPassword": "'"$grafana_password"'", '
-  data_string+='"oldPassword": "admin" '
-  data_string+='}'
+data_string='{ '
+data_string+='"confirmNew": "'"$grafana_password"'", '
+data_string+='"newPassword": "'"$grafana_password"'", '
+data_string+='"oldPassword": "admin" '
+data_string+='}'
 
-  until curl --request GET --silent "http://admin:$grafana_password@localhost:3000/api/user" \
-    | jq --exit-status '.isGrafanaAdmin'; do
-    curl \
-      --data "$data_string" \
-      --header "Accept: application/json" \
-      --header "Content-Type: application/json" \
-      --include \
-      --max-time 10 \
-      --request PUT \
-      --verbose \
-      "http://admin:admin@localhost:3000/api/user/password" || sleep 10s
-
+until curl --request GET --silent "http://admin:$grafana_password@localhost:3000/api/user" \
+  | jq --exit-status '.isGrafanaAdmin'; do
+  curl \
+    --data "$data_string" \
+    --header "Accept: application/json" \
+    --header "Content-Type: application/json" \
+    --include \
+    --max-time 10 \
+    --request PUT \
+    --verbose \
+    "http://admin:admin@localhost:3000/api/user/password" || {
     docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml logs --tail=5 grafana
-  done
-}
+    sleep 10s
+  }
+done
 
 logger "=== Check that the Graftorio containers all came up OK"
 declare -i dctop=0
