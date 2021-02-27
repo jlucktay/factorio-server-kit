@@ -8,6 +8,8 @@ RUN echo "${PACKER_VERSION_SHA256SUM}  packer_${PACKER_VERSION}_linux_amd64.zip"
   && sha256sum -c checksum \
   && /usr/bin/unzip packer_${PACKER_VERSION}_linux_amd64.zip
 
+# The 'gcloud-slim' image doesn't tag versions, only 'latest'
+# hadolint ignore=DL3006
 FROM gcr.io/cloud-builders/gcloud-slim
 
 COPY --from=checksum packer /usr/bin/packer
