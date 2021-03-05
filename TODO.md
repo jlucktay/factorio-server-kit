@@ -11,6 +11,15 @@
 - see about turning off unattended-upgrade when preemptible server runs up
 - bin Ubuntu for Debian
 
+## 2021-01-19
+
+- figure out container volume settings: <https://docs.docker.com/compose/compose-file/compose-file-v3/>
+- troubleshoot Prometheus
+  - <https://prometheus.io/docs/prometheus/latest/installation/#using-docker>
+  - <https://prometheus.io/docs/guides/cadvisor/>
+  - make sure Prometheus is running as the `nobody` user per the
+    [Dockerfile](https://github.com/prometheus/prometheus/blob/b7fe028740b7b36a31c2deda1e2b74aa566fc0ee/Dockerfile#L21)
+
 ## Finish documenting/testing/implementing the _New Project Bootstrap_ journey
 
 ## Ship GCE `goppuku` log out to BigQuery/Spanner/whatever
@@ -20,6 +29,16 @@ Run some basic analysis of /played.
 ## Make a dashboard for science pack production in Grafana
 
 WIP; see:
+
+- [my notes on Notion](https://www.notion.so/jlucktay/The-Factory-Must-Grow-86efaae54e1a4a06930ee1e62e92d30d)
+  - Graftorio addon building/troubleshooting guide:
+    1. consider setting [this flag](https://www.packer.io/docs/commands/build#on-error-cleanup)
+    1. `export CLOUDSDK` before running any other scripts
+    1. For both Docker (Factorio) & Docker Compose (Graftorio) use `yq` to set `restart=no`
+
+        ```shell
+        yq eval --inplace '(.services.*.restart = "no") | (.services.*.restart style="double")' ./docker-compose.yml
+        ```
 
 - [grafana.json](./grafana.json)
 - [scripts/grafana-setup.sh](./scripts/grafana-setup.sh)
