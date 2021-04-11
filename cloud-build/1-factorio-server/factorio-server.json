@@ -19,6 +19,7 @@
       "ssh_username": "packer",
       "tags": ["ssh-from-world"],
       "type": "googlecompute",
+      "use_os_login": true,
       "zone": "{{ user `image_zone` }}"
     }
   ],

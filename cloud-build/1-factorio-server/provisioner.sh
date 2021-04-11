@@ -64,17 +64,7 @@ logger "+++ Users added via conventional adduser"
 echo 'EXTRA_GROUPS="docker"' | tee --append /etc/adduser.conf
 echo 'ADD_EXTRA_GROUPS=1' | tee --append /etc/adduser.conf
 
-logger "+++ Users added via GCE bootstrap cf. \
-https://github.com/GoogleCloudPlatform/compute-image-packages/tree/master/packages/python-google-compute-engine"
-gce_groups=$(grep "^groups = " /etc/default/instance_configs.cfg)
-gce_groups+=",docker"
-
-cat << EOF > /etc/default/instance_configs.cfg.template
-[Accounts]
-$gce_groups
-EOF
-
-google_instance_setup
+logger "+++ Users added via OS Login - TODO"
 
 logger "=== Set up 'factorio' and 'grafana' users/groups"
 groupadd --gid 845 factorio
