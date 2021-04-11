@@ -24,15 +24,9 @@
   ],
   "provisioners": [
     {
-      "destination": "/tmp/docker-run-factorio.sh",
+      "destination": "/tmp/",
       "direction": "upload",
-      "source": "{{ template_dir }}/docker-run-factorio.sh",
-      "type": "file"
-    },
-    {
-      "destination": "/etc/skel/.config/procps/toprc",
-      "direction": "upload",
-      "source": "{{ template_dir }}/toprc",
+      "sources": ["{{ template_dir }}/docker-run-factorio.sh", "{{ template_dir }}/toprc"],
       "type": "file"
     },
     {

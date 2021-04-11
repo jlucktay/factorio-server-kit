@@ -101,11 +101,16 @@ export USERNAME
 export TOKEN
 # export UPDATE_MODS_ON_START=true # TODO(jlucktay): re-enable once Graftorio is OK with Factorio v0.18
 
-logger "=== Set up Docker start script, and run up Factorio with Docker"
-systemctl enable docker
+logger "=== Move uploaded file(s) into place"
+mkdir --parents --verbose /etc/skel/.config/procps
+mv --verbose /tmp/toprc /etc/skel/.config/procps/toprc
+
 mv --verbose /tmp/docker-run-factorio.sh /usr/bin/
 chown --changes root:root /usr/bin/docker-run-factorio.sh
 chmod --changes u+x /usr/bin/docker-run-factorio.sh
+
+logger "=== Run up Factorio with Docker start script"
+systemctl enable docker
 docker-run-factorio.sh
 
 logger "=== Install our server seppuku binary"
