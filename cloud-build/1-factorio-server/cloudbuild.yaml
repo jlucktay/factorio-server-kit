@@ -10,7 +10,7 @@ steps:
       - -var=image_name=$_IMAGE_NAME
       - -var=image_zone=$_IMAGE_ZONE
       - -var=project_id=$PROJECT_ID
-      - factorio-server.json
+      - factorio-server.pkr.hcl
 
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
     entrypoint: gcloud
