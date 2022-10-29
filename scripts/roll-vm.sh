@@ -22,7 +22,7 @@ zone=${FACTORIO_SERVER_LOCATIONS[$FACTORIO_LOCATION]:?"'location' key \
 function usage() {
   cat << HEREDOC
 
-  Usage: ${script_name:?} [ --help | [--logs] [--machine-type=...] --<location> ]
+  Usage: ${script_name:?} [ --help | [--logs] [--machine-type=...] [--<server type>] [--<location>] ]
 
   Optional arguments:
     -h, --help             show this help message and exit
