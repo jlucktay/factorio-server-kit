@@ -2,11 +2,11 @@
 set -euo pipefail
 
 # Arguments:
-# - 1: type of server               ["factorio", "minecraft"]
+# - 1: type of server               ["factorio"]
 # - 2: IP to update into the record
 
 function factorio::dns::update() {
-  # The DNS name/'A' record to update ["factorio.menagerie.games.", "minecraft.menagerie.games."]
+  # The DNS name/'A' record to update ["factorio.menagerie.games."]
   local dns_name="${1:?}.menagerie.games."
   local zone="$1-server"
 

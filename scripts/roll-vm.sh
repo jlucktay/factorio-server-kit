@@ -32,7 +32,6 @@ function usage() {
 
   Optional arguments for server type:
         --factorio         Factorio server using the 'factoriotools/factorio' image (default type)
-        --minecraft        Minecraft (Bedrock) server using the 'itzg/minecraft-bedrock-server' image
 
   Optional arguments for server location:
 HEREDOC
@@ -79,11 +78,6 @@ for arg in "$@"; do
     --factorio)
       server_type=factorio
       template_filter="${FACTORIO_IMAGE_FAMILY:?}-*"
-      shift
-      ;;
-    --minecraft)
-      server_type=minecraft
-      template_filter="${MINECRAFT_IMAGE_FAMILY:?}-*"
       shift
       ;;
     *)
