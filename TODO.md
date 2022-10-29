@@ -89,4 +89,8 @@ Currently hard-coded to Graftorio and that's about it.
 
 ## Only update DNS if old vs new IP has changed
 
+## Leverage Spot VMs on Google Cloud
+
+- <https://cloud.google.com/compute/docs/instances/spot>
+
 [1]: https://cloud.google.com/community/tutorials/docker-gcplogs-driver
