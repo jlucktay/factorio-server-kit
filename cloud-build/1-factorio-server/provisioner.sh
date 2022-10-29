@@ -12,8 +12,8 @@ function get_download_url() {
 
 # Log setup and function
 cd /tmp
-curl --remote-name --show-error --silent https://dl.google.com/cloudagents/install-logging-agent.sh
-bash install-logging-agent.sh
+curl --remote-name --show-error --silent https://dl.google.com/cloudagents/add-logging-agent-repo.sh
+bash add-logging-agent-repo.sh --also-install
 
 logger "=== Set Docker's log driver to google-fluentd (gcplogs)"
 mkdir --parents --verbose /etc/docker
