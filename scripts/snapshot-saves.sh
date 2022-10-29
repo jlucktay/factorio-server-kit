@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly FACTORIO_ROOT="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && git rev-parse --show-toplevel)"
+FACTORIO_ROOT="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && git rev-parse --show-toplevel)"
+readonly FACTORIO_ROOT
 
 for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   # shellcheck disable=SC1090
@@ -9,17 +10,18 @@ for lib in "$FACTORIO_ROOT"/lib/*.sh; do
 done
 
 # Iterate through all location-specific '-saves' buckets defined in our lib JSON and backup into an Archive-class
-# bucket with location/timestamp sub-directories
+# bucket with location/timestamp sub-directories.
 
 # shellcheck disable=SC2154
 for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
   stat=$(gsutil -m stat "gs://${CLOUDSDK_CORE_PROJECT:?}-saves-$location/_autosave*.zip" 2> /dev/null || true)
 
-  if [ ${#stat} -eq 0 ]; then
+  if [[ ${#stat} -eq 0 ]]; then
     continue
   fi
 
-  mapfile -t mtimes < <(grep goog-reserved-file-mtime <<< "$stat" | cut -d":" -f2)
+  grep_output=$(grep goog-reserved-file-mtime <<< "$stat" | cut -d":" -f2)
+  mapfile -t mtimes <<< "$grep_output"
   mtime_high_score=0
 
   for mtime in "${mtimes[@]}"; do
@@ -30,7 +32,7 @@ for location in "${!FACTORIO_SERVER_LOCATIONS[@]}"; do
 
   snapshot_timestamp=$(TZ=UTC factorio::util::run_date --date="@$mtime_high_score" "+%Y%m%d.%H%M%S%z")
 
-  gsutil -m \
+  gsutil -m -o "GSUtil:parallel_process_count=1" \
     rsync -P -x ".*\.tmp\.zip" \
     "gs://$CLOUDSDK_CORE_PROJECT-saves-$location" \
     "gs://$CLOUDSDK_CORE_PROJECT-backup-saves/$location-$snapshot_timestamp"

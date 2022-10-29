@@ -10,7 +10,7 @@ function factorio::vm::delete_instances() {
     list
   )
 
-  if [ -n "${1:-}" ]; then
+  if [[ -n ${1:-} ]]; then
     gcloud_list_args+=("--filter=name:$1")
   fi
 
@@ -22,7 +22,8 @@ function factorio::vm::delete_instances() {
   for ((i = 0; i < for_loop_limit; i += 1)); do
     local name zone
     name=$(jq --raw-output ".[$i].name" <<< "$delete_instances")
-    zone=$(basename "$(jq --raw-output ".[$i].zone" <<< "$delete_instances")")
+    jq_output=$(jq --raw-output ".[$i].zone" <<< "$delete_instances")
+    zone=$(basename "$jq_output")
 
     local gcloud_delete_args=(
       "--format=json"

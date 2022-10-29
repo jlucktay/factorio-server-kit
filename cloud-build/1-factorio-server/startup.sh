@@ -21,16 +21,18 @@ logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
 most_recent_saves_location=
 
-mapfile -t arr_locations < <(jq --raw-output ".[].location" <<< "$locations")
+jq_output=$(jq --raw-output ".[].location" <<< "$locations")
+mapfile -t arr_locations <<< "$jq_output"
 
 for location in "${arr_locations[@]}"; do
   stat=$(gsutil -m stat "gs://$project_id-saves-$location/_autosave*.zip" 2> /dev/null || true)
 
-  if [ ${#stat} -eq 0 ]; then
+  if [[ ${#stat} -eq 0 ]]; then
     continue
   fi
 
-  mapfile -t mtimes < <(grep goog-reserved-file-mtime <<< "$stat" | cut -d":" -f2)
+  grep_output=$(grep goog-reserved-file-mtime <<< "$stat" | cut -d":" -f2)
+  mapfile -t mtimes <<< "$grep_output"
 
   for mtime in "${mtimes[@]}"; do
     if ((mtime > mtime_high_score)); then
@@ -40,7 +42,7 @@ for location in "${arr_locations[@]}"; do
   done
 done
 
-if [ -n "$most_recent_saves_location" ]; then
+if [[ -n $most_recent_saves_location ]]; then
   gsutil -m rsync "gs://$project_id-saves-$most_recent_saves_location" /opt/factorio/saves |& logger
 fi
 

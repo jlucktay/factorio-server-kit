@@ -42,7 +42,7 @@ HEREDOC
   for key in "${sorted_keys[@]}"; do
     printf '        --%-16s run from %s' "$key" "${FACTORIO_SERVER_LOCATIONS[$key]}"
 
-    if [ "$zone" == "${FACTORIO_SERVER_LOCATIONS[$key]}" ]; then
+    if [[ $zone == "${FACTORIO_SERVER_LOCATIONS[$key]}" ]]; then
       printf ' (default location)'
     fi
 
@@ -82,7 +82,7 @@ for arg in "$@"; do
       ;;
     *)
       location=${arg:2}
-      if [ -n "${FACTORIO_SERVER_LOCATIONS[$location]+is_set}" ]; then
+      if [[ -n ${FACTORIO_SERVER_LOCATIONS[$location]+is_set} ]]; then
         shift
       else
         usage
@@ -94,7 +94,7 @@ done
 
 eval "$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$location]}")"
 
-if [ -n "$machine_type" ]; then
+if [[ -n $machine_type ]]; then
   echo -n "Validating machine type '$machine_type'..."
   mapfile -t valid_machine_types_in_zone < <(
     gcloud "--format=value(name)" \
@@ -107,7 +107,7 @@ if [ -n "$machine_type" ]; then
 
   for ((i = 0; i < ${#valid_machine_types_in_zone[@]}; i += 1)); do
     echo -n "."
-    if [ "$machine_type" == "${valid_machine_types_in_zone[$i]}" ]; then
+    if [[ $machine_type == "${valid_machine_types_in_zone[$i]}" ]]; then
       valid_mt=1
       break
     fi
@@ -141,7 +141,7 @@ echo -n "Listing instance templates: gcloud "
 echo "${gcloud_template_list_args[@]}"
 instance_template=$(gcloud "${gcloud_template_list_args[@]}")
 
-if [ -z "$instance_template" ]; then
+if [[ -z $instance_template ]]; then
   err "no instance templates named '$template_filter' were found"
 fi
 
@@ -153,7 +153,7 @@ gcloud_instance_create_args=(
   create
 )
 
-if [ -n "$machine_type" ]; then
+if [[ -n $machine_type ]]; then
   gcloud_instance_create_args+=("--machine-type=$machine_type")
 fi
 

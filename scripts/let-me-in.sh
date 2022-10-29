@@ -26,7 +26,9 @@ echo "Describing firewall rule: gcloud ${gcloud_firewall_describe_args[*]}"
 description=$(gcloud "${gcloud_firewall_describe_args[@]}")
 
 ### Update the firewall rule if the IP differs
-if [ "$my_ip/32" != "$(jq --raw-output '.sourceRanges[0]' <<< "$description")" ]; then
+jq_output=$(jq --raw-output '.sourceRanges[0]' <<< "$description")
+
+if [[ "$my_ip/32" != "$jq_output" ]]; then
   gcloud_firewall_update_args=(
     compute
     firewall-rules
@@ -51,13 +53,15 @@ gcloud_instance_list_args=(
 
 echo "Listing existing instances: gcloud ${gcloud_instance_list_args[*]}"
 instance=$(gcloud "${gcloud_instance_list_args[@]}")
+jq_output=$(jq length <<< "$instance")
 
-if [ "$(jq length <<< "$instance")" == 0 ]; then
+if [[ $jq_output == 0 ]]; then
   err "there are no instances currently running"
 fi
 
 name=$(jq --raw-output ".[0].name" <<< "$instance")
-zone=$(basename "$(jq --raw-output ".[0].zone" <<< "$instance")")
+jq_output=$(jq --raw-output ".[0].zone" <<< "$instance")
+zone=$(basename "$jq_output")
 
 gcloud_ssh_args=(
   compute

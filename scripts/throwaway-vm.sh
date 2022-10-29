@@ -12,12 +12,13 @@ done
 select_location=${1:-${FACTORIO_LOCATION:?}}
 name="throwaway-$select_location"
 
-# shellcheck disable=SC2154 # Already defined by 'lib' scripts above
-if [ -z "${FACTORIO_SERVER_LOCATIONS[$select_location]+is_set}" ]; then
+# Already defined by 'lib' scripts above
+if [[ -z ${FACTORIO_SERVER_LOCATIONS[$select_location]+is_set} ]]; then
   err "Location '$select_location' is not valid."
 fi
 
-eval "$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$select_location]:?}")"
+eval_input=$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$select_location]:?}")
+eval "$eval_input"
 
 gcloud_create_args=(
   compute
@@ -42,7 +43,7 @@ gcloud_ssh_args=(
 )
 
 until gcloud "${gcloud_ssh_args[@]}"; do
-  sleep 1s
+  sleep 1
 done
 
 factorio::vm::delete_instances "$name"

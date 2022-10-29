@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly script_name="$(basename "${BASH_SOURCE[-1]}")"
+script_name="$(basename "${BASH_SOURCE[-1]}")"
+readonly script_name
 
 # Error logging function
 function err() {
@@ -11,7 +12,7 @@ function err() {
 
 ### Check for presence of other variables/tools
 # Variable - FACTORIO_ROOT
-if [ -z "${FACTORIO_ROOT:?}" ]; then
+if [[ -z ${FACTORIO_ROOT:?} ]]; then
   err "FACTORIO_ROOT is not defined; it should be set to the root path of this project."
 fi
 
@@ -27,8 +28,8 @@ if ! hash gsutil 2> /dev/null; then
 fi
 
 # Variable - Google Cloud SDK default project ID
-if [ -z "${CLOUDSDK_CORE_PROJECT:-}" ]; then
-  if [ -n "${GOOGLE_CLOUD_PROJECT:-}" ]; then
+if [[ -z ${CLOUDSDK_CORE_PROJECT:-} ]]; then
+  if [[ -n ${GOOGLE_CLOUD_PROJECT:-} ]]; then
     # Provided by Google Cloud Shell
     CLOUDSDK_CORE_PROJECT=$GOOGLE_CLOUD_PROJECT
   else

@@ -17,7 +17,8 @@ for ((i = 0; i < for_loop_limit; i += 1)); do
 
   unset tmp_location_zone tmp_location tmp_zone
 
-  if [[ "$(jq --raw-output ".[$i].default" "$tmp_locations_json")" == "true" ]]; then
+  jq_output=$(jq --raw-output ".[$i].default" "$tmp_locations_json")
+  if [[ $jq_output == "true" ]]; then
     default_location=$(jq --raw-output ".[$i].location" "$tmp_locations_json")
     default_zone=$(jq --raw-output ".[$i].zone" "$tmp_locations_json")
   fi
@@ -38,7 +39,8 @@ FACTORIO_IMAGE_NAME="$FACTORIO_IMAGE_FAMILY-$(TZ=UTC date +%Y%m%d-%H%M%S)"
 readonly FACTORIO_IMAGE_NAME
 export FACTORIO_IMAGE_NAME
 
-eval "$(factorio::env::set_location "${default_zone:?}")" # locations.json should have "default: true" on one location
+eval_input=$(factorio::env::set_location "${default_zone:?}")
+eval "$eval_input" # locations.json should have "default: true" on one location
 unset default_zone
 
 # Ref: https://www.packer.io/downloads.html

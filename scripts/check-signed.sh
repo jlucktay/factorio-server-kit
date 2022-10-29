@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly FACTORIO_ROOT="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && git rev-parse --show-toplevel)"
+FACTORIO_ROOT="$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && git rev-parse --show-toplevel)"
+readonly FACTORIO_ROOT
 
 for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   # shellcheck disable=SC1090
@@ -11,7 +12,7 @@ done
 # Ref: https://cloud.google.com/community/tutorials/dnssec-cloud-dns-domains
 function factorio::dns::check_signed() {
   ZONE=$(basename "$1" .).
-  if [ "$ZONE" = .. ]; then
+  if [[ $ZONE == .. ]]; then
     ZONE=.
   fi
   NAME=$(basename "$ZONE" .)
@@ -21,7 +22,7 @@ function factorio::dns::check_signed() {
   dig +cd +noall +answer +nocl +nottl NS "$ZONE" @publicdns.goog | {
     # Check each delegated name server
     while read -r DOMAIN TYPE NS; do
-      if [ "$DOMAIN $TYPE" != "$ZONE NS" ]; then
+      if [[ "$DOMAIN $TYPE" != "$ZONE NS" ]]; then
         continue
       fi
       NO_NS=false

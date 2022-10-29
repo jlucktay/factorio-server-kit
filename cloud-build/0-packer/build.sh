@@ -63,7 +63,7 @@ for ((i = 0; i < for_loop_limit; i += 1)); do
 done
 
 # Only run the delete command if any arguments were added to the array
-if [ ${#gcloud_delete_args[@]} -gt "$pre_loop_count" ]; then
+if [[ ${#gcloud_delete_args[@]} -gt $pre_loop_count ]]; then
   echo -n "Deleting untagged digests: gcloud "
   echo "${gcloud_delete_args[@]}"
   gcloud "${gcloud_delete_args[@]}"
