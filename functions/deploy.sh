@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-readonly script_dir=$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
-readonly FACTORIO_ROOT="$(git -C "$script_dir" rev-parse --show-toplevel)"
+script_dir=$(cd "$(dirname "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
+readonly script_dir
+
+FACTORIO_ROOT="$(git -C "$script_dir" rev-parse --show-toplevel)"
+readonly FACTORIO_ROOT
 
 for lib in "$FACTORIO_ROOT"/lib/*.sh; do
   # shellcheck disable=SC1090
@@ -11,9 +14,11 @@ done
 
 cd "$script_dir"
 
-mapfile -t func_names < <(go doc | awk -F' |\\\(' '$1 == "func" { print $2 }')
+go_doc_output=$(go doc)
+awk_output=$(awk -F' |\\\(' '$1 == "func" { print $2 }' <<< "$go_doc_output")
+mapfile -t func_names <<< "$awk_output"
 
-for func_name in ${func_names[*]}; do
+for func_name in "${func_names[@]}"; do
   function_name=$(echo "cleanup-$func_name" | awk '{ print tolower($0) }')
 
   gcloud_list_args=(
@@ -24,7 +29,10 @@ for func_name in ${func_names[*]}; do
   )
 
   echo "Looking for existing '$function_name' functions deployed outside the '${CLOUDSDK_FUNCTIONS_REGION:?}' region..."
-  mapfile -t functions_list < <(gcloud "${gcloud_list_args[@]}" | jq --raw-output '.[].name')
+
+  gcloud_function_list_output=$(gcloud "${gcloud_list_args[@]}")
+  jq_function_list_output=$(jq --raw-output '.[].name' <<< "$gcloud_function_list_output")
+  mapfile -t functions_list <<< "$jq_function_list_output"
 
   delete_region=()
 
@@ -32,7 +40,7 @@ for func_name in ${func_names[*]}; do
     func=${functions_list[$i]##*locations/}
     func=${func%%/functions*}
 
-    if [ "$func" != "${CLOUDSDK_FUNCTIONS_REGION:?}" ]; then
+    if [[ $func != "${CLOUDSDK_FUNCTIONS_REGION:?}" ]]; then
       delete_region+=("$func")
     fi
   done
