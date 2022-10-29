@@ -64,7 +64,7 @@ for func_name in "${func_names[@]}"; do
     "$function_name"
     --entry-point "$func_name"
     --max-instances 1
-    --runtime go116
+    --runtime go113
     --trigger-topic "$function_name"
   )
 
