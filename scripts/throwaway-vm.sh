@@ -24,9 +24,9 @@ gcloud_create_args=(
   compute
   instances
   create
-  --image-family ubuntu-1804-lts
-  --image-project ubuntu-os-cloud
-  --machine-type f1-micro
+  --image-family debian-11
+  --image-project debian-cloud
+  --machine-type n1-standard-2
   --scopes https://www.googleapis.com/auth/cloud-platform
   --tags ssh
   "$name"
