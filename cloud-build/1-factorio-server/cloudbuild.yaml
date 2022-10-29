@@ -29,7 +29,6 @@ steps:
       - --network-tier=PREMIUM
       - --network=projects/${PROJECT_ID}/global/networks/default
       - --no-restart-on-failure
-      - --preemptible
       # "A best practice is to set the full cloud-platform access scope on the instance, then securely limit the
       # service account's API access with Cloud IAM roles."
       # Ref: https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam
