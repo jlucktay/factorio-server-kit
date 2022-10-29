@@ -106,7 +106,7 @@ docker-run-factorio.sh
 logger "=== Install our server seppuku binary"
 mkdir --parents --verbose /tmp/goppuku /var/log/goppuku
 cd /tmp/goppuku
-get_download_url jlucktay goppuku linux_amd64 | wget --input-file=- --progress=dot:giga -O - | tar vxz
+get_download_url jlucktay goppuku Linux_x86_64 | wget --input-file=- --progress=dot:giga -O - | tar vxz
 mv --verbose goppuku /usr/bin/
 
 logger "=== Check that the Factorio container came up OK"
@@ -115,7 +115,7 @@ declare -i dtop=0
 until docker top factorio; do
   ((dtop += 1))
 
-  if [ "$dtop" -gt 30 ]; then
+  if [[ $dtop -gt 30 ]]; then
     exit 1
   fi
 
@@ -129,7 +129,7 @@ docker rm --force factorio
 rm --force --verbose /opt/factorio/saves/*.zip
 
 logger "=== Bail out here if we're not adding Graftorio"
-if [ "${GRAFTORIO_ADDON:?}" -ne 1 ]; then
+if [[ ${GRAFTORIO_ADDON:?} -ne 1 ]]; then
   exit 0
 fi
 
@@ -209,7 +209,7 @@ declare -i dctop=0
 until docker-compose --file=/opt/factorio/mods/graftorio/docker-compose.yml top exporter grafana prometheus; do
   ((dctop += 1))
 
-  if [ "$dctop" -gt 30 ]; then
+  if [[ $dctop -gt 30 ]]; then
     exit 1
   fi
 

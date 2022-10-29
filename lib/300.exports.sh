@@ -17,7 +17,7 @@ for ((i = 0; i < for_loop_limit; i += 1)); do
 
   unset tmp_location_zone tmp_location tmp_zone
 
-  if [ "$(jq --raw-output ".[$i].default" "$tmp_locations_json")" == "true" ]; then
+  if [[ "$(jq --raw-output ".[$i].default" "$tmp_locations_json")" == "true" ]]; then
     default_location=$(jq --raw-output ".[$i].location" "$tmp_locations_json")
     default_zone=$(jq --raw-output ".[$i].zone" "$tmp_locations_json")
   fi
@@ -34,7 +34,8 @@ declare -rx FACTORIO_LOCATION="${default_location:?}" # locations.json should ha
 unset default_location
 
 # Define these once per script invocation, so that they can be used consistently across builds, deployments, etc
-readonly FACTORIO_IMAGE_NAME="$FACTORIO_IMAGE_FAMILY-$(TZ=UTC date +%Y%m%d-%H%M%S)"
+FACTORIO_IMAGE_NAME="$FACTORIO_IMAGE_FAMILY-$(TZ=UTC date +%Y%m%d-%H%M%S)"
+readonly FACTORIO_IMAGE_NAME
 export FACTORIO_IMAGE_NAME
 
 eval "$(factorio::env::set_location "${default_zone:?}")" # locations.json should have "default: true" on one location
