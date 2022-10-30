@@ -5,3 +5,6 @@
   - memory usage was low, ~13GB free ✅
   - go for 2x cpu, 8gb memory next time ✅
     - `c2d-standard-2` ✅
+
+- add `-o "GSUtil:parallel_process_count=1"` to `gsutil` calls ✅
+  - only for scripts executed locally, potentially from a Mac ✅
