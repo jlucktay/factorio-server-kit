@@ -37,7 +37,8 @@ function usage() {
 HEREDOC
 
   # https://www.reddit.com/r/bash/comments/5wma5k/is_there_a_way_to_sort_an_associative_array_by/debbjsp/
-  mapfile -d '' sorted_keys < <(printf '%s\0' "${!FACTORIO_SERVER_LOCATIONS[@]}" | sort --zero-terminated)
+  sorted_locations=$(printf '%s\0' "${!FACTORIO_SERVER_LOCATIONS[@]}" | sort --zero-terminated)
+  mapfile -d '' sorted_keys <<< "$sorted_locations"
 
   for key in "${sorted_keys[@]}"; do
     printf '        --%-16s run from %s' "$key" "${FACTORIO_SERVER_LOCATIONS[$key]}"
@@ -92,17 +93,13 @@ for arg in "$@"; do
   esac
 done
 
-eval "$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$location]}")"
+eval_input=$(factorio::env::set_location "${FACTORIO_SERVER_LOCATIONS[$location]}")
+eval "$eval_input"
 
 if [[ -n $machine_type ]]; then
   echo -n "Validating machine type '$machine_type'..."
-  mapfile -t valid_machine_types_in_zone < <(
-    gcloud "--format=value(name)" \
-      compute \
-      machine-types \
-      list
-  )
-
+  gcloud_machine_list=$(gcloud "--format=value(name)" compute machine-types list)
+  mapfile -t valid_machine_types_in_zone <<< "$gcloud_machine_list"
   valid_mt=0
 
   for ((i = 0; i < ${#valid_machine_types_in_zone[@]}; i += 1)); do
