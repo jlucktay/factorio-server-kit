@@ -18,13 +18,14 @@ steps:
       - compute
       - instance-templates
       - create
+      - --boot-disk-auto-delete
       - --boot-disk-device-name=${_IMAGE_FAMILY}-1
       - --boot-disk-size=20GB
       - --boot-disk-type=pd-standard
       - --description=https://github.com/jlucktay/factorio-server-kit
       - --image=$_IMAGE_NAME
-      - --machine-type=n2-standard-2
-      - --maintenance-policy=TERMINATE
+      - --machine-type=c2d-standard-2
+      - --maintenance-policy=MIGRATE
       - --metadata-from-file=startup-script=startup.sh,shutdown-script=shutdown.sh
       - --network-tier=PREMIUM
       - --network=projects/${PROJECT_ID}/global/networks/default

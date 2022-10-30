@@ -27,7 +27,7 @@ source "googlecompute" "factorio" {
   image_description   = "https://github.com/jlucktay/factorio-server-kit - baked with Packer ${packer.version}"
   image_family        = var.image_family
   image_name          = var.image_name
-  machine_type        = "n2-standard-2"
+  machine_type        = "c2d-standard-2"
   preemptible         = false
   project_id          = var.project_id
   source_image_family = "ubuntu-2004-lts"
