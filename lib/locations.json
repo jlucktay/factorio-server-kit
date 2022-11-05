@@ -1,5 +1,6 @@
 [
   {
+    "default": true,
     "location": "london",
     "zone": "europe-west2-c"
   },
@@ -12,7 +13,6 @@
     "zone": "australia-southeast1-b"
   },
   {
-    "default": true,
     "location": "tokyo",
     "zone": "asia-northeast1-c"
   },
