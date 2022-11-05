@@ -16,6 +16,7 @@ locations=$(gsutil cat "gs://$project_id-storage/lib/locations.json")
 gsutil -m cp "gs://$project_id-storage/fluentd/*" /etc/google-fluentd/config.d/ || true
 gsutil -m cp "gs://$project_id-storage/config/*-settings.json" /opt/factorio/config/ || true
 gsutil -m cp "gs://$project_id-storage/config/server-*list.json" /opt/factorio/config/ || true
+gsutil -m cp "gs://$project_id-storage/mods/mod-*.json" /opt/factorio/mods/ || true
 
 logger "=== Get most recent game saves from appropriate Storage bucket"
 mtime_high_score=0
@@ -84,7 +85,7 @@ if ! secrets="$(gsutil cat "gs://$project_id-storage/lib/secrets.json")" \
 fi
 export USERNAME
 export TOKEN
-# export UPDATE_MODS_ON_START=true # TODO(jlucktay): re-enable once Graftorio is OK with Factorio v0.18
+export UPDATE_MODS_ON_START=true
 
 logger "=== Upgrade and (re)start the Factorio server"
 docker-run-factorio.sh

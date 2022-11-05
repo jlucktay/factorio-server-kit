@@ -8,3 +8,8 @@
 
 - add `-o "GSUtil:parallel_process_count=1"` to `gsutil` calls ✅
   - only for scripts executed locally, potentially from a Mac ✅
+
+- syncing factorio/mods/* to server?
+  - env var: `UPDATE_MODS_ON_START`
+    - <https://github.com/factoriotools/factorio-docker/blob/master/docker/files/update-mods.sh>
+  - propagate `mod-list.json` and `mod-settings.dat` to factorio/mods/ directory

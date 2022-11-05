@@ -6,7 +6,7 @@ readonly FACTORIO_ROOT
 
 bucket=${CLOUDSDK_CORE_PROJECT:?}-storage
 
-for d in config lib; do
+for d in config mods lib; do
   (
     set -x
 

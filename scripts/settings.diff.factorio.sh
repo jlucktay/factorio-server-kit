@@ -6,7 +6,7 @@ readonly FACTORIO_ROOT
 
 bucket=${CLOUDSDK_CORE_PROJECT:?}-storage
 
-for f in "$FACTORIO_ROOT"/{config,lib}/*.json; do
+for f in "$FACTORIO_ROOT"/{config,mods,lib}/*.json; do
   stripped_prefix=${f#"$FACTORIO_ROOT/"}
 
   gsutil_output=$(gsutil cat "gs://$bucket/$stripped_prefix")

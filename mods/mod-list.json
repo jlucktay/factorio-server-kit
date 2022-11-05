@@ -1,0 +1,112 @@
+{
+  "mods": [
+    {
+      "enabled": true,
+      "name": "base"
+    },
+    {
+      "enabled": true,
+      "name": "aai-containers"
+    },
+    {
+      "enabled": true,
+      "name": "aai-industry"
+    },
+    {
+      "enabled": true,
+      "name": "aai-signal-transmission"
+    },
+    {
+      "enabled": true,
+      "name": "alien-biomes"
+    },
+    {
+      "enabled": true,
+      "name": "alien-biomes-hr-terrain"
+    },
+    {
+      "enabled": true,
+      "name": "even-distribution"
+    },
+    {
+      "enabled": true,
+      "name": "FactorySearch"
+    },
+    {
+      "enabled": true,
+      "name": "FNEI"
+    },
+    {
+      "enabled": true,
+      "name": "informatron"
+    },
+    {
+      "enabled": true,
+      "name": "jetpack"
+    },
+    {
+      "enabled": true,
+      "name": "robot_attrition"
+    },
+    {
+      "enabled": true,
+      "name": "shield-projector"
+    },
+    {
+      "enabled": true,
+      "name": "simhelper"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-graphics"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-graphics-2"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-graphics-3"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-graphics-4"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-graphics-5"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-menu-simulations"
+    },
+    {
+      "enabled": true,
+      "name": "space-exploration-postprocess"
+    },
+    {
+      "enabled": true,
+      "name": "Squeak Through"
+    },
+    {
+      "enabled": true,
+      "name": "TinyStart"
+    },
+    {
+      "enabled": true,
+      "name": "VehicleSnap"
+    },
+    {
+      "enabled": true,
+      "name": "WireShortcuts"
+    },
+    {
+      "enabled": true,
+      "name": "YARM"
+    }
+  ]
+}

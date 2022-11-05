@@ -73,8 +73,7 @@ groupadd --gid 472 grafana
 useradd --gid 472 --uid 472 grafana
 
 logger "=== Create the necessary folder structure"
-mkdir --parents --verbose /opt/factorio/config
-mkdir --parents --verbose /opt/factorio/saves
+mkdir --parents --verbose /opt/factorio/{config,mods,saves}
 
 logger "=== Fix up Factorio permissions"
 chown --changes --recursive factorio:factorio /opt/factorio
@@ -89,7 +88,7 @@ if ! secrets="$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/secrets.
 fi
 export USERNAME
 export TOKEN
-# export UPDATE_MODS_ON_START=true # TODO(jlucktay): re-enable once Graftorio is OK with Factorio v0.18
+export UPDATE_MODS_ON_START=true
 
 logger "=== Move uploaded file(s) into place"
 mkdir --parents --verbose /etc/skel/.config/procps
