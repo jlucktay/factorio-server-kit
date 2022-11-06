@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
 set -euxo pipefail
 
-### Helper functions
-function get_download_url() {
-  curl --silent "https://api.github.com/repos/$1/$2/releases/latest" 2> /dev/null \
-    | jq --arg contains "$3" --exit-status --raw-output \
-      '.assets[] | select(.browser_download_url | contains($contains)) | .browser_download_url'
-}
-# Usage:   get_download_url <author> <repo> <release pattern>
-# Example: get_download_url 99designs aws-vault linux_amd64
+for lib in /usr/lib/factorio-bash/*.sh; do
+  # shellcheck disable=SC1090
+  source "$lib"
+done
 
 # Log setup and function
 cd /tmp
@@ -79,7 +75,7 @@ logger "=== Fix up Factorio permissions"
 chown --changes --recursive factorio:factorio /opt/factorio
 
 logger "=== Add factorio.com secrets to environment"
-if ! secrets="$(gsutil cat "gs://${CLOUDSDK_CORE_PROJECT:?}-storage/lib/secrets.json")" \
+if ! secrets="$(gsutil cat "gs://${PROJECT_ID:?}-storage/lib/secrets.json")" \
   || ! USERNAME="$(jq --exit-status --raw-output ".username" <<< "$secrets")" \
   || ! TOKEN="$(jq --exit-status --raw-output ".token" <<< "$secrets")"; then
 
@@ -89,14 +85,6 @@ fi
 export USERNAME
 export TOKEN
 export UPDATE_MODS_ON_START=true
-
-logger "=== Move uploaded file(s) into place"
-mkdir --parents --verbose /etc/skel/.config/procps
-mv --verbose /tmp/toprc /etc/skel/.config/procps/toprc
-
-mv --verbose /tmp/docker-run-factorio.sh /usr/bin/
-chown --changes root:root /usr/bin/docker-run-factorio.sh
-chmod --changes u+x /usr/bin/docker-run-factorio.sh
 
 logger "=== Run up Factorio with Docker start script"
 systemctl enable docker

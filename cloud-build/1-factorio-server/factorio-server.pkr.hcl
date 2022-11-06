@@ -39,8 +39,7 @@ source "googlecompute" "factorio" {
 
 build {
   description = "https://github.com/jlucktay/factorio-server-kit - Factorio"
-
-  sources = ["source.googlecompute.factorio"]
+  sources     = ["source.googlecompute.factorio"]
 
   provisioner "file" {
     destination = "/tmp/"
@@ -49,8 +48,37 @@ build {
   }
 
   provisioner "shell" {
+    inline = [
+      "mkdir --parents --verbose /tmp/lib/factorio-bash",
+    ]
+  }
+
+  provisioner "file" {
+    destination = "/tmp/lib/factorio-bash"
+    direction   = "upload"
+    source      = "${path.root}/lib/"
+  }
+
+  provisioner "shell" {
+    execute_command = "echo 'packer' | sudo --stdin env {{ .Vars }} {{ .Path }}"
+
+    inline = [
+      "mv --verbose /tmp/docker-run-factorio.sh /usr/bin/",
+      "chown --changes root:root /usr/bin/docker-run-factorio.sh",
+      "chmod --changes u+x /usr/bin/docker-run-factorio.sh",
+
+      "mkdir --parents --verbose /etc/skel/.config/procps /usr/lib/factorio-bash",
+      "mv --verbose /tmp/toprc /etc/skel/.config/procps/",
+      "mv --verbose /tmp/lib/factorio-bash/* /usr/lib/factorio-bash/",
+      "chown --changes root:root /usr/lib/factorio-bash/*",
+    ]
+  }
+
+  provisioner "shell" {
+    execute_command = "echo 'packer' | sudo --stdin env {{ .Vars }} {{ .Path }}"
+
     environment_vars = ["CLOUDSDK_CORE_PROJECT=${var.project_id}", "GRAFTORIO_ADDON=${var.graftorio_addon}"]
-    execute_command  = "sudo sh -c '{{ .Vars }} {{ .Path }}'"
-    script           = "${path.root}/provisioner.sh"
+
+    script = "${path.root}/provisioner.sh"
   }
 }
