@@ -13,7 +13,7 @@ function err() {
 }
 
 # Check for availability of some necessary tools
-for tool in curl cut jq sed; do
+for tool in curl cut sed; do
   tool_command=$(command -v "$tool" || true)
 
   if [[ -n $tool_command ]] && [[ -x $tool_command ]]; then
