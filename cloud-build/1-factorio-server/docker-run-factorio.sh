@@ -6,7 +6,7 @@ image_name="factoriotools/factorio"
 image_tag="stable"
 image="$image_name":"$image_tag"
 
-docker rm "$container_name" || true
+docker rm --force "$container_name"
 docker pull "$image"
 
 docker run \
