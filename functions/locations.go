@@ -19,19 +19,19 @@ func locations(ctx context.Context, projectID string) ([]location, error) {
 	bkt := storageClient.Bucket(bucketName)
 	objLocs := bkt.Object(locationsObject)
 
-	r, err := objLocs.NewReader(ctx)
+	reader, err := objLocs.NewReader(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("error reading JSON object: %w", err)
 	}
 
 	var locs []location
 
-	dec := json.NewDecoder(r)
+	dec := json.NewDecoder(reader)
 	if errDecode := dec.Decode(&locs); errDecode != nil {
 		return nil, fmt.Errorf("error decoding locations JSON: %w", errDecode)
 	}
 
-	if err := r.Close(); err != nil {
+	if err := reader.Close(); err != nil {
 		return nil, fmt.Errorf("could not close Storage reader: %w", err)
 	}
 
