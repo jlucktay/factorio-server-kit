@@ -22,10 +22,10 @@ for func_name in "${func_names[@]}"; do
   function_name=$(echo "cleanup-$func_name" | awk '{ print tolower($0) }')
 
   gcloud_list_args=(
-    --format json
+    --format=json
     functions
     list
-    --filter "name:$function_name"
+    --filter="name:$function_name"
   )
 
   echo "Looking for existing '$function_name' functions deployed outside the '${CLOUDSDK_FUNCTIONS_REGION:?}' region..."
@@ -50,7 +50,7 @@ for func_name in "${func_names[@]}"; do
       functions
       delete
       "$function_name"
-      --region "${delete_region[$i]}"
+      --region="${delete_region[$i]}"
       --quiet
     )
 
@@ -62,10 +62,11 @@ for func_name in "${func_names[@]}"; do
     functions
     deploy
     "$function_name"
-    --entry-point "$func_name"
-    --max-instances 1
-    --runtime go116
-    --trigger-topic "$function_name"
+    --docker-registry=artifact-registry
+    --entry-point="$func_name"
+    --max-instances=1
+    --runtime=go121
+    --trigger-topic="$function_name"
   )
 
   echo "Deploying '$function_name': gcloud ${gcloud_deploy_args[*]}"
